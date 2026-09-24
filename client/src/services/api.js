@@ -1,4 +1,61 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+/**
+ * ProblemPool API Client
+ * Automatically normalizes API_BASE_URL for both localhost and production deployment (Render/Vercel)
+ */
+const getApiBaseUrl = () => {
+  let url = import.meta.env.VITE_API_URL;
+  if (!url || typeof url !== 'string' || url.trim() === '') {
+    // Default for local development
+    return 'http://localhost:5000/api';
+  }
+
+  // Trim whitespace and trailing slashes
+  url = url.trim().replace(/\/+$/, '');
+
+  // If the user provided the base URL without /api (e.g. https://problempool.onrender.com)
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
+/**
+ * Helper to safely parse JSON or text response
+ */
+const handleApiResponse = async (response) => {
+  const contentType = response.headers.get('content-type') || '';
+  let data = null;
+
+  if (contentType.includes('application/json')) {
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
+  } else {
+    try {
+      const text = await response.text();
+      data = { message: text };
+    } catch {
+      data = null;
+    }
+  }
+
+  if (!response.ok) {
+    const errorMessage =
+      data?.message ||
+      (response.status === 401
+        ? 'Invalid credentials or session expired'
+        : response.status === 404
+        ? 'Requested endpoint not found'
+        : `Request failed with status ${response.status}`);
+    throw new Error(errorMessage);
+  }
+
+  return data || { success: true };
+};
 
 /**
  * Register a new user
@@ -13,11 +70,7 @@ export const signupUser = async (userData) => {
       },
       body: JSON.stringify(userData),
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to register account');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error('signupUser error:', error);
     throw error;
@@ -37,11 +90,7 @@ export const loginUser = async (credentials) => {
       },
       body: JSON.stringify(credentials),
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to login');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error('loginUser error:', error);
     throw error;
@@ -54,16 +103,15 @@ export const loginUser = async (credentials) => {
  */
 export const getCurrentUser = async (token) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to fetch current user profile');
+    const headers = {};
+    if (token && token !== 'null' && token !== 'undefined') {
+      headers.Authorization = `Bearer ${token.trim()}`;
     }
-    return data;
+
+    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+      headers,
+    });
+    return await handleApiResponse(response);
   } catch (error) {
     console.error('getCurrentUser error:', error);
     throw error;
@@ -76,11 +124,7 @@ export const getCurrentUser = async (token) => {
 export const getProblems = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/problems`);
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to fetch problems');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error('getProblems error:', error);
     throw error;
@@ -94,11 +138,7 @@ export const getProblems = async () => {
 export const getProblem = async (id) => {
   try {
     const response = await fetch(`${API_BASE_URL}/problems/${id}`);
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to fetch problem details');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error(`getProblem(${id}) error:`, error);
     throw error;
@@ -115,8 +155,8 @@ export const createProblem = async (problemData, token) => {
     const headers = {
       'Content-Type': 'application/json',
     };
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    if (token && token !== 'null' && token !== 'undefined') {
+      headers.Authorization = `Bearer ${token.trim()}`;
     }
 
     const response = await fetch(`${API_BASE_URL}/problems`, {
@@ -124,11 +164,7 @@ export const createProblem = async (problemData, token) => {
       headers,
       body: JSON.stringify(problemData),
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to create problem');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error('createProblem error:', error);
     throw error;
@@ -143,19 +179,15 @@ export const createProblem = async (problemData, token) => {
 export const deleteProblem = async (id, token) => {
   try {
     const headers = {};
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    if (token && token !== 'null' && token !== 'undefined') {
+      headers.Authorization = `Bearer ${token.trim()}`;
     }
 
     const response = await fetch(`${API_BASE_URL}/problems/${id}`, {
       method: 'DELETE',
       headers,
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to delete problem');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error(`deleteProblem(${id}) error:`, error);
     throw error;
@@ -171,11 +203,7 @@ export const getProblemsByCategory = async (category) => {
     const response = await fetch(
       `${API_BASE_URL}/problems/category/${encodeURIComponent(category)}`
     );
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to fetch problems by category');
-    }
-    return data;
+    return await handleApiResponse(response);
   } catch (error) {
     console.error(`getProblemsByCategory(${category}) error:`, error);
     throw error;

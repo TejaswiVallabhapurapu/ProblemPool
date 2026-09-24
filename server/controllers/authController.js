@@ -3,7 +3,8 @@ const User = require('../models/User');
 
 // Helper to generate JWT
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  const secret = process.env.JWT_SECRET || 'problempool_jwt_secret_key_2026_secure_local';
+  return jwt.sign({ id }, secret, {
     expiresIn: '7d',
   });
 };

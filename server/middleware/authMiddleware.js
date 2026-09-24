@@ -3,16 +3,22 @@ const User = require('../models/User');
 
 const protect = async (req, res, next) => {
   let token;
+  const authHeader = req.headers.authorization || req.headers.Authorization;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer ')
-  ) {
+  if (authHeader && authHeader.startsWith('Bearer')) {
     try {
-      token = req.headers.authorization.split(' ')[1];
+      token = authHeader.split(' ')[1]?.trim();
 
+      if (!token || token === 'null' || token === 'undefined') {
+        return res.status(401).json({
+          success: false,
+          message: 'Not authorized, invalid token format',
+        });
+      }
+
+      const secret = process.env.JWT_SECRET || 'problempool_jwt_secret_key_2026_secure_local';
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, secret);
 
       // Find user by decoded ID without password
       const user = await User.findById(decoded.id).select('-password');
@@ -34,12 +40,10 @@ const protect = async (req, res, next) => {
     }
   }
 
-  if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Not authorized, no token provided',
-    });
-  }
+  return res.status(401).json({
+    success: false,
+    message: 'Not authorized, no token provided',
+  });
 };
 
 module.exports = { protect };
