@@ -209,3 +209,73 @@ export const getProblemsByCategory = async (category) => {
     throw error;
   }
 };
+
+/**
+ * Fetch all answers for a given problem
+ * @param {string} problemId - MongoDB Problem ObjectId
+ */
+export const getProblemAnswers = async (problemId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/problems/${problemId}/answers`);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error(`getProblemAnswers(${problemId}) error:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Submit an answer to a problem (Protected)
+ * @param {string} problemId - MongoDB Problem ObjectId
+ * @param {string} content - Answer text content
+ * @param {string} token - JWT Token
+ */
+export const submitAnswer = async (problemId, content, token) => {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (token && token !== 'null' && token !== 'undefined') {
+      headers.Authorization = `Bearer ${token.trim()}`;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/problems/${problemId}/answers`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ content }),
+    });
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error(`submitAnswer(${problemId}) error:`, error);
+    throw error;
+  }
+};
+
+export const createAnswer = submitAnswer;
+
+/**
+ * Delete an answer from a problem (Protected)
+ * @param {string} problemId - MongoDB Problem ObjectId
+ * @param {string} answerId - MongoDB Answer ObjectId
+ * @param {string} token - JWT Token
+ */
+export const deleteAnswer = async (problemId, answerId, token) => {
+  try {
+    const headers = {};
+    if (token && token !== 'null' && token !== 'undefined') {
+      headers.Authorization = `Bearer ${token.trim()}`;
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/problems/${problemId}/answers/${answerId}`,
+      {
+        method: 'DELETE',
+        headers,
+      }
+    );
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error(`deleteAnswer(${problemId}, ${answerId}) error:`, error);
+    throw error;
+  }
+};

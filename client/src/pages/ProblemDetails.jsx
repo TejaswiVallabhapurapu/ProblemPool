@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getProblem, deleteProblem } from '../services/api';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import { getProblem, deleteProblem, getProblemAnswers, submitAnswer, deleteAnswer } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const CATEGORY_COLORS = {
@@ -17,62 +17,145 @@ const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
-    weekday: 'long',
+    weekday: 'short',
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 };
 
 const ProblemDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const location = useLocation();
+  const { user, token, isAuthenticated } = useAuth();
 
   const [problem, setProblem] = useState(null);
+  const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeletingProblem, setIsDeletingProblem] = useState(false);
+
+  // Answer form states
+  const [answerContent, setAnswerContent] = useState('');
+  const [submittingAnswer, setSubmittingAnswer] = useState(false);
+  const [answerError, setAnswerError] = useState('');
+  const [answerSuccess, setAnswerSuccess] = useState('');
+  const [deletingAnswerId, setDeletingAnswerId] = useState(null);
+
+  const fetchProblemAndAnswers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch problem details and answers in parallel
+      const [problemRes, answersRes] = await Promise.all([
+        getProblem(id),
+        getProblemAnswers(id).catch((err) => {
+          console.warn('Failed to load answers:', err);
+          return { success: true, answers: [] };
+        }),
+      ]);
+
+      if (problemRes.success && problemRes.problem) {
+        setProblem(problemRes.problem);
+      } else {
+        setError('Problem not found');
+      }
+
+      if (answersRes && answersRes.answers) {
+        setAnswers(answersRes.answers);
+      }
+    } catch (err) {
+      setError(err.message || 'Unable to load problem details');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDetails = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getProblem(id);
-        if (data.success && data.problem) {
-          setProblem(data.problem);
-        } else {
-          setError('Problem not found');
-        }
-      } catch (err) {
-        setError(err.message || 'Unable to load problem details');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDetails();
+    fetchProblemAndAnswers();
   }, [id]);
 
-  const handleDelete = async () => {
+  const handleDeleteProblem = async () => {
     if (!window.confirm('Are you sure you want to delete this problem?')) {
       return;
     }
 
     try {
-      setIsDeleting(true);
+      setIsDeletingProblem(true);
       await deleteProblem(id, token);
       navigate('/problems');
     } catch (err) {
       alert('Failed to delete problem: ' + err.message);
-      setIsDeleting(false);
+      setIsDeletingProblem(false);
+    }
+  };
+
+  const handleAnswerSubmit = async (e) => {
+    e.preventDefault();
+    setAnswerError('');
+    setAnswerSuccess('');
+
+    const trimmedContent = answerContent.trim();
+    if (!trimmedContent) {
+      setAnswerError('Please write an answer before submitting.');
+      return;
+    }
+
+    if (!isAuthenticated || !token) {
+      setAnswerError('Authentication required. Please log in to answer.');
+      return;
+    }
+
+    try {
+      setSubmittingAnswer(true);
+      const res = await submitAnswer(id, trimmedContent, token);
+
+      if (res.success && res.answer) {
+        // Prepend new answer immediately to state
+        setAnswers((prevAnswers) => [res.answer, ...prevAnswers]);
+        setAnswerContent('');
+        setAnswerSuccess('Your answer has been posted successfully!');
+
+        // Clear success message after 4 seconds
+        setTimeout(() => {
+          setAnswerSuccess('');
+        }, 4000);
+      } else {
+        setAnswerError(res.message || 'Failed to post answer.');
+      }
+    } catch (err) {
+      setAnswerError(err.message || 'Failed to submit answer. Please try again.');
+    } finally {
+      setSubmittingAnswer(false);
+    }
+  };
+
+  const handleDeleteAnswer = async (answerId) => {
+    if (!window.confirm('Are you sure you want to delete your answer?')) {
+      return;
+    }
+
+    try {
+      setDeletingAnswerId(answerId);
+      await deleteAnswer(id, answerId, token);
+      setAnswers((prevAnswers) => prevAnswers.filter((a) => a._id !== answerId));
+    } catch (err) {
+      alert('Failed to delete answer: ' + err.message);
+    } finally {
+      setDeletingAnswerId(null);
     }
   };
 
   const authorName = problem?.createdBy?.name || 'Community Member';
   const authorEmail = problem?.createdBy?.email;
-  const isCreator = user && problem?.createdBy && (user._id === problem.createdBy._id || user._id === problem.createdBy);
+  const isCreator =
+    user &&
+    problem?.createdBy &&
+    (user._id === problem.createdBy._id || user._id === problem.createdBy);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
@@ -82,7 +165,10 @@ const ProblemDetails = () => {
           to="/problems"
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
         >
-          <span>← Back to Problems</span>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          <span>Back to Problems</span>
         </Link>
       </div>
 
@@ -113,78 +199,256 @@ const ProblemDetails = () => {
         </div>
       )}
 
-      {/* 3. Problem Details Card */}
+      {/* 3. Problem Details & Answers Section */}
       {!loading && !error && problem && (
-        <article className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
-          {/* Header Metadata */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
-            <div className="flex items-center gap-3">
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
-                  CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200'
-                }`}
-              >
-                {problem.category}
-              </span>
-              <span className="text-xs text-slate-400 font-medium">
-                Posted on {formatDate(problem.createdAt)}
-              </span>
+        <div className="space-y-8">
+          {/* Problem Card */}
+          <article className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+            {/* Header Metadata */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
+                    CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200'
+                  }`}
+                >
+                  {problem.category}
+                </span>
+                <span className="text-xs text-slate-400 font-medium">
+                  Posted on {formatDate(problem.createdAt)}
+                </span>
+              </div>
+
+              {/* Creator Delete Option */}
+              {isCreator && (
+                <button
+                  onClick={handleDeleteProblem}
+                  disabled={isDeletingProblem}
+                  className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
+                  title="Delete this problem"
+                >
+                  {isDeletingProblem ? 'Deleting...' : 'Delete problem'}
+                </button>
+              )}
             </div>
 
-            {/* Creator or Admin Delete Option */}
-            {isCreator && (
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
-                title="Delete this problem"
-              >
-                {isDeleting ? 'Deleting...' : 'Delete problem'}
-              </button>
+            {/* Title */}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
+              {problem.title}
+            </h1>
+
+            {/* Author & Location Meta Bar */}
+            <div className="flex flex-wrap items-center gap-4 mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold">
+                <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+                <span>Posted by {authorName}</span>
+                {authorEmail && <span className="text-indigo-400 font-normal">({authorEmail})</span>}
+              </div>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium">
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+                <span>{problem.location}</span>
+              </div>
+            </div>
+
+            {/* Full Description */}
+            <div className="prose prose-slate max-w-none">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">
+                Problem Description
+              </h2>
+              <div className="text-slate-700 text-base leading-relaxed whitespace-pre-line bg-slate-50/50 p-6 rounded-xl border border-slate-100">
+                {problem.description}
+              </div>
+            </div>
+          </article>
+
+          {/* ========================================================= */}
+          {/* ANSWERS SECTION */}
+          {/* ========================================================= */}
+          <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+            {/* Answers Section Header */}
+            <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-8">
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                  Answers
+                </h2>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+                  {answers.length}
+                </span>
+              </div>
+            </div>
+
+            {/* Answer Form (If Logged In) */}
+            {isAuthenticated ? (
+              <div className="mb-10 p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-base font-bold text-slate-900">
+                    Your Answer
+                  </h3>
+                  {user && (
+                    <span className="text-xs text-slate-500 font-medium">
+                      Answering as <strong className="text-indigo-600">{user.name}</strong>
+                    </span>
+                  )}
+                </div>
+
+                {answerError && (
+                  <div className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+                    <svg className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <span>{answerError}</span>
+                  </div>
+                )}
+
+                {answerSuccess && (
+                  <div className="mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
+                    <svg className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{answerSuccess}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleAnswerSubmit} className="space-y-4">
+                  <textarea
+                    rows={4}
+                    value={answerContent}
+                    onChange={(e) => {
+                      setAnswerContent(e.target.value);
+                      if (answerError) setAnswerError('');
+                    }}
+                    placeholder="Write your solution, explanation, or suggestion for this problem..."
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+                  />
+
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={submittingAnswer || !answerContent.trim()}
+                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold text-sm shadow-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      {submittingAnswer ? (
+                        <>
+                          <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          <span>Submitting Answer...</span>
+                        </>
+                      ) : (
+                        <span>Submit Answer</span>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              /* Prompt to Log in (If Not Logged In) */
+              <div className="mb-10 p-6 rounded-2xl bg-indigo-50/60 border border-indigo-100 text-center sm:text-left sm:flex sm:items-center sm:justify-between gap-4">
+                <div className="mb-4 sm:mb-0">
+                  <h3 className="text-base font-bold text-slate-900 mb-1">
+                    Have a solution or idea for this problem?
+                  </h3>
+                  <p className="text-xs text-slate-600">
+                    Please log in to answer this problem and join the discussion.
+                  </p>
+                </div>
+                <Link
+                  to="/login"
+                  state={{ from: location.pathname }}
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-sm transition-colors shrink-0"
+                >
+                  Log in to Answer
+                </Link>
+              </div>
             )}
-          </div>
 
-          {/* Title */}
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
-            {problem.title}
-          </h1>
+            {/* List of Existing Answers */}
+            <div className="space-y-6">
+              {answers.length === 0 ? (
+                /* Empty state */
+                <div className="py-12 text-center border border-dashed border-slate-200 rounded-2xl bg-slate-50/40">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                    </svg>
+                  </div>
+                  <h4 className="text-base font-bold text-slate-800 mb-1">No answers yet.</h4>
+                  <p className="text-xs text-slate-500">
+                    Be the first person to answer this problem!
+                  </p>
+                </div>
+              ) : (
+                /* Answer Cards */
+                answers.map((ans) => {
+                  const answerAuthorName = ans.user?.name || 'Community Member';
+                  const answerAuthorInitial = answerAuthorName.charAt(0).toUpperCase() || 'U';
+                  const isAnswerAuthor =
+                    user &&
+                    ans.user &&
+                    (user._id === ans.user._id || user._id === ans.user);
 
-          {/* Author & Location Meta Bar */}
-          <div className="flex flex-wrap items-center gap-4 mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold">
-              <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
-              <span>Posted by {authorName}</span>
-              {authorEmail && <span className="text-indigo-400 font-normal">({authorEmail})</span>}
+                  return (
+                    <div
+                      key={ans._id}
+                      className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all space-y-3"
+                    >
+                      {/* Author header */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs shadow-xs">
+                            {answerAuthorInitial}
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-slate-900">
+                              {answerAuthorName}
+                            </div>
+                            <div className="text-[11px] text-slate-400">
+                              {formatDate(ans.createdAt)}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Delete option for author */}
+                        {isAnswerAuthor && (
+                          <button
+                            onClick={() => handleDeleteAnswer(ans._id)}
+                            disabled={deletingAnswerId === ans._id}
+                            className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
+                            title="Delete your answer"
+                          >
+                            {deletingAnswerId === ans._id ? 'Deleting...' : 'Delete'}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line pl-11">
+                        {ans.content}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
+          </section>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium">
-              <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-              </svg>
-              <span>{problem.location}</span>
-            </div>
-          </div>
-
-          {/* Full Description */}
-          <div className="prose prose-slate max-w-none">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              Problem Description
-            </h2>
-            <div className="text-slate-700 text-base leading-relaxed whitespace-pre-line bg-slate-50/50 p-6 rounded-xl border border-slate-100">
-              {problem.description}
-            </div>
-          </div>
-
-          {/* Bottom Actions */}
-          <div className="mt-10 pt-6 border-t border-slate-100 flex items-center justify-between">
+          {/* Bottom Navigation */}
+          <div className="pt-2 flex items-center justify-between">
             <Link
               to="/problems"
               className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1.5"
             >
-              <span>← Back to Problems</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+              <span>Back to Problems</span>
             </Link>
             <Link
               to="/create-problem"
@@ -193,7 +457,7 @@ const ProblemDetails = () => {
               Post another problem →
             </Link>
           </div>
-        </article>
+        </div>
       )}
     </div>
   );

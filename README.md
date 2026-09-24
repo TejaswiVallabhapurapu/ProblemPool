@@ -152,5 +152,14 @@ Base URL: `http://localhost:5000/api`
 | `GET` | `/api/problems` | List all problems (newest first, populated creator) | No |
 | `GET` | `/api/problems/:id` | Get problem details by MongoDB ID | No |
 | `POST` | `/api/problems` | Create new problem (`createdBy` from JWT) | Yes (Bearer) |
-| `DELETE` | `/api/problems/:id` | Delete a problem by MongoDB ID | No / Creator |
+| `DELETE` | `/api/problems/:id` | Delete a problem by MongoDB ID | Yes (Creator) |
 | `GET` | `/api/problems/category/:category` | Filter problems by category | No |
+
+### Answer Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/api/problems/:problemId/answers` | Get all answers for a problem (newest first) | No |
+| `POST` | `/api/problems/:problemId/answers` | Submit an answer to a problem | Yes (Bearer) |
+| `DELETE` | `/api/problems/:problemId/answers/:answerId` | Delete an answer | Yes (Author) |
+
