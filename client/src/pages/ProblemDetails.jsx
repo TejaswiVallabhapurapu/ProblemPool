@@ -23,27 +23,7 @@ import AddToCollectionModal from '../components/AddToCollectionModal';
 import GlassAiButton from '../components/GlassAiButton';
 import EmptyState3D from '../components/EmptyState3D';
 import { Loader, LoaderContainer } from '../components/Loader';
-import {
-  Bookmark,
-  Eye,
-  Tag,
-  MessageSquare,
-  CheckCircle2,
-  HelpCircle,
-  Layers,
-  ArrowRight,
-  Sparkles,
-  FolderPlus,
-  Flag,
-  Bot,
-  RefreshCw,
-  X,
-  ChevronDown,
-  ChevronUp,
-  Users,
-  Crown,
-  Plus,
-} from 'lucide-react';
+
 
 const CATEGORY_COLORS = {
   Programming: 'bg-white/10 text-slate-200 border-white/20',
@@ -463,11 +443,7 @@ const ProblemDetails = () => {
                   variant={isSaved ? "primary" : "glass"}
                   title={isSaved ? 'Remove from saved problems' : 'Save problem for later'}
                   icon={
-                    <Bookmark
-                      className={`w-3.5 h-3.5 ${
-                        isSaved ? 'fill-white text-white' : 'text-slate-400'
-                      }`}
-                    />
+                    
                   }
                 >
                   {isSaved ? 'Saved' : 'Save'}
@@ -480,7 +456,7 @@ const ProblemDetails = () => {
                     size="xs"
                     variant="glass"
                     title="Organize into collections"
-                    icon={<FolderPlus className="w-3.5 h-3.5 text-indigo-500" />}
+                    icon={}
                   >
                     Collections
                   </GlassAiButton>
@@ -505,7 +481,7 @@ const ProblemDetails = () => {
                     size="xs"
                     variant="glass"
                     title="Report inappropriate problem"
-                    icon={<Flag className="w-3.5 h-3.5 text-rose-500" />}
+                    icon={}
                   />
                 )}
               </div>           </div>
@@ -535,7 +511,7 @@ const ProblemDetails = () => {
               </div>
 
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181818] border border-white/10 text-slate-300 text-xs font-medium">
-                <Eye className="w-3.5 h-3.5 text-slate-400" />
+                
                 <span>{problem.views || 0} views</span>
               </div>
             </div>
@@ -543,7 +519,7 @@ const ProblemDetails = () => {
             {/* Full Description with Markdown & Syntax Highlighting */}
             <div>
               <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-slate-400" />
+                
                 <span>Problem Description</span>
               </h2>
               <div className="bg-[#181818] p-5 sm:p-7 rounded-2xl border border-white/10">
@@ -555,7 +531,7 @@ const ProblemDetails = () => {
             {Array.isArray(problem.tags) && problem.tags.length > 0 && (
               <div className="mt-6 pt-6 border-t border-white/10">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-slate-400" />
+                  
                   <span>Tags</span>
                 </h3>
                 <div className="flex flex-wrap items-center gap-2">
@@ -574,7 +550,7 @@ const ProblemDetails = () => {
           </article>
 
           {/* ========================================================= */}
-          {/* 🤝 COLLABORATIVE PROBLEM SOLVING (TEAM UP) SECTION */}
+          {/*  COLLABORATIVE PROBLEM SOLVING (TEAM UP) SECTION */}
           {/* ========================================================= */}
           {problem.allowTeamUp && (
             <section className="p-6 sm:p-8 rounded-3xl bg-[#141414] border border-white/10 shadow-xl space-y-6">
@@ -582,7 +558,7 @@ const ProblemDetails = () => {
                 <div>
                   <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                     <div className="w-8 h-8 rounded-xl bg-[#1e1e1e] border border-white/10 flex items-center justify-center text-base">
-                      🤝
+                      
                     </div>
                     <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                       Collaborate With Others
@@ -609,7 +585,7 @@ const ProblemDetails = () => {
                     }}
                     size="sm"
                     variant="primary"
-                    icon={<Plus className="w-4 h-4" />}
+                    icon={}
                   >
                     Start a Team
                   </GlassAiButton>
@@ -619,7 +595,7 @@ const ProblemDetails = () => {
               {/* Toast / Notice for team actions */}
               {teamNotice && (
                 <div className="p-3.5 rounded-2xl bg-[#1c1c1c] border border-white/15 text-slate-200 text-xs flex items-center gap-2 animate-in fade-in duration-200">
-                  <Sparkles className="w-4 h-4 text-slate-300 shrink-0" />
+                  
                   <span>{teamNotice}</span>
                 </div>
               )}
@@ -701,7 +677,7 @@ const ProblemDetails = () => {
                                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#1a1a1a] border border-white/10 text-[11px] font-semibold text-slate-300"
                               >
                                 {m._id === team.leaderId?._id ? (
-                                  <Crown className="w-2.5 h-2.5 text-slate-400" />
+                                  
                                 ) : (
                                   <User className="w-2.5 h-2.5 text-slate-500" />
                                 )}
@@ -722,7 +698,7 @@ const ProblemDetails = () => {
                               to={`/problems/${problem._id}/team/${team._id}`}
                               size="xs"
                               variant="primary"
-                              icon={<ArrowRight className="w-3.5 h-3.5" />}
+                              icon={}
                               iconPosition="right"
                             >
                               Open Workspace
@@ -806,7 +782,7 @@ const ProblemDetails = () => {
                     size="xs"
                     variant="primary"
                     title="Generate an AI-powered overview of all community solutions"
-                    icon={<Sparkles className="w-3.5 h-3.5 text-indigo-200" />}
+                    icon={}
                   >
                     Summarize Answers
                   </GlassAiButton>
@@ -826,7 +802,7 @@ const ProblemDetails = () => {
                             : 'text-slate-300 hover:text-white'
                         }`}
                       >
-                        ⭐ Best Answer
+                        Best Answer
                       </button>
                       <button
                         type="button"
@@ -873,13 +849,13 @@ const ProblemDetails = () => {
                 <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/15 mb-3">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xs">
-                      <Sparkles className="w-4 h-4" />
+                      
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="text-sm font-bold text-white">AI Answer Summary</h4>
                         <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-white/20">
-                          ✨ AI-generated summary
+                          AI-generated summary
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-500">
@@ -896,7 +872,7 @@ const ProblemDetails = () => {
                       className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
                       title="Re-generate summary"
                     >
-                      <RefreshCw className={`w-3.5 h-3.5 ${summarizingAi ? 'animate-spin' : ''}`} />
+                      
                     </button>
                     <button
                       type="button"
@@ -904,7 +880,7 @@ const ProblemDetails = () => {
                       className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
                       title="Close summary"
                     >
-                      <X className="w-4 h-4" />
+                      
                     </button>
                   </div>
                 </div>
@@ -934,7 +910,7 @@ const ProblemDetails = () => {
                     {aiKeyTakeaways && aiKeyTakeaways.length > 0 && (
                       <div className="p-3.5 rounded-xl bg-white/10/60 border border-white/15">
                         <span className="text-xs font-bold text-indigo-950 block mb-1.5">
-                          💡 Key Takeaways:
+                          Key Takeaways:
                         </span>
                         <ul className="list-disc list-inside space-y-1 text-xs text-indigo-900/90">
                           {aiKeyTakeaways.map((takeaway, idx) => (
@@ -945,7 +921,7 @@ const ProblemDetails = () => {
                     )}
 
                     <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-                      <span>💡 AI summaries help understand answers quickly. Always check original code blocks below.</span>
+                      <span>AI summaries help understand answers quickly. Always check original code blocks below.</span>
                     </div>
                   </div>
                 )}
@@ -1022,7 +998,7 @@ const ProblemDetails = () => {
 
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-[11px] text-slate-400 font-medium">
-                      💡 Tip: Use <code className="bg-[#202020] text-white px-1 py-0.5 rounded font-mono">```language</code> for syntax-highlighted code blocks with a copy button.
+                      Tip: Use <code className="bg-[#202020] text-white px-1 py-0.5 rounded font-mono">```language</code> for syntax-highlighted code blocks with a copy button.
                     </span>
                     <GlassAiButton
                       type="submit"
@@ -1106,7 +1082,7 @@ const ProblemDetails = () => {
                   className="text-xs font-semibold text-white hover:text-slate-200 inline-flex items-center gap-1 self-start sm:self-auto"
                 >
                   <span>More in {problem.category || 'this category'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  
                 </Link>
               </div>
 
@@ -1141,7 +1117,7 @@ const ProblemDetails = () => {
                                 : 'bg-[#202020] text-slate-300 border border-white/10'
                             }`}
                           >
-                            {isSolved ? '🏆 Solved' : isAnswered ? '💡 Answered' : '❓ Open'}
+                            {isSolved ? 'Solved' : isAnswered ? 'Answered' : 'Open'}
                           </span>
                         </div>
 
@@ -1172,11 +1148,11 @@ const ProblemDetails = () => {
                       <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                         <div className="flex items-center gap-3">
                           <span className="flex items-center gap-1">
-                            <Eye className="w-3.5 h-3.5 text-slate-400" />
+                            
                             <span>{rel.views || 0}</span>
                           </span>
                           <span className="flex items-center gap-1">
-                            <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
+                            
                             <span>{rel.answersCount || 0}</span>
                           </span>
                         </div>
@@ -1246,7 +1222,7 @@ const ProblemDetails = () => {
                   className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-300 hover:bg-[#202020] transition"
                   aria-label="Close modal"
                 >
-                  <X className="w-5 h-5" />
+                  
                 </button>
 
                 <div className="flex items-center gap-3.5 mb-4">
@@ -1292,7 +1268,6 @@ const ProblemDetails = () => {
                     loading={isDeletingProblem}
                     size="sm"
                     variant="danger"
-                    icon={<Trash2 className="w-4 h-4" />}
                   >
                     {isDeletingProblem ? 'Deleting...' : 'Delete Permanently'}
                   </GlassAiButton>
@@ -1307,7 +1282,7 @@ const ProblemDetails = () => {
               <div className="relative max-w-md w-full p-6 sm:p-8 rounded-3xl bg-[#161616] border border-white/15 shadow-2xl">
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">🤝</span>
+                    
                     <h3 className="text-lg font-bold text-white">Create Collaborative Team</h3>
                   </div>
                   <button
@@ -1315,7 +1290,7 @@ const ProblemDetails = () => {
                     onClick={() => setShowCreateTeamModal(false)}
                     className="text-slate-400 hover:text-white transition p-1 cursor-pointer"
                   >
-                    <X className="w-5 h-5" />
+                    
                   </button>
                 </div>
 
