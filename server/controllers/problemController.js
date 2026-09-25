@@ -11,6 +11,7 @@ const Collection = require('../models/Collection');
 const Notification = require('../models/Notification');
 const User = require('../models/User');
 const Follow = require('../models/Follow');
+const Team = require('../models/Team');
 const { adjustReputation, REPUTATION_RULES } = require('../services/reputationService');
 const { createNotification } = require('../services/notificationService');
 
@@ -474,7 +475,7 @@ const getPopularProblems = async (req, res) => {
 // @route   POST /api/problems
 const createProblem = async (req, res) => {
   try {
-    const { title, description, category, location, tags } = req.body;
+    const { title, description, category, location, tags, allowTeamUp } = req.body;
 
     // Validate required fields
     if (!title || !description || !category || !location) {
@@ -496,6 +497,7 @@ const createProblem = async (req, res) => {
       views: 0,
       createdBy: req.user._id,
       bestAnswer: null,
+      allowTeamUp: Boolean(allowTeamUp),
     });
 
     // Award reputation points for posting a problem (+2)
@@ -536,7 +538,7 @@ const createProblem = async (req, res) => {
 const updateProblem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, category, location, tags } = req.body;
+    const { title, description, category, location, tags, allowTeamUp } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -565,6 +567,7 @@ const updateProblem = async (req, res) => {
     if (category && category.trim()) problem.category = category.trim();
     if (location && location.trim()) problem.location = location.trim();
     if (tags !== undefined) problem.tags = normalizeTags(tags);
+    if (allowTeamUp !== undefined) problem.allowTeamUp = Boolean(allowTeamUp);
 
     await problem.save();
 
@@ -748,25 +751,61 @@ const setBestAnswer = async (req, res) => {
     }
 
     if (!problem.bestAnswer || problem.bestAnswer.toString() !== answerId.toString()) {
-      adjustReputation({
-        userId: answer.user,
-        points: REPUTATION_RULES.BEST_ANSWER,
-        reason: `Your answer was selected as Best Answer on: "${problem.title.slice(0, 45)}..."`,
-        referenceType: 'best_answer',
-        referenceId: answer._id,
-      });
+      if (answer.isTeamAnswer && answer.team) {
+        // 1. Mark Team as COMPLETED
+        const teamDoc = await Team.findById(answer.team);
+        if (teamDoc) {
+          teamDoc.status = 'COMPLETED';
+          await teamDoc.save();
+        }
 
-      // Notify answer author
-      createNotification({
-        recipient: answer.user,
-        sender: req.user._id,
-        type: 'best_answer',
-        title: '⭐ Best Answer Awarded!',
-        message: `Your answer was selected as Best Answer on "${problem.title.slice(0, 50)}..." (+15 rep)`,
-        referenceType: 'problem',
-        referenceId: problem._id,
-        link: `/problems/${problem._id}`,
-      });
+        const teamMemberIds = (answer.teamMembers && answer.teamMembers.length > 0)
+          ? answer.teamMembers
+          : (teamDoc ? teamDoc.members : [answer.user]);
+
+        // 2. Award reputation and send notifications to all team members
+        for (const memberId of teamMemberIds) {
+          adjustReputation({
+            userId: memberId,
+            points: REPUTATION_RULES.BEST_ANSWER,
+            reason: `Your team answer was selected as Best Answer on: "${problem.title.slice(0, 40)}..."`,
+            referenceType: 'best_answer',
+            referenceId: answer._id,
+          });
+
+          createNotification({
+            recipient: memberId,
+            sender: req.user._id,
+            type: 'best_answer',
+            title: '⭐ Team Best Answer Awarded!',
+            message: `Your collaborative team solution was selected as Best Answer on "${problem.title.slice(0, 45)}..." (+15 rep each)`,
+            referenceType: 'problem',
+            referenceId: problem._id,
+            link: `/problems/${problem._id}`,
+          });
+        }
+      } else {
+        // Regular single-author answer
+        adjustReputation({
+          userId: answer.user,
+          points: REPUTATION_RULES.BEST_ANSWER,
+          reason: `Your answer was selected as Best Answer on: "${problem.title.slice(0, 45)}..."`,
+          referenceType: 'best_answer',
+          referenceId: answer._id,
+        });
+
+        // Notify answer author
+        createNotification({
+          recipient: answer.user,
+          sender: req.user._id,
+          type: 'best_answer',
+          title: '⭐ Best Answer Awarded!',
+          message: `Your answer was selected as Best Answer on "${problem.title.slice(0, 50)}..." (+15 rep)`,
+          referenceType: 'problem',
+          referenceId: problem._id,
+          link: `/problems/${problem._id}`,
+        });
+      }
     }
 
     problem.bestAnswer = answerId;
