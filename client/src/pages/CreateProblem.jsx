@@ -6,7 +6,6 @@ import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
-import ParticlesBackground from '../components/ParticlesBackground';
 import { Loader } from '../components/Loader';
 import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Wand2, Lightbulb, Check } from 'lucide-react';
 
