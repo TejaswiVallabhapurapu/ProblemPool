@@ -59,6 +59,7 @@ const ProblemCard = ({
 
   // Compute status
   const answersCount = problem.answersCount || (Array.isArray(problem.answers) ? problem.answers.length : 0);
+  const savesCount = problem.savesCount || 0;
   const hasBestAnswer = Boolean(problem.bestAnswer);
   const totalHelpfulVotes = problem.totalHelpfulVotes || 0;
   const viewsCount = problem.views || 0;
@@ -216,24 +217,31 @@ const ProblemCard = ({
           )}
         </div>
 
-        {/* Engagement stats (Answers, Helpful votes, Views, Best Answer) */}
+        {/* Engagement stats (Answers, Helpful votes, Views, Saves, Best Answer) */}
         <div className="flex items-center gap-3 py-2 px-3 bg-slate-50/80 rounded-xl text-xs font-medium text-slate-600 mb-4 flex-wrap">
-          <span className="inline-flex items-center gap-1 text-slate-700">
+          <span className="inline-flex items-center gap-1 text-slate-700" title="Answers">
             <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
             <span>💬 {answersCount}</span>
           </span>
 
+          <span className="inline-flex items-center gap-1 text-slate-600" title="Views">
+            <Eye className="w-3.5 h-3.5 text-slate-400" />
+            <span>👀 {viewsCount}</span>
+          </span>
+
+          {savesCount > 0 && (
+            <span className="inline-flex items-center gap-1 text-indigo-700 font-semibold" title="Saves">
+              <Bookmark className="w-3.5 h-3.5 text-indigo-500" />
+              <span>🔖 {savesCount}</span>
+            </span>
+          )}
+
           {totalHelpfulVotes > 0 && (
-            <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
+            <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold" title="Helpful Votes">
               <ThumbsUp className="w-3.5 h-3.5 text-emerald-500" />
               <span>👍 {totalHelpfulVotes}</span>
             </span>
           )}
-
-          <span className="inline-flex items-center gap-1 text-slate-500">
-            <Eye className="w-3.5 h-3.5 text-slate-400" />
-            <span>👀 {viewsCount}</span>
-          </span>
 
           {hasBestAnswer && (
             <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 font-bold ml-auto text-[11px]">

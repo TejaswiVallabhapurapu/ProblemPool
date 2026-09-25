@@ -43,6 +43,43 @@ const normalizeTags = (tagsInput) => {
   return Array.from(new Set(cleaned)).slice(0, 10);
 };
 
+// In-memory cache for view deduplication: clientKey -> lastViewedTimestamp
+const viewCooldownCache = new Map();
+const VIEW_COOLDOWN_MS = 15 * 60 * 1000; // 15 minutes cooldown per user/client per problem
+
+// Periodic garbage collection for view deduplication cache (every 30 minutes)
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamp] of viewCooldownCache.entries()) {
+    if (now - timestamp > VIEW_COOLDOWN_MS) {
+      viewCooldownCache.delete(key);
+    }
+  }
+}, 30 * 60 * 1000);
+
+/**
+ * Checks if a view from the current request should be counted (deduplication)
+ */
+const shouldIncrementView = (req, problemId) => {
+  const userId = req.user ? req.user._id.toString() : null;
+  const ip =
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.connection?.remoteAddress ||
+    req.socket?.remoteAddress ||
+    '127.0.0.1';
+  const clientId = req.headers['x-client-id'] || req.headers['user-agent'] || 'client';
+
+  const key = userId ? `user:${userId}:${problemId}` : `guest:${ip}:${clientId}:${problemId}`;
+  const now = Date.now();
+  const lastViewed = viewCooldownCache.get(key);
+
+  if (!lastViewed || now - lastViewed > VIEW_COOLDOWN_MS) {
+    viewCooldownCache.set(key, now);
+    return true;
+  }
+  return false;
+};
+
 /**
  * @desc    Get / Advanced Search Problems with multi-field queries, status filters, and sorting
  * @route   GET /api/problems or GET /api/problems/search
@@ -205,15 +242,25 @@ const getProblemById = async (req, res) => {
       });
     }
 
-    // Increment views count atomically
-    const problem = await Problem.findByIdAndUpdate(
-      id,
-      { $inc: { views: 1 } },
-      { new: true }
-    )
-      .populate('createdBy', 'name username avatar email')
-      .populate('bestAnswer')
-      .lean();
+    // Check if view should be incremented (deduplication against refresh spam)
+    const isNewView = shouldIncrementView(req, id);
+
+    let problem;
+    if (isNewView) {
+      problem = await Problem.findByIdAndUpdate(
+        id,
+        { $inc: { views: 1 } },
+        { new: true }
+      )
+        .populate('createdBy', 'name username avatar email')
+        .populate('bestAnswer')
+        .lean();
+    } else {
+      problem = await Problem.findById(id)
+        .populate('createdBy', 'name username avatar email')
+        .populate('bestAnswer')
+        .lean();
+    }
 
     if (!problem) {
       return res.status(404).json({
@@ -241,7 +288,7 @@ const getProblemById = async (req, res) => {
       problem: {
         ...problem,
         tags: Array.isArray(problem.tags) ? problem.tags : [],
-        views: problem.views || 1,
+        views: problem.views || 0,
         answersCount,
         totalHelpfulVotes,
         savesCount,
@@ -252,6 +299,168 @@ const getProblemById = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Failed to fetch problem: ' + error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Get Trending Problems based on recent activity & engagement score
+ * @route   GET /api/problems/trending
+ * @access  Public
+ */
+const getTrendingProblems = async (req, res) => {
+  try {
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 6, 1), 50);
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+
+    // Fetch active problems
+    const problems = await Problem.find()
+      .populate('createdBy', 'name username avatar email')
+      .populate('bestAnswer')
+      .lean();
+
+    if (!problems.length) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        totalCount: 0,
+        page,
+        limit,
+        problems: [],
+      });
+    }
+
+    const problemIds = problems.map((p) => p._id);
+
+    // Aggregate answers count
+    const answersGroup = await Answer.aggregate([
+      { $match: { problem: { $in: problemIds } } },
+      { $group: { _id: '$problem', count: { $sum: 1 }, answerIds: { $push: '$_id' } } },
+    ]);
+    const answersCountMap = new Map();
+    const allAnswerIds = [];
+    const problemAnswerIdsMap = new Map();
+
+    answersGroup.forEach((ag) => {
+      answersCountMap.set(ag._id.toString(), ag.count);
+      problemAnswerIdsMap.set(ag._id.toString(), ag.answerIds);
+      allAnswerIds.push(...ag.answerIds);
+    });
+
+    // Aggregate helpful votes
+    const helpfulVotesGroup = await AnswerVote.aggregate([
+      { $match: { answer: { $in: allAnswerIds }, voteType: 'helpful' } },
+      { $group: { _id: '$answer', count: { $sum: 1 } } },
+    ]);
+    const helpfulVotesMap = new Map();
+    helpfulVotesGroup.forEach((hg) => {
+      helpfulVotesMap.set(hg._id.toString(), hg.count);
+    });
+
+    // Aggregate saves count
+    const savesGroup = await SavedProblem.aggregate([
+      { $match: { problem: { $in: problemIds } } },
+      { $group: { _id: '$problem', count: { $sum: 1 } } },
+    ]);
+    const savesCountMap = new Map();
+    savesGroup.forEach((sg) => {
+      savesCountMap.set(sg._id.toString(), sg.count);
+    });
+
+    const now = Date.now();
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+    // Calculate Trending Score for each problem
+    const trendingProblems = problems.map((p) => {
+      const pid = p._id.toString();
+      const answersCount = answersCountMap.get(pid) || 0;
+      const savesCount = savesCountMap.get(pid) || 0;
+      const ansIds = problemAnswerIdsMap.get(pid) || [];
+      const totalHelpfulVotes = ansIds.reduce(
+        (sum, aId) => sum + (helpfulVotesMap.get(aId.toString()) || 0),
+        0
+      );
+      const views = p.views || 0;
+      const status = computeProblemStatus(p, answersCount);
+
+      // Recency bonus (in days)
+      const ageInDays = (now - new Date(p.createdAt).getTime()) / ONE_DAY_MS;
+      let recencyBonus = 0;
+      if (ageInDays <= 1) {
+        recencyBonus = 50;
+      } else if (ageInDays <= 3) {
+        recencyBonus = 35;
+      } else if (ageInDays <= 7) {
+        recencyBonus = 20;
+      } else if (ageInDays <= 30) {
+        recencyBonus = 10;
+      } else {
+        recencyBonus = Math.max(0, 5 - Math.floor(ageInDays / 30));
+      }
+
+      // Explainable scoring formula:
+      // Views (1 pt) + Answers (6 pts) + Saves (4 pts) + Helpful Votes (3 pts) + Recency Bonus
+      const trendingScore =
+        views * 1 +
+        answersCount * 6 +
+        savesCount * 4 +
+        totalHelpfulVotes * 3 +
+        recencyBonus;
+
+      return {
+        ...p,
+        tags: Array.isArray(p.tags) ? p.tags : [],
+        views,
+        answersCount,
+        savesCount,
+        totalHelpfulVotes,
+        status,
+        trendingScore: Math.round(trendingScore * 10) / 10,
+      };
+    });
+
+    // Sort by trending score descending
+    trendingProblems.sort(
+      (a, b) => b.trendingScore - a.trendingScore || new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const startIndex = (page - 1) * limit;
+    const paginatedProblems = trendingProblems.slice(startIndex, startIndex + limit);
+
+    return res.status(200).json({
+      success: true,
+      count: paginatedProblems.length,
+      totalCount: trendingProblems.length,
+      page,
+      limit,
+      problems: paginatedProblems,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch trending problems: ' + error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Get Popular Problems based on all-time views & answers
+ * @route   GET /api/problems/popular
+ * @access  Public
+ */
+const getPopularProblems = async (req, res) => {
+  try {
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 6, 1), 50);
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+
+    req.query.sort = 'most_viewed';
+    req.query.limit = limit;
+    req.query.page = page;
+    return getProblems(req, res);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch popular problems: ' + error.message,
     });
   }
 };
@@ -618,6 +827,8 @@ module.exports = {
   getProblemsByCategory,
   getProblemsByTag,
   getPopularTags,
+  getTrendingProblems,
+  getPopularProblems,
   setBestAnswer,
   removeBestAnswer,
   normalizeTags,

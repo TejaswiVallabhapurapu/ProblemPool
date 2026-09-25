@@ -172,6 +172,52 @@ export const getProblems = async (params = {}, token = null) => {
 export const searchProblems = getProblems;
 
 /**
+ * Fetch trending problems based on recent activity & engagement
+ * @param {Object} [params] - { page, limit }
+ * @param {string} [token]
+ */
+export const getTrendingProblems = async (params = {}, token = null) => {
+  const queryParts = [];
+  if (params && typeof params === 'object') {
+    Object.entries(params).forEach(([key, val]) => {
+      if (val !== undefined && val !== null && val !== '') {
+        queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+      }
+    });
+  }
+  const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/trending${queryString}`, { headers });
+};
+
+/**
+ * Fetch popular problems ranked by views & answers
+ * @param {Object} [params]
+ * @param {string} [token]
+ */
+export const getPopularProblems = async (params = {}, token = null) => {
+  const queryParts = [];
+  if (params && typeof params === 'object') {
+    Object.entries(params).forEach(([key, val]) => {
+      if (val !== undefined && val !== null && val !== '') {
+        queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+      }
+    });
+  }
+  const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/popular${queryString}`, { headers });
+};
+
+/**
  * Fetch popular tags across problems
  */
 export const getPopularTags = async () => {

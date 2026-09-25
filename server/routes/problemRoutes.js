@@ -10,6 +10,8 @@ const {
   getProblemsByCategory,
   getProblemsByTag,
   getPopularTags,
+  getTrendingProblems,
+  getPopularProblems,
   setBestAnswer,
   removeBestAnswer,
 } = require('../controllers/problemController');
@@ -24,8 +26,10 @@ const {
 } = require('../controllers/savedProblemController');
 const { protect, optionalProtect } = require('../middleware/authMiddleware');
 
-// Search & Tags endpoints (must come before /:id)
+// Search, Tags, Trending & Popular endpoints (must come before /:id)
 router.get('/search', optionalProtect, searchProblems);
+router.get('/trending', optionalProtect, getTrendingProblems);
+router.get('/popular', optionalProtect, getPopularProblems);
 router.get('/tags', getPopularTags);
 router.get('/tag/:tag', optionalProtect, getProblemsByTag);
 router.get('/category/:category', optionalProtect, getProblemsByCategory);
@@ -36,7 +40,7 @@ router.route('/')
   .post(protect, createProblem);
 
 router.route('/:id')
-  .get(getProblemById)
+  .get(optionalProtect, getProblemById)
   .put(protect, updateProblem)
   .delete(protect, deleteProblem);
 
