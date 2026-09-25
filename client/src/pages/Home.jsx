@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, PlusCircle, ArrowRight, Lightbulb, Compass, Award, Users, CheckCircle, Sparkles } from 'lucide-react';
 import { getProblems } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 const Home = () => {
   const [stats, setStats] = useState({
@@ -45,33 +46,49 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-24 md:pt-28 md:pb-32 bg-gradient-to-b from-indigo-50/50 via-white to-slate-50">
-        {/* Subtle decorative background circles */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-indigo-200/30 to-violet-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="flex flex-col min-h-screen relative overflow-x-hidden">
+      {/* Hero Section with 3D Animated Energy Orb Background */}
+      <section className="relative overflow-hidden pt-20 pb-24 md:pt-28 md:pb-32 bg-gradient-to-b from-indigo-50/40 via-white/80 to-slate-50 min-h-[580px] flex items-center justify-center">
+        {/* Dynamic 3D Energy Orb Globe Background */}
+        <AnimatedBackground
+          variant="energy-orb"
+          speed={1.00}
+          scale={1.00}
+          smokeScale={1.00}
+          smokeStrength={1.00}
+          smokeSpeed={1.00}
+          hue={0}
+          saturation={1.00}
+          glow={1.00}
+          starDensity={1.00}
+          starSpeed={1.00}
+          starSize={1.00}
+          brightness={1.00}
+          opacity={1.00}
+        />
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold mb-8 animate-fadeIn">
-            <Sparkles className="w-4 h-4 text-indigo-600" />
+        {/* Hero Content positioned above background */}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pointer-events-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-indigo-200/80 text-indigo-700 text-xs sm:text-sm font-semibold mb-8 shadow-xs animate-fadeIn">
+            <Sparkles className="w-4 h-4 text-indigo-600 animate-pulse" />
             <span>Problem-First Innovation Platform</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-6 drop-shadow-xs">
             Turn Real Problems Into{' '}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700">
               Real Solutions
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
             Discover real-world problems, share challenges and create opportunities for meaningful solutions.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/problems"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/35 transition-all duration-200 transform hover:-translate-y-0.5"
             >
               <Search className="w-5 h-5" />
               <span>Explore Problems</span>
@@ -79,7 +96,7 @@ const Home = () => {
 
             <Link
               to="/create-problem"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300/80 shadow-sm hover:border-slate-400 transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-slate-800 bg-white/90 hover:bg-white backdrop-blur-md border border-slate-300 shadow-md hover:border-slate-400 transition-all duration-200 transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-5 h-5 text-indigo-600" />
               <span>Post a Problem</span>
@@ -89,7 +106,7 @@ const Home = () => {
       </section>
 
       {/* Statistics Section */}
-      <section className="py-12 bg-white border-y border-slate-200/80">
+      <section className="relative z-10 py-12 bg-white/95 backdrop-blur-sm border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
             <div className="pt-4 md:pt-0">
@@ -123,7 +140,7 @@ const Home = () => {
       </section>
 
       {/* How ProblemPool Works Section */}
-      <section className="py-20 md:py-24 bg-slate-50">
+      <section className="relative z-10 py-20 md:py-24 bg-slate-50/90 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -182,7 +199,7 @@ const Home = () => {
 
       {/* Featured / Recent Problems Preview */}
       {featuredProblems.length > 0 && (
-        <section className="py-16 bg-white border-t border-slate-200/80">
+        <section className="relative z-10 py-16 bg-white border-t border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
               <div>

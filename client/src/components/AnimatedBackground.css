@@ -1,0 +1,108 @@
+/* Animated 3D Energy Orb Background Styles */
+
+.animated-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+.animated-bg-canvas-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Ensure ThreeUI shader frame fills the background seamlessly */
+.animated-bg-canvas-wrapper .shader-frame {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+
+.animated-bg-canvas-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  display: block;
+}
+
+/* Ambient Radial & Linear Blend Overlays for Maximum Contrast & Readability */
+.animated-bg-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(248, 250, 252, 0.88) 85%,
+    rgba(241, 245, 249, 0.96) 100%
+  );
+}
+
+.animated-bg-bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.95) 80%, #ffffff 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fallback CSS Energy Orb if WebGL is unavailable or fails */
+.animated-bg-fallback {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, 90vw);
+  height: min(650px, 90vw);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(99, 102, 241, 0.45) 0%,
+    rgba(139, 92, 246, 0.35) 30%,
+    rgba(192, 132, 252, 0.2) 55%,
+    transparent 75%
+  );
+  filter: blur(48px);
+  animation: fallback-orb-pulse 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes fallback-orb-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.9) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -48%) scale(1.1) rotate(180deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.95) rotate(360deg);
+    opacity: 0.7;
+  }
+}
