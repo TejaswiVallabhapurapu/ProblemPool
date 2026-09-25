@@ -14,8 +14,8 @@ const Navbar = () => {
   const navLinkClass = ({ isActive }) =>
     `font-semibold text-sm transition-colors duration-200 px-3 py-1.5 rounded-xl ${
       isActive
-        ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-        : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
+        ? 'text-white bg-[#1c1c1c] border border-white/15 font-bold shadow-xs'
+        : 'text-[#A0A0A0] hover:text-white hover:bg-[#181818]'
     }`;
 
   const handleLogout = () => {
@@ -35,12 +35,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <nav className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-[16px] border-b border-white/10 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2.5 group shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 rounded-xl bg-[#161616] border border-white/10 flex items-center justify-center text-white shadow-md group-hover:border-white/25 group-hover:scale-105 transition-all duration-200">
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -55,8 +55,8 @@ const Navbar = () => {
                 />
               </svg>
             </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
-              Problem<span className="text-indigo-600">Pool</span>
+            <span className="text-xl font-bold tracking-tight text-white group-hover:text-slate-300 transition-colors">
+              Problem<span className="text-slate-400">Pool</span>
             </span>
           </Link>
 
@@ -100,7 +100,7 @@ const Navbar = () => {
                 {user?.role === 'admin' && (
                   <NavLink
                     to="/admin"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-xs font-bold transition-all shadow-xs"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#221212] text-rose-300 hover:bg-[#2e1616] border border-rose-500/30 text-xs font-bold transition-all shadow-xs"
                     title="Admin Dashboard"
                   >
                     <Shield className="w-3.5 h-3.5" />
@@ -111,13 +111,13 @@ const Navbar = () => {
                 {/* Profile Link & User badge */}
                 <Link
                   to="/profile"
-                  className="flex items-center gap-2 pl-2 border-l border-slate-200 hover:opacity-85 transition group"
+                  className="flex items-center gap-2 pl-2 border-l border-white/10 hover:opacity-85 transition group"
                   title="View Profile & Reputation"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                  <div className="w-8 h-8 rounded-full bg-[#1c1c1c] border border-white/15 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <span className="text-sm font-semibold text-slate-800 max-w-[130px] truncate group-hover:text-indigo-600">
+                  <span className="text-sm font-semibold text-slate-200 max-w-[130px] truncate group-hover:text-white">
                     {user?.name}
                   </span>
                 </Link>
@@ -127,7 +127,7 @@ const Navbar = () => {
                   onClick={handleLogout}
                   size="xs"
                   variant="glass"
-                  className="!text-slate-600 hover:!text-rose-600"
+                  className="!text-slate-400 hover:!text-rose-400"
                   title="Sign out of your account"
                 >
                   Logout
@@ -163,7 +163,7 @@ const Navbar = () => {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               type="button"
-              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#1c1c1c] focus:outline-none"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -187,64 +187,64 @@ const Navbar = () => {
 
       {/* Mobile menu panel */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-5 space-y-2.5">
+        <div className="md:hidden border-b border-white/10 bg-[#0c0c0c] px-4 pt-2 pb-5 space-y-2.5 shadow-2xl">
           <NavLink
             to={isAuthenticated ? '/dashboard' : '/'}
             end
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
           >
             Dashboard
           </NavLink>
           <NavLink
             to="/platform"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
           >
             Platform
           </NavLink>
           <NavLink
             to="/problems"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
           >
             Problems
           </NavLink>
           <NavLink
             to="/challenges"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
           >
             🧩 Weekly Challenges
           </NavLink>
           <NavLink
             to="/leaderboard"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
           >
             🏆 Leaderboard
           </NavLink>
 
           {isAuthenticated ? (
-            <div className="pt-2 border-t border-slate-100 space-y-2">
+            <div className="pt-2 border-t border-white/10 space-y-2">
               <Link
                 to="/profile"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-[#181818] transition"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-full bg-[#1c1c1c] border border-white/15 text-white flex items-center justify-center font-bold text-xs">
                   {user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                <div className="text-sm font-semibold text-slate-800 truncate">
+                <div className="text-sm font-semibold text-slate-200 truncate">
                   {user?.name}
-                  <span className="block text-[11px] text-indigo-600 font-normal">View Community Profile →</span>
+                  <span className="block text-[11px] text-slate-400 font-normal">View Community Profile →</span>
                 </div>
               </Link>
 
               <NavLink
                 to="/notifications"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
               >
                 🔔 Notifications
               </NavLink>
@@ -252,7 +252,7 @@ const Navbar = () => {
               <NavLink
                 to="/saved-problems"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
               >
                 🔖 Saved Problems
               </NavLink>
@@ -261,7 +261,7 @@ const Navbar = () => {
                 <NavLink
                   to="/admin"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-xl text-base font-bold text-rose-700 hover:bg-rose-50"
+                  className="block px-3 py-2 rounded-xl text-base font-bold text-rose-400 hover:bg-[#221212]"
                 >
                   🛡️ Admin Dashboard
                 </NavLink>
@@ -288,7 +288,7 @@ const Navbar = () => {
               </GlassAiButton>
             </div>
           ) : (
-            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2.5">
+            <div className="pt-3 border-t border-white/10 flex flex-col gap-2.5">
               <div className="grid grid-cols-2 gap-2">
                 <AnimatedButton
                   to="/login"
