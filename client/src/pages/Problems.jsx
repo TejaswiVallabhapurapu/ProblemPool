@@ -25,6 +25,7 @@ import CategoryFilter, { POPULAR_CATEGORIES } from '../components/CategoryFilter
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
+import { LoaderContainer } from '../components/Loader';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Problems', icon: Layers },
@@ -499,29 +500,7 @@ const Problems = () => {
       {/* MAIN CONTENT: SKELETON / ERROR / EMPTY / PROBLEM CARDS */}
       {/* ========================================================= */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((n) => (
-            <div
-              key={n}
-              className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 animate-pulse shadow-xs"
-            >
-              <div className="flex justify-between items-center">
-                <div className="h-5 w-24 bg-slate-200 rounded-full" />
-                <div className="h-4 w-16 bg-slate-100 rounded" />
-              </div>
-              <div className="h-6 w-3/4 bg-slate-200 rounded" />
-              <div className="space-y-2">
-                <div className="h-4 w-full bg-slate-100 rounded" />
-                <div className="h-4 w-5/6 bg-slate-100 rounded" />
-              </div>
-              <div className="flex gap-2">
-                <div className="h-5 w-14 bg-slate-100 rounded" />
-                <div className="h-5 w-14 bg-slate-100 rounded" />
-              </div>
-              <div className="h-8 w-full bg-slate-50 rounded-xl" />
-            </div>
-          ))}
-        </div>
+        <LoaderContainer minHeight="40vh" message="Loading problems..." />
       ) : error ? (
         <div className="bg-white rounded-3xl border border-rose-200 p-10 text-center max-w-lg mx-auto shadow-sm">
           <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
