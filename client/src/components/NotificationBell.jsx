@@ -1,19 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Bell,
-  Check,
-  CheckCheck,
-  ExternalLink,
-  MessageSquare,
-  Star,
-  ThumbsUp,
-  Award,
-  UserPlus,
-  AtSign,
-  MessageCircle,
-  Sparkles,
-} from 'lucide-react';
 import { Loader } from './Loader';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -22,19 +8,6 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
 } from '../services/api';
-
-const NOTIFICATION_ICONS = {
-  answer: { icon: MessageSquare, color: 'text-indigo-600 bg-indigo-50 border-indigo-200' },
-  best_answer: { icon: Star, color: 'text-amber-600 bg-amber-50 border-amber-200' },
-  review: { icon: MessageCircle, color: 'text-sky-600 bg-sky-50 border-sky-200' },
-  reply: { icon: MessageSquare, color: 'text-purple-600 bg-purple-50 border-purple-200' },
-  vote: { icon: ThumbsUp, color: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
-  mention: { icon: AtSign, color: 'text-blue-600 bg-blue-50 border-blue-200' },
-  follow: { icon: UserPlus, color: 'text-violet-600 bg-violet-50 border-violet-200' },
-  badge: { icon: Award, color: 'text-orange-600 bg-orange-50 border-orange-200' },
-  reputation: { icon: Sparkles, color: 'text-amber-600 bg-amber-50 border-amber-200' },
-  system: { icon: Bell, color: 'text-slate-600 bg-slate-50 border-slate-200' },
-};
 
 const formatTimeAgo = (dateString) => {
   if (!dateString) return '';
@@ -148,17 +121,17 @@ const NotificationBell = () => {
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
-      {/* Bell Trigger Button */}
+      {/* Trigger Button - Text Only */}
       <button
         type="button"
         onClick={toggleDropdown}
         title="Notifications"
         aria-label="Open notifications menu"
-        className="relative p-2 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+        className="relative px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer focus:outline-none"
       >
-        <Bell className="w-5 h-5" />
+        <span>Alerts</span>
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex h-4 min-w-[16px] items-center justify-center px-1 rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white animate-pulse">
+          <span className="ml-1.5 px-1.5 py-0.2 rounded-full bg-white text-black text-[10px] font-bold">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -166,13 +139,13 @@ const NotificationBell = () => {
 
       {/* Popover Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-[#121212]/95 backdrop-blur-xl shadow-2xl border border-white/10 z-50 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-100 bg-slate-50/70">
+          <div className="flex items-center justify-between px-4 py-3.5 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-slate-900">Notifications</span>
+              <span className="text-sm font-semibold text-white">Notifications</span>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-black">
                   {unreadCount} new
                 </span>
               )}
@@ -182,69 +155,62 @@ const NotificationBell = () => {
               <button
                 type="button"
                 onClick={handleMarkAllAsRead}
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1 cursor-pointer"
+                className="text-xs font-medium text-neutral-300 hover:text-white transition cursor-pointer"
               >
-                <CheckCheck className="w-3.5 h-3.5" />
-                <span>Mark all read</span>
+                Mark all read
               </button>
             )}
           </div>
 
           {/* Notifications List */}
-          <div className="max-h-[360px] overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-[360px] overflow-y-auto divide-y divide-white/5">
             {loading ? (
-              <div className="py-8 flex flex-col items-center justify-center text-slate-400 gap-3">
+              <div className="py-8 flex flex-col items-center justify-center text-neutral-400 gap-3">
                 <Loader size="sm" />
                 <span className="text-xs font-medium">Loading notifications...</span>
               </div>
             ) : notifications.length === 0 ? (
               <div className="py-10 text-center px-4">
-                <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-2 text-base">
-                  🔔
-                </div>
-                <p className="text-xs font-bold text-slate-700 mb-0.5">No notifications yet</p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-xs font-semibold text-white mb-1">No notifications yet</p>
+                <p className="text-[11px] text-neutral-400">
                   You'll be notified when community members interact with your problems, answers, and reviews.
                 </p>
               </div>
             ) : (
               notifications.map((notif) => {
-                const config = NOTIFICATION_ICONS[notif.type] || NOTIFICATION_ICONS.system;
-                const Icon = config.icon;
+                const typeLabel = notif.type ? notif.type.replace('_', ' ').toUpperCase() : 'ALERT';
 
                 return (
                   <div
                     key={notif._id}
                     onClick={() => handleNotificationClick(notif)}
-                    className={`p-3.5 flex items-start gap-3 hover:bg-slate-50/80 transition cursor-pointer relative ${
-                      !notif.read ? 'bg-indigo-50/30' : ''
+                    className={`p-3.5 flex items-start gap-3 hover:bg-white/5 transition cursor-pointer relative ${
+                      !notif.read ? 'bg-white/[0.04]' : ''
                     }`}
                   >
-                    {/* Notification Type Icon */}
-                    <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${config.color}`}
-                    >
-                      <Icon className="w-4 h-4" />
+                    {/* Notification Type Badge - Text Only */}
+                    <div className="px-2 py-1 rounded text-[9px] font-mono tracking-wider font-semibold uppercase shrink-0 border border-white/10 bg-white/5 text-neutral-300">
+                      {typeLabel}
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0 pr-4">
                       {notif.title && (
-                        <h4 className="text-xs font-bold text-slate-900 truncate mb-0.5">
+                        <h4 className="text-xs font-semibold text-white truncate mb-0.5">
                           {notif.title}
                         </h4>
                       )}
-                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed">
                         {notif.message}
                       </p>
-                      <span className="text-[10px] text-slate-400 font-medium mt-1 inline-block">
+                      <span className="text-[10px] text-neutral-400 font-mono mt-1 inline-block">
                         {formatTimeAgo(notif.createdAt)}
                       </span>
                     </div>
 
                     {/* Unread indicator */}
                     {!notif.read && (
-                      <span className="absolute top-4 right-3.5 w-2 h-2 rounded-full bg-indigo-600 ring-2 ring-indigo-200" />
+                      <span className="absolute top-4 right-3.5 w-2 h-2 rounded-full bg-white ring-2 ring-white/20" />
                     )}
                   </div>
                 );
@@ -253,14 +219,13 @@ const NotificationBell = () => {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2.5 border-t border-slate-100 bg-slate-50/80 text-center">
+          <div className="px-4 py-2.5 border-t border-white/10 bg-white/5 text-center">
             <Link
               to="/notifications"
               onClick={() => setIsOpen(false)}
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
+              className="text-xs font-medium text-neutral-300 hover:text-white"
             >
-              <span>View all notifications</span>
-              <ExternalLink className="w-3 h-3" />
+              View all notifications
             </Link>
           </div>
         </div>
