@@ -26,7 +26,6 @@ import {
   clearAllNotifications,
 } from '../services/api';
 import GlassAiButton from '../components/GlassAiButton';
-import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 import { Loader, LoaderContainer } from '../components/Loader';
 
@@ -200,7 +199,6 @@ const Notifications = () => {
 
   return (
     <div className="relative min-h-screen">
-      <ParticlesBackground />
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
