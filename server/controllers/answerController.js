@@ -1,15 +1,20 @@
 const mongoose = require('mongoose');
 const Answer = require('../models/Answer');
 const Problem = require('../models/Problem');
+const AnswerVote = require('../models/AnswerVote');
+const Review = require('../models/Review');
+const ReviewVote = require('../models/ReviewVote');
+const Reply = require('../models/Reply');
 
 /**
- * @desc    Get all answers for a specific problem
+ * @desc    Get all answers for a specific problem with vote counts, user vote, and best answer status
  * @route   GET /api/problems/:problemId/answers
- * @access  Public
+ * @access  Public (Optional JWT for userVote status)
  */
 const getAnswersByProblem = async (req, res) => {
   try {
     const problemId = req.params.problemId || req.params.id;
+    const { sort = 'best_answer' } = req.query;
 
     if (!problemId || !mongoose.Types.ObjectId.isValid(problemId)) {
       return res.status(400).json({
@@ -27,15 +32,74 @@ const getAnswersByProblem = async (req, res) => {
       });
     }
 
-    // Fetch answers sorted by newest first
-    const answers = await Answer.find({ problem: problemId })
+    // Fetch all answers for this problem
+    const rawAnswers = await Answer.find({ problem: problemId })
       .populate('user', 'name email')
-      .sort({ createdAt: -1 });
+      .lean();
+
+    const currentUserId = req.user ? req.user._id.toString() : null;
+    const bestAnswerIdStr = problem.bestAnswer ? problem.bestAnswer.toString() : null;
+
+    // Aggregate votes and reviews in parallel for all answers
+    const answersWithMeta = await Promise.all(
+      rawAnswers.map(async (ans) => {
+        const ansId = ans._id;
+
+        const [helpfulCount, notHelpfulCount, reviewCount, userVoteDoc] =
+          await Promise.all([
+            AnswerVote.countDocuments({ answer: ansId, voteType: 'helpful' }),
+            AnswerVote.countDocuments({ answer: ansId, voteType: 'not_helpful' }),
+            Review.countDocuments({ answer: ansId }),
+            currentUserId
+              ? AnswerVote.findOne({ answer: ansId, user: currentUserId }).lean()
+              : null,
+          ]);
+
+        const isBestAnswer = Boolean(bestAnswerIdStr && bestAnswerIdStr === ansId.toString());
+
+        return {
+          ...ans,
+          helpfulCount,
+          notHelpfulCount,
+          reviewCount,
+          userVote: userVoteDoc ? userVoteDoc.voteType : null,
+          isBestAnswer,
+        };
+      })
+    );
+
+    // Apply Sorting logic
+    answersWithMeta.sort((a, b) => {
+      if (sort === 'best_answer') {
+        // Best answer strictly on top, then newest
+        if (a.isBestAnswer && !b.isBestAnswer) return -1;
+        if (!a.isBestAnswer && b.isBestAnswer) return 1;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+
+      if (sort === 'most_helpful') {
+        // Sort by net helpful votes (helpful - notHelpful) descending
+        const scoreA = a.helpfulCount - a.notHelpfulCount;
+        const scoreB = b.helpfulCount - b.notHelpfulCount;
+        if (scoreB !== scoreA) {
+          return scoreB - scoreA;
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+
+      if (sort === 'oldest') {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+
+      // Default / 'newest':
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
 
     return res.status(200).json({
       success: true,
-      count: answers.length,
-      answers,
+      count: answersWithMeta.length,
+      bestAnswerId: bestAnswerIdStr,
+      answers: answersWithMeta,
     });
   } catch (error) {
     return res.status(500).json({
@@ -75,7 +139,7 @@ const createAnswer = async (req, res) => {
     if (!content || typeof content !== 'string' || content.trim() === '') {
       return res.status(400).json({
         success: false,
-        message: 'Answer cannot be empty',
+        message: 'Answer content cannot be empty',
       });
     }
 
@@ -87,15 +151,21 @@ const createAnswer = async (req, res) => {
     });
 
     // Populate user info for immediate frontend display
-    const populatedAnswer = await Answer.findById(newAnswer._id).populate(
-      'user',
-      'name email'
-    );
+    const populatedAnswer = await Answer.findById(newAnswer._id)
+      .populate('user', 'name email')
+      .lean();
 
     return res.status(201).json({
       success: true,
       message: 'Answer submitted successfully',
-      answer: populatedAnswer,
+      answer: {
+        ...populatedAnswer,
+        helpfulCount: 0,
+        notHelpfulCount: 0,
+        reviewCount: 0,
+        userVote: null,
+        isBestAnswer: false,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -106,13 +176,13 @@ const createAnswer = async (req, res) => {
 };
 
 /**
- * @desc    Delete an answer
+ * @desc    Delete an answer and cascade delete its votes, reviews, replies
  * @route   DELETE /api/problems/:problemId/answers/:answerId
- * @access  Private (Author or Admin)
+ * @access  Private (Author only)
  */
 const deleteAnswer = async (req, res) => {
   try {
-    const { answerId } = req.params;
+    const { answerId, problemId } = req.params;
 
     if (!answerId || !mongoose.Types.ObjectId.isValid(answerId)) {
       return res.status(400).json({
@@ -137,7 +207,31 @@ const deleteAnswer = async (req, res) => {
       });
     }
 
-    await Answer.findByIdAndDelete(answerId);
+    // If this was the best answer, remove reference from Problem
+    if (problemId && mongoose.Types.ObjectId.isValid(problemId)) {
+      await Problem.updateOne(
+        { _id: problemId, bestAnswer: answerId },
+        { $set: { bestAnswer: null } }
+      );
+    } else {
+      await Problem.updateMany(
+        { bestAnswer: answerId },
+        { $set: { bestAnswer: null } }
+      );
+    }
+
+    // Find all reviews belonging to this answer to cascade delete replies & review votes
+    const reviews = await Review.find({ answer: answerId }).select('_id');
+    const reviewIds = reviews.map((r) => r._id);
+
+    // Cascade cleanups
+    await Promise.all([
+      Answer.findByIdAndDelete(answerId),
+      AnswerVote.deleteMany({ answer: answerId }),
+      Review.deleteMany({ answer: answerId }),
+      ReviewVote.deleteMany({ review: { $in: reviewIds } }),
+      Reply.deleteMany({ review: { $in: reviewIds } }),
+    ]);
 
     return res.status(200).json({
       success: true,
@@ -151,8 +245,135 @@ const deleteAnswer = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Vote Helpful or Not Helpful on an answer
+ * @route   POST /api/answers/:answerId/vote
+ * @access  Private (JWT Protected)
+ */
+const voteAnswer = async (req, res) => {
+  try {
+    const { answerId } = req.params;
+    const { voteType } = req.body;
+
+    if (!answerId || !mongoose.Types.ObjectId.isValid(answerId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid answer ID format',
+      });
+    }
+
+    if (!voteType || !['helpful', 'not_helpful'].includes(voteType)) {
+      return res.status(400).json({
+        success: false,
+        message: "voteType must be either 'helpful' or 'not_helpful'",
+      });
+    }
+
+    const answer = await Answer.findById(answerId);
+    if (!answer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Answer not found',
+      });
+    }
+
+    // Rule: Answer author cannot vote on their own answer
+    if (answer.user.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'You cannot vote on your own answer',
+      });
+    }
+
+    // Check if user has already voted
+    const existingVote = await AnswerVote.findOne({
+      answer: answerId,
+      user: req.user._id,
+    });
+
+    if (existingVote) {
+      if (existingVote.voteType === voteType) {
+        // Same vote clicked again -> remove vote (toggle off)
+        await AnswerVote.findByIdAndDelete(existingVote._id);
+      } else {
+        // Change vote (e.g. from helpful to not_helpful)
+        existingVote.voteType = voteType;
+        await existingVote.save();
+      }
+    } else {
+      // Create new vote
+      await AnswerVote.create({
+        answer: answerId,
+        user: req.user._id,
+        voteType,
+      });
+    }
+
+    // Return updated counts and active user vote
+    const [helpfulCount, notHelpfulCount, activeVote] = await Promise.all([
+      AnswerVote.countDocuments({ answer: answerId, voteType: 'helpful' }),
+      AnswerVote.countDocuments({ answer: answerId, voteType: 'not_helpful' }),
+      AnswerVote.findOne({ answer: answerId, user: req.user._id }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      helpfulCount,
+      notHelpfulCount,
+      userVote: activeVote ? activeVote.voteType : null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to record vote: ' + error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Explicitly remove vote on an answer
+ * @route   DELETE /api/answers/:answerId/vote
+ * @access  Private (JWT Protected)
+ */
+const removeAnswerVote = async (req, res) => {
+  try {
+    const { answerId } = req.params;
+
+    if (!answerId || !mongoose.Types.ObjectId.isValid(answerId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid answer ID format',
+      });
+    }
+
+    await AnswerVote.findOneAndDelete({
+      answer: answerId,
+      user: req.user._id,
+    });
+
+    const [helpfulCount, notHelpfulCount] = await Promise.all([
+      AnswerVote.countDocuments({ answer: answerId, voteType: 'helpful' }),
+      AnswerVote.countDocuments({ answer: answerId, voteType: 'not_helpful' }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      helpfulCount,
+      notHelpfulCount,
+      userVote: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to remove vote: ' + error.message,
+    });
+  }
+};
+
 module.exports = {
   getAnswersByProblem,
   createAnswer,
   deleteAnswer,
+  voteAnswer,
+  removeAnswerVote,
 };

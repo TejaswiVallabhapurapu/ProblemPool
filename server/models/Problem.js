@@ -27,6 +27,11 @@ const problemSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Creator is required'],
     },
+    bestAnswer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Answer',
+      default: null,
+    },
   },
   {
     timestamps: true,

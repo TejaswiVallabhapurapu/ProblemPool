@@ -70,6 +70,8 @@ const handleApiResponse = async (response) => {
       data?.message ||
       (response.status === 401
         ? 'Invalid credentials or session expired'
+        : response.status === 403
+        ? 'You are not authorized to perform this action'
         : response.status === 404
         ? 'Requested endpoint not found'
         : `Request failed with status ${response.status}`);
@@ -204,11 +206,55 @@ export const getProblemsByCategory = async (category) => {
 };
 
 /**
- * Fetch all answers for a given problem
- * @param {string} problemId - MongoDB Problem ObjectId
+ * Mark an answer as the Best Answer for a problem (Protected - Problem Owner Only)
+ * @param {string} problemId
+ * @param {string} answerId
+ * @param {string} token
  */
-export const getProblemAnswers = async (problemId) => {
-  return await safeFetch(`/problems/${problemId}/answers`);
+export const setBestAnswer = async (problemId, answerId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/${problemId}/best-answer/${answerId}`, {
+    method: 'PUT',
+    headers,
+  });
+};
+
+/**
+ * Remove Best Answer designation for a problem (Protected - Problem Owner Only)
+ * @param {string} problemId
+ * @param {string} token
+ */
+export const removeBestAnswer = async (problemId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/${problemId}/best-answer`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Fetch all answers for a given problem with sorting and user vote status
+ * @param {string} problemId - MongoDB Problem ObjectId
+ * @param {string} [sort='best_answer'] - 'best_answer' | 'most_helpful' | 'newest' | 'oldest'
+ * @param {string} [token] - Optional JWT Token
+ */
+export const getProblemAnswers = async (problemId, sort = 'best_answer', token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/${problemId}/answers?sort=${encodeURIComponent(sort)}`, {
+    headers,
+  });
 };
 
 /**
@@ -247,6 +293,221 @@ export const deleteAnswer = async (problemId, answerId, token) => {
   }
 
   return await safeFetch(`/problems/${problemId}/answers/${answerId}`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Vote Helpful or Not Helpful on an answer (Protected)
+ * @param {string} answerId
+ * @param {'helpful' | 'not_helpful'} voteType
+ * @param {string} token
+ */
+export const voteAnswer = async (answerId, voteType, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/answers/${answerId}/vote`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ voteType }),
+  });
+};
+
+/**
+ * Remove active vote on an answer (Protected)
+ * @param {string} answerId
+ * @param {string} token
+ */
+export const removeAnswerVote = async (answerId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/answers/${answerId}/vote`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Get all reviews for an answer (with optional user token)
+ * @param {string} answerId
+ * @param {string} [sort='most_helpful'] - 'most_helpful' | 'newest' | 'oldest'
+ * @param {string} [token]
+ */
+export const getAnswerReviews = async (answerId, sort = 'most_helpful', token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/answers/${answerId}/reviews?sort=${encodeURIComponent(sort)}`, {
+    headers,
+  });
+};
+
+/**
+ * Submit a review on an answer (Protected)
+ * @param {string} answerId
+ * @param {string} content
+ * @param {string} token
+ */
+export const createAnswerReview = async (answerId, content, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/answers/${answerId}/reviews`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ content }),
+  });
+};
+
+/**
+ * Update an existing review (Protected - Author only)
+ * @param {string} reviewId
+ * @param {string} content
+ * @param {string} token
+ */
+export const updateReview = async (reviewId, content, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/reviews/${reviewId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ content }),
+  });
+};
+
+/**
+ * Delete an existing review (Protected - Author only)
+ * @param {string} reviewId
+ * @param {string} token
+ */
+export const deleteReview = async (reviewId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/reviews/${reviewId}`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Vote Helpful on a review (Protected)
+ * @param {string} reviewId
+ * @param {string} token
+ */
+export const voteReview = async (reviewId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/reviews/${reviewId}/vote`, {
+    method: 'POST',
+    headers,
+  });
+};
+
+/**
+ * Remove Helpful vote on a review (Protected)
+ * @param {string} reviewId
+ * @param {string} token
+ */
+export const removeReviewVote = async (reviewId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/reviews/${reviewId}/vote`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Get all replies for a review
+ * @param {string} reviewId
+ */
+export const getReviewReplies = async (reviewId) => {
+  return await safeFetch(`/reviews/${reviewId}/replies`);
+};
+
+/**
+ * Submit a reply to a review (Protected)
+ * @param {string} reviewId
+ * @param {string} content
+ * @param {string} token
+ */
+export const createReviewReply = async (reviewId, content, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/reviews/${reviewId}/replies`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ content }),
+  });
+};
+
+/**
+ * Update an existing reply (Protected - Author only)
+ * @param {string} replyId
+ * @param {string} content
+ * @param {string} token
+ */
+export const updateReply = async (replyId, content, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/replies/${replyId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ content }),
+  });
+};
+
+/**
+ * Delete an existing reply (Protected - Author only)
+ * @param {string} replyId
+ * @param {string} token
+ */
+export const deleteReply = async (replyId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/replies/${replyId}`, {
     method: 'DELETE',
     headers,
   });

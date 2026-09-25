@@ -5,6 +5,9 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const problemRoutes = require('./routes/problemRoutes');
 const authRoutes = require('./routes/authRoutes');
+const answerRoutes = require('./routes/answerRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const replyRoutes = require('./routes/replyRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -85,6 +88,9 @@ app.use(express.json());
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/problems', problemRoutes);
+app.use('/api/answers', answerRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/replies', replyRoutes);
 
 // Health check endpoints for root and /api (used by uptime monitors & hosting platforms)
 app.get(['/', '/api'], (req, res) => {

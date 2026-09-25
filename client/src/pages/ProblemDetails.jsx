@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { getProblem, deleteProblem, getProblemAnswers, submitAnswer, deleteAnswer } from '../services/api';
+import {
+  getProblem,
+  deleteProblem,
+  getProblemAnswers,
+  submitAnswer,
+  deleteAnswer,
+} from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import AnswerCard from '../components/AnswerCard';
 
 const CATEGORY_COLORS = {
   Education: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -37,23 +44,23 @@ const ProblemDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeletingProblem, setIsDeletingProblem] = useState(false);
+  const [answerSort, setAnswerSort] = useState('best_answer');
 
   // Answer form states
   const [answerContent, setAnswerContent] = useState('');
   const [submittingAnswer, setSubmittingAnswer] = useState(false);
   const [answerError, setAnswerError] = useState('');
   const [answerSuccess, setAnswerSuccess] = useState('');
-  const [deletingAnswerId, setDeletingAnswerId] = useState(null);
 
-  const fetchProblemAndAnswers = async () => {
+  const fetchProblemAndAnswers = async (currentSort = answerSort) => {
     try {
       setLoading(true);
       setError(null);
 
-      // Fetch problem details and answers in parallel
+      // Fetch problem details and answers in parallel with token for user vote mapping
       const [problemRes, answersRes] = await Promise.all([
         getProblem(id),
-        getProblemAnswers(id).catch((err) => {
+        getProblemAnswers(id, currentSort, token).catch((err) => {
           console.warn('Failed to load answers:', err);
           return { success: true, answers: [] };
         }),
@@ -76,11 +83,11 @@ const ProblemDetails = () => {
   };
 
   useEffect(() => {
-    fetchProblemAndAnswers();
-  }, [id]);
+    fetchProblemAndAnswers(answerSort);
+  }, [id, answerSort, token]);
 
   const handleDeleteProblem = async () => {
-    if (!window.confirm('Are you sure you want to delete this problem?')) {
+    if (!window.confirm('Are you sure you want to delete this problem and all its answers/reviews?')) {
       return;
     }
 
@@ -140,22 +147,41 @@ const ProblemDetails = () => {
     }
 
     try {
-      setDeletingAnswerId(answerId);
       await deleteAnswer(id, answerId, token);
       setAnswers((prevAnswers) => prevAnswers.filter((a) => a._id !== answerId));
+      if (problem?.bestAnswer === answerId) {
+        setProblem((prev) => (prev ? { ...prev, bestAnswer: null } : prev));
+      }
     } catch (err) {
       alert('Failed to delete answer: ' + err.message);
-    } finally {
-      setDeletingAnswerId(null);
     }
+  };
+
+  // Callback when Best Answer changes
+  const handleBestAnswerChange = (newBestAnswerId) => {
+    setProblem((prev) => (prev ? { ...prev, bestAnswer: newBestAnswerId } : prev));
+    setAnswers((prev) =>
+      prev.map((ans) => ({
+        ...ans,
+        isBestAnswer: Boolean(newBestAnswerId && ans._id === newBestAnswerId),
+      }))
+    );
   };
 
   const authorName = problem?.createdBy?.name || 'Community Member';
   const authorEmail = problem?.createdBy?.email;
-  const isCreator =
+  const isProblemOwner = Boolean(
     user &&
-    problem?.createdBy &&
-    (user._id === problem.createdBy._id || user._id === problem.createdBy);
+      problem?.createdBy &&
+      (user._id === problem.createdBy._id || user._id === problem.createdBy)
+  );
+
+  // Dynamic status computation
+  const problemStatus = problem?.bestAnswer
+    ? 'Solved'
+    : answers.length > 0
+    ? 'Answered'
+    : 'Unanswered';
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
@@ -206,7 +232,7 @@ const ProblemDetails = () => {
           <article className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
             {/* Header Metadata */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
                     CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200'
@@ -214,13 +240,30 @@ const ProblemDetails = () => {
                 >
                   {problem.category}
                 </span>
+
+                {/* Status Indicator */}
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                    problemStatus === 'Solved'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-xs'
+                      : problemStatus === 'Answered'
+                      ? 'bg-blue-50 text-blue-800 border-blue-200'
+                      : 'bg-amber-50 text-amber-800 border-amber-200'
+                  }`}
+                >
+                  <span className="text-xs">
+                    {problemStatus === 'Solved' ? '🟢' : problemStatus === 'Answered' ? '🟢' : '🟡'}
+                  </span>
+                  <span>{problemStatus}</span>
+                </span>
+
                 <span className="text-xs text-slate-400 font-medium">
                   Posted on {formatDate(problem.createdAt)}
                 </span>
               </div>
 
               {/* Creator Delete Option */}
-              {isCreator && (
+              {isProblemOwner && (
                 <button
                   onClick={handleDeleteProblem}
                   disabled={isDeletingProblem}
@@ -271,8 +314,8 @@ const ProblemDetails = () => {
           {/* ANSWERS SECTION */}
           {/* ========================================================= */}
           <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
-            {/* Answers Section Header */}
-            <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-8">
+            {/* Answers Section Header with Sorting Controls */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 mb-8">
               <div className="flex items-center gap-3">
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
                   Answers
@@ -281,6 +324,59 @@ const ProblemDetails = () => {
                   {answers.length}
                 </span>
               </div>
+
+              {/* Answer Sorting Options */}
+              {answers.length > 0 && (
+                <div className="flex items-center gap-1.5 text-xs">
+                  <span className="text-slate-400 font-semibold">Sort by:</span>
+                  <div className="inline-flex rounded-xl bg-slate-100 p-1">
+                    <button
+                      type="button"
+                      onClick={() => setAnswerSort('best_answer')}
+                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                        answerSort === 'best_answer'
+                          ? 'bg-white text-indigo-600 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      ⭐ Best Answer
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAnswerSort('most_helpful')}
+                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                        answerSort === 'most_helpful'
+                          ? 'bg-white text-indigo-600 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      👍 Most Helpful
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAnswerSort('newest')}
+                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                        answerSort === 'newest'
+                          ? 'bg-white text-indigo-600 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      🕒 Newest
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAnswerSort('oldest')}
+                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                        answerSort === 'oldest'
+                          ? 'bg-white text-indigo-600 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      ⌛ Oldest
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Answer Form (If Logged In) */}
@@ -356,7 +452,7 @@ const ProblemDetails = () => {
                     Have a solution or idea for this problem?
                   </h3>
                   <p className="text-xs text-slate-600">
-                    Please log in to answer this problem and join the discussion.
+                    Please log in to answer this problem, vote, and review community solutions.
                   </p>
                 </div>
                 <Link
@@ -369,7 +465,7 @@ const ProblemDetails = () => {
               </div>
             )}
 
-            {/* List of Existing Answers */}
+            {/* List of Existing Answers with Feedback, Reviews, Replies, and Best Answer */}
             <div className="space-y-6">
               {answers.length === 0 ? (
                 /* Empty state */
@@ -381,60 +477,24 @@ const ProblemDetails = () => {
                   </div>
                   <h4 className="text-base font-bold text-slate-800 mb-1">No answers yet.</h4>
                   <p className="text-xs text-slate-500">
-                    Be the first person to answer this problem!
+                    Be the first to help solve this problem!
                   </p>
                 </div>
               ) : (
                 /* Answer Cards */
-                answers.map((ans) => {
-                  const answerAuthorName = ans.user?.name || 'Community Member';
-                  const answerAuthorInitial = answerAuthorName.charAt(0).toUpperCase() || 'U';
-                  const isAnswerAuthor =
-                    user &&
-                    ans.user &&
-                    (user._id === ans.user._id || user._id === ans.user);
-
-                  return (
-                    <div
-                      key={ans._id}
-                      className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all space-y-3"
-                    >
-                      {/* Author header */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs shadow-xs">
-                            {answerAuthorInitial}
-                          </div>
-                          <div>
-                            <div className="text-xs font-bold text-slate-900">
-                              {answerAuthorName}
-                            </div>
-                            <div className="text-[11px] text-slate-400">
-                              {formatDate(ans.createdAt)}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Delete option for author */}
-                        {isAnswerAuthor && (
-                          <button
-                            onClick={() => handleDeleteAnswer(ans._id)}
-                            disabled={deletingAnswerId === ans._id}
-                            className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
-                            title="Delete your answer"
-                          >
-                            {deletingAnswerId === ans._id ? 'Deleting...' : 'Delete'}
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line pl-11">
-                        {ans.content}
-                      </div>
-                    </div>
-                  );
-                })
+                answers.map((ans) => (
+                  <AnswerCard
+                    key={ans._id}
+                    answer={ans}
+                    problemId={id}
+                    isProblemOwner={isProblemOwner}
+                    currentUser={user}
+                    token={token}
+                    isAuthenticated={isAuthenticated}
+                    onDeleteAnswer={handleDeleteAnswer}
+                    onBestAnswerChange={handleBestAnswerChange}
+                  />
+                ))
               )}
             </div>
           </section>

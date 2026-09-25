@@ -46,4 +46,30 @@ const protect = async (req, res, next) => {
   });
 };
 
-module.exports = { protect };
+/**
+ * Optional authentication: extracts user if valid token exists,
+ * but does not reject unauthenticated requests.
+ */
+const optionalProtect = async (req, res, next) => {
+  const authHeader = req.headers.authorization || req.headers.Authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer')) {
+    try {
+      const token = authHeader.split(' ')[1]?.trim();
+      if (token && token !== 'null' && token !== 'undefined') {
+        const secret = process.env.JWT_SECRET || 'problempool_jwt_secret_key_2026_secure_local';
+        const decoded = jwt.verify(token, secret);
+        const user = await User.findById(decoded.id).select('-password');
+        if (user) {
+          req.user = user;
+        }
+      }
+    } catch {
+      // Ignore token verification errors for public endpoints
+      req.user = null;
+    }
+  }
+  return next();
+};
+
+module.exports = { protect, optionalProtect };

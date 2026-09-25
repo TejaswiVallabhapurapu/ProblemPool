@@ -27,16 +27,37 @@ const ProblemCard = ({ problem }) => {
 
   const authorName = problem.createdBy?.name || 'Community Member';
 
+  // Dynamic Status Badge
+  const status = problem.status || (problem.bestAnswer ? 'Solved' : problem.answersCount > 0 ? 'Answered' : 'Unanswered');
+
+  const statusBadge =
+    status === 'Solved' ? (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+        <span>🟢</span> Solved
+      </span>
+    ) : status === 'Answered' ? (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+        <span>🟢</span> Answered
+      </span>
+    ) : (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+        <span>🟡</span> Unanswered
+      </span>
+    );
+
   return (
     <div className="group bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between p-6">
       <div>
-        {/* Category & Date */}
+        {/* Category, Status & Date */}
         <div className="flex items-center justify-between gap-2 mb-3.5">
-          <span
-            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${categoryBadgeClass}`}
-          >
-            {problem.category}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${categoryBadgeClass}`}
+            >
+              {problem.category}
+            </span>
+            {statusBadge}
+          </div>
           <span className="text-xs text-slate-400 font-medium">
             {formatDate(problem.createdAt)}
           </span>
