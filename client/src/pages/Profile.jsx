@@ -817,7 +817,7 @@ const Profile = () => {
 
           {tabLoading ? (
             <div className="py-12 flex justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+              <Loader size="md" />
             </div>
           ) : followersList.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-xs">
@@ -897,7 +897,7 @@ const Profile = () => {
 
           {tabLoading ? (
             <div className="py-12 flex justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+              <Loader size="md" />
             </div>
           ) : followingList.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-xs">
