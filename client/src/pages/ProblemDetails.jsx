@@ -11,6 +11,9 @@ import {
   getMySavedProblemIds,
   getRelatedProblems,
   summarizeAnswersWithAI,
+  getProblemTeams,
+  createTeam,
+  joinTeam,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
@@ -21,7 +24,27 @@ import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 import { Loader, LoaderContainer } from '../components/Loader';
-import { Bookmark, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag, Bot, RefreshCw, X, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Bookmark,
+  Eye,
+  Tag,
+  MessageSquare,
+  CheckCircle2,
+  HelpCircle,
+  Layers,
+  ArrowRight,
+  Sparkles,
+  FolderPlus,
+  Flag,
+  Bot,
+  RefreshCw,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Users,
+  Crown,
+  Plus,
+} from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -92,6 +115,18 @@ const ProblemDetails = () => {
   const [aiSummaryError, setAiSummaryError] = useState(null);
   const [showAiSummaryCard, setShowAiSummaryCard] = useState(false);
 
+  // Collaborative Team Up states
+  const [teams, setTeams] = useState([]);
+  const [loadingTeams, setLoadingTeams] = useState(false);
+  const [userActiveTeamId, setUserActiveTeamId] = useState(null);
+  const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
+  const [teamNameInput, setTeamNameInput] = useState('');
+  const [teamDescInput, setTeamDescInput] = useState('');
+  const [creatingTeam, setCreatingTeam] = useState(false);
+  const [createTeamError, setCreateTeamError] = useState(null);
+  const [joiningTeamId, setJoiningTeamId] = useState(null);
+  const [teamNotice, setTeamNotice] = useState(null);
+
   const handleSummarizeAnswers = async () => {
     if (!answers || answers.length === 0) {
       setAiSummaryError('No answers are available to summarize yet.');
@@ -156,7 +191,12 @@ const ProblemDetails = () => {
         );
       }
 
-      const [problemRes, answersRes, relatedRes, savedIdsRes] = await Promise.all(promises);
+      // Fetch collaborative teams if problem allows team up
+      promises.push(
+        getProblemTeams(id, token).catch(() => ({ success: true, teams: [], userActiveTeamId: null }))
+      );
+
+      const [problemRes, answersRes, relatedRes, savedIdsRes, teamsRes] = await Promise.all(promises);
 
       if (problemRes.success && problemRes.problem) {
         setProblem(problemRes.problem);
@@ -174,6 +214,11 @@ const ProblemDetails = () => {
 
       if (savedIdsRes && Array.isArray(savedIdsRes.savedProblemIds)) {
         setIsSaved(savedIdsRes.savedProblemIds.includes(id));
+      }
+
+      if (teamsRes && Array.isArray(teamsRes.teams)) {
+        setTeams(teamsRes.teams);
+        setUserActiveTeamId(teamsRes.userActiveTeamId || null);
       }
     } catch (err) {
       setError(err.message || 'Unable to load problem details');
@@ -529,6 +574,212 @@ const ProblemDetails = () => {
               </div>
             )}
           </article>
+
+          {/* ========================================================= */}
+          {/* 🤝 COLLABORATIVE PROBLEM SOLVING (TEAM UP) SECTION */}
+          {/* ========================================================= */}
+          {problem.allowTeamUp && (
+            <section className="p-6 sm:p-8 rounded-3xl bg-[#141414] border border-white/10 shadow-xl space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <div className="w-8 h-8 rounded-xl bg-[#1e1e1e] border border-white/10 flex items-center justify-center text-base">
+                      🤝
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                      Collaborate With Others
+                    </h2>
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#202020] border border-white/15 text-[11px] font-bold text-slate-200">
+                      Team Up Enabled
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+                    Form or join a team of up to 5 developers. Collaborate in a private workspace, delegate tasks, build a shared solution, and submit a joint answer.
+                  </p>
+                </div>
+
+                {!userActiveTeamId && (
+                  <GlassAiButton
+                    type="button"
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        navigate('/login', { state: { message: 'Please sign in to create or join a team', from: location.pathname } });
+                        return;
+                      }
+                      setCreateTeamError(null);
+                      setShowCreateTeamModal(true);
+                    }}
+                    size="sm"
+                    variant="primary"
+                    icon={<Plus className="w-4 h-4" />}
+                  >
+                    Start a Team
+                  </GlassAiButton>
+                )}
+              </div>
+
+              {/* Toast / Notice for team actions */}
+              {teamNotice && (
+                <div className="p-3.5 rounded-2xl bg-[#1c1c1c] border border-white/15 text-slate-200 text-xs flex items-center gap-2 animate-in fade-in duration-200">
+                  <Sparkles className="w-4 h-4 text-slate-300 shrink-0" />
+                  <span>{teamNotice}</span>
+                </div>
+              )}
+
+              {/* Active Teams List / Empty State */}
+              {teams.length === 0 ? (
+                <div className="text-center py-10 rounded-2xl bg-[#101010] border border-white/5 p-6">
+                  <p className="text-sm font-bold text-white mb-1">Be the first to start a team!</p>
+                  <p className="text-xs text-slate-400 mb-4 max-w-sm mx-auto">
+                    Gather collaborators, solve this problem together, and share the contribution reward.
+                  </p>
+                  <GlassAiButton
+                    type="button"
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        navigate('/login', { state: { message: 'Please sign in to create a team', from: location.pathname } });
+                        return;
+                      }
+                      setCreateTeamError(null);
+                      setShowCreateTeamModal(true);
+                    }}
+                    size="xs"
+                    variant="primary"
+                  >
+                    Create First Team
+                  </GlassAiButton>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {teams.map((team) => {
+                    const isMyTeam = team.isUserMember;
+                    const isFull = team.isFull;
+                    const isSubmitted = team.status === 'SUBMITTED' || team.status === 'COMPLETED';
+
+                    return (
+                      <div
+                        key={team._id}
+                        className={`p-5 rounded-2xl border transition-all flex flex-col justify-between ${
+                          isMyTeam
+                            ? 'bg-[#181818] border-white/25 shadow-md'
+                            : 'bg-[#121212] border-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <div>
+                          {/* Team Title & Member Count Badge */}
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <div>
+                              <h3 className="text-base font-bold text-white flex items-center gap-1.5">
+                                <span>{team.name}</span>
+                                {isMyTeam && (
+                                  <span className="text-[10px] px-2 py-0.2 rounded-full bg-[#2a2a2a] text-white border border-white/20 font-bold">
+                                    Your Team
+                                  </span>
+                                )}
+                              </h3>
+                              {team.description && (
+                                <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                                  {team.description}
+                                </p>
+                              )}
+                            </div>
+
+                            <span
+                              className={`px-2.5 py-0.5 rounded-full text-xs font-black shrink-0 ${
+                                isFull
+                                  ? 'bg-[#222222] text-slate-400 border border-white/10'
+                                  : 'bg-[#1a1a1a] text-slate-200 border border-white/15'
+                              }`}
+                            >
+                              {team.memberCount} / 5 members
+                            </span>
+                          </div>
+
+                          {/* Member Chips */}
+                          <div className="flex items-center gap-1.5 flex-wrap my-3">
+                            {team.members?.map((m) => (
+                              <span
+                                key={m._id}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#1a1a1a] border border-white/10 text-[11px] font-semibold text-slate-300"
+                              >
+                                {m._id === team.leaderId?._id ? (
+                                  <Crown className="w-2.5 h-2.5 text-slate-400" />
+                                ) : (
+                                  <User className="w-2.5 h-2.5 text-slate-500" />
+                                )}
+                                <span>{m.name}</span>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Team Action Button */}
+                        <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-2">
+                          <span className="text-[11px] text-slate-500">
+                            Status: <strong className="text-slate-300 font-semibold">{team.status}</strong>
+                          </span>
+
+                          {isMyTeam ? (
+                            <GlassAiButton
+                              to={`/problems/${problem._id}/team/${team._id}`}
+                              size="xs"
+                              variant="primary"
+                              icon={<ArrowRight className="w-3.5 h-3.5" />}
+                              iconPosition="right"
+                            >
+                              Open Workspace
+                            </GlassAiButton>
+                          ) : isSubmitted ? (
+                            <span className="text-xs text-slate-400 font-semibold italic">
+                              Solution Submitted
+                            </span>
+                          ) : isFull ? (
+                            <span className="text-xs text-slate-500 font-semibold">
+                              Team Full
+                            </span>
+                          ) : userActiveTeamId ? (
+                            <span className="text-xs text-slate-500 font-semibold">
+                              In Another Team
+                            </span>
+                          ) : (
+                            <GlassAiButton
+                              type="button"
+                              onClick={async () => {
+                                if (!isAuthenticated) {
+                                  navigate('/login', { state: { message: 'Please sign in to join a team', from: location.pathname } });
+                                  return;
+                                }
+                                setJoiningTeamId(team._id);
+                                try {
+                                  const res = await joinTeam(team._id, token);
+                                  if (res.success) {
+                                    setTeamNotice(`Joined team "${team.name}"! Navigating to workspace...`);
+                                    setTimeout(() => {
+                                      navigate(`/problems/${problem._id}/team/${team._id}`);
+                                    }, 600);
+                                  }
+                                } catch (err) {
+                                  alert(err.message || 'Failed to join team');
+                                } finally {
+                                  setJoiningTeamId(null);
+                                }
+                              }}
+                              disabled={joiningTeamId === team._id}
+                              loading={joiningTeamId === team._id}
+                              size="xs"
+                              variant="glass"
+                            >
+                              Join Team
+                            </GlassAiButton>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* ========================================================= */}
           {/* ANSWERS SECTION */}
