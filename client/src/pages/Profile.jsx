@@ -369,7 +369,11 @@ const Profile = () => {
     );
   }
 
-  const { user, stats, level, achievements, profileCompletion } = profileData;
+  const user = profileData?.user || {};
+  const stats = profileData?.stats || { reputation: 0, problemsCount: 0, answersCount: 0, helpfulVotesReceived: 0, bestAnswersCount: 0, reviewsCount: 0, savedCount: 0, followersCount: 0, followingCount: 0 };
+  const level = profileData?.level || { name: 'Initiate', progress: 0 };
+  const achievements = profileData?.achievements || [];
+  const profileCompletion = profileData?.profileCompletion || { percentage: 0, completedTasks: [], pendingTasks: [] };
 
   return (
     <div className="relative min-h-screen">
@@ -386,16 +390,16 @@ const Profile = () => {
                 {user.avatar ? (
                   <img
                     src={user.avatar}
-                    alt={user.name}
+                    alt={user.name || user.username || 'User'}
                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover ring-2 ring-white/15 border border-white/10 shadow-md"
                   />
                 ) : (
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#1c1c1c] border border-white/15 text-white flex items-center justify-center text-3xl font-extrabold shadow-md ring-2 ring-white/10">
-                    {user.name.charAt(0).toUpperCase()}
+                    {user.name?.charAt(0)?.toUpperCase() || user.username?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                 )}
                 <div className="absolute -bottom-2 -right-2 bg-[#181818] rounded-xl shadow-xs border border-white/15 px-2 py-0.5 text-[11px] font-bold text-slate-300">
-                  {level.name}
+                  {level.name || 'Initiate'}
                 </div>
               </div>
 
@@ -403,10 +407,10 @@ const Profile = () => {
               <div>
                 <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
                   <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                    {user.name}
+                    {user.name || user.username || 'Problem Solver'}
                   </h1>
                   <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/15">
-                    @{user.username}
+                    @{user.username || 'solver'}
                   </span>
                 </div>
 
