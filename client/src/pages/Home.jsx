@@ -14,7 +14,6 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { getProblems, getPersonalizedFeed, getCollaborativeProblems } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
-import KnowledgeCore3D from '../components/KnowledgeCore3D';
 import KnowledgeFlowVisual from '../components/KnowledgeFlowVisual';
 import EmptyState3D from '../components/EmptyState3D';
 import GlassAiButton from '../components/GlassAiButton';
@@ -139,90 +138,82 @@ const Home = () => {
         {/* 1. AUTHENTICATED DASHBOARD APPLICATION HEADER */}
         <section className="relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16 border-b border-white/10">
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Column: Greeting, User Summary & Quick Action Buttons */}
-              <div className="lg:col-span-8 text-left">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-4 shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Problem Solver Dashboard</span>
-                </div>
-
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-3">
-                  Welcome back,{' '}
-                  <span className="shimmer-text">
-                    {authUser?.name || 'Problem Solver'}
-                  </span>
-                </h1>
-
-                <p className="text-sm sm:text-base text-slate-300 max-w-2xl mb-6 font-medium leading-relaxed">
-                  Track your personalized feed, collaborate with squads on difficult technical hurdles, and discover community questions matched to your stack.
-                </p>
-
-                {/* Dashboard Action Toolbar */}
-                <div className="flex flex-wrap items-center gap-3 mb-6">
-                  <GlassAiButton
-                    to="/create-problem"
-                    size="md"
-                    variant="primary"
-                    icon={<PlusCircle className="w-4 h-4" />}
-                  >
-                    Post a Problem
-                  </GlassAiButton>
-
-                  <GlassAiButton
-                    to="/problems"
-                    size="md"
-                    variant="glass"
-                    icon={<Search className="w-4 h-4 text-slate-400" />}
-                  >
-                    Browse Problems
-                  </GlassAiButton>
-
-                  <GlassAiButton
-                    to="/team-up"
-                    size="md"
-                    variant="glass"
-                    icon={<Users className="w-4 h-4 text-slate-400" />}
-                  >
-                    🤝 Team Up
-                  </GlassAiButton>
-
-                  <GlassAiButton
-                    to="/challenges"
-                    size="md"
-                    variant="glass"
-                  >
-                    🧩 Challenges
-                  </GlassAiButton>
-
-                  <GlassAiButton
-                    to="/saved-problems"
-                    size="md"
-                    variant="glass"
-                  >
-                    🔖 Saved
-                  </GlassAiButton>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-5 text-xs font-semibold text-slate-400 pt-2 border-t border-white/5">
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-white" />
-                    <span>Verified Peer Answers</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-slate-300" />
-                    <span>Squad Collaboration</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-slate-400" />
-                    <span>Reputation Ranking</span>
-                  </span>
-                </div>
+            <div className="max-w-4xl text-left">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-4 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Problem Solver Dashboard</span>
               </div>
 
-              {/* Right Column: Floating 3D Knowledge Core Visual */}
-              <div className="lg:col-span-4 flex items-center justify-center">
-                <KnowledgeCore3D />
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-3">
+                Welcome back,{' '}
+                <span className="shimmer-text">
+                  {authUser?.name || 'Problem Solver'}
+                </span>
+              </h1>
+
+              <p className="text-sm sm:text-base text-slate-300 max-w-2xl mb-6 font-medium leading-relaxed">
+                Track your personalized feed, collaborate with others on difficult technical hurdles, and discover community questions matched to your interests.
+              </p>
+
+              {/* Dashboard Action Toolbar */}
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <GlassAiButton
+                  to="/create-problem"
+                  size="md"
+                  variant="primary"
+                  icon={<PlusCircle className="w-4 h-4" />}
+                >
+                  Post a Problem
+                </GlassAiButton>
+
+                <GlassAiButton
+                  to="/problems"
+                  size="md"
+                  variant="glass"
+                  icon={<Search className="w-4 h-4 text-slate-400" />}
+                >
+                  Browse Problems
+                </GlassAiButton>
+
+                <GlassAiButton
+                  to="/team-up"
+                  size="md"
+                  variant="glass"
+                  icon={<Users className="w-4 h-4 text-slate-400" />}
+                >
+                  🤝 Team Up
+                </GlassAiButton>
+
+                <GlassAiButton
+                  to="/challenges"
+                  size="md"
+                  variant="glass"
+                >
+                  🧩 Challenges
+                </GlassAiButton>
+
+                <GlassAiButton
+                  to="/saved-problems"
+                  size="md"
+                  variant="glass"
+                >
+                  🔖 Saved
+                </GlassAiButton>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-5 text-xs font-semibold text-slate-400 pt-2 border-t border-white/5">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-white" />
+                  <span>Verified Peer Answers</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-slate-300" />
+                  <span>Squad Collaboration</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-slate-400" />
+                  <span>Reputation Ranking</span>
+                </span>
               </div>
             </div>
           </div>
