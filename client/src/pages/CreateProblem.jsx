@@ -7,7 +7,8 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
-import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Loader2, Wand2, Lightbulb, Check } from 'lucide-react';
+import { Loader } from '../components/Loader';
+import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Wand2, Lightbulb, Check } from 'lucide-react';
 
 const SUGGESTED_TAGS = [
   'React',
@@ -557,8 +558,8 @@ const CreateProblem = () => {
                 Problem Title <span className="text-rose-500">*</span>
               </label>
               {checkingSimilar && (
-                <span className="text-xs text-indigo-600 font-medium flex items-center gap-1.5 animate-pulse">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span className="text-xs text-indigo-600 font-medium flex items-center gap-2">
+                  <Loader size="sm" />
                   <span>Checking for similar questions...</span>
                 </span>
               )}
