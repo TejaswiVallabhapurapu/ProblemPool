@@ -272,7 +272,7 @@ const Problems = () => {
                     value={opt.value}
                     disabled={opt.authRequired && !isAuthenticated}
                   >
-                    {opt.label} {opt.authRequired && !isAuthenticated ? '(Login required)' : ''}
+                    {opt.label} {opt.authRequired && !isAuthenticated ? '(Sign In required)' : ''}
                   </option>
                 ))}
               </select>

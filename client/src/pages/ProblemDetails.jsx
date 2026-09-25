@@ -378,7 +378,7 @@ const ProblemDetails = () => {
                       onClick={() => navigate('/login', { state: { from: location.pathname } })}
                       className="text-indigo-400 hover:text-indigo-300 underline font-semibold ml-1"
                     >
-                      Login
+                      Sign In
                     </button>
                   )}
                 </div>
@@ -798,7 +798,7 @@ const ProblemDetails = () => {
                     Have a solution or idea for this problem?
                   </h3>
                   <p className="text-xs text-slate-600">
-                    Please log in to answer this problem, vote, and review community solutions.
+                    Please sign in to answer this problem, vote, and review community solutions.
                   </p>
                 </div>
                 <Link
@@ -806,7 +806,7 @@ const ProblemDetails = () => {
                   state={{ from: location.pathname }}
                   className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-sm transition-colors shrink-0"
                 >
-                  Log in to Answer
+                  Sign In to Answer
                 </Link>
               </div>
             )}
