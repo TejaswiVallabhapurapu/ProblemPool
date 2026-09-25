@@ -4,7 +4,6 @@ import ReviewSection from './ReviewSection';
 import MarkdownRenderer from './MarkdownRenderer';
 import ReportModal from './ReportModal';
 import GlassAiButton from './GlassAiButton';
-import { Flag } from 'lucide-react';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -39,7 +38,6 @@ const AnswerCard = ({
   const [reviewCount, setReviewCount] = useState(answer.reviewCount || 0);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  // Sync state if props change (e.g. from parent sorting or best answer shift)
   React.useEffect(() => {
     setHelpfulCount(answer.helpfulCount || 0);
     setNotHelpfulCount(answer.notHelpfulCount || 0);
@@ -55,7 +53,6 @@ const AnswerCard = ({
     answer.user &&
     (currentUser._id === answer.user._id || currentUser._id === answer.user);
 
-  // Handle Voting
   const handleVote = async (type) => {
     if (!isAuthenticated) {
       alert('Please log in to vote on answers.');
@@ -69,7 +66,6 @@ const AnswerCard = ({
 
     if (voting) return;
 
-    // Optimistic Vote Calculations
     const prevHelpful = helpfulCount;
     const prevNotHelpful = notHelpfulCount;
     const prevVote = userVote;
@@ -79,12 +75,10 @@ const AnswerCard = ({
     let newVote = prevVote;
 
     if (prevVote === type) {
-      // Toggle Off
       newVote = null;
       if (type === 'helpful') newHelpful = Math.max(0, prevHelpful - 1);
       if (type === 'not_helpful') newNotHelpful = Math.max(0, prevNotHelpful - 1);
     } else {
-      // Switch or New Vote
       if (prevVote === 'helpful') newHelpful = Math.max(0, prevHelpful - 1);
       if (prevVote === 'not_helpful') newNotHelpful = Math.max(0, prevNotHelpful - 1);
 
@@ -106,7 +100,6 @@ const AnswerCard = ({
         setUserVote(res.userVote);
       }
     } catch (err) {
-      // Revert on error
       setUserVote(prevVote);
       setHelpfulCount(prevHelpful);
       setNotHelpfulCount(prevNotHelpful);
@@ -116,7 +109,6 @@ const AnswerCard = ({
     }
   };
 
-  // Handle Best Answer Toggle (Problem Owner Only)
   const handleBestAnswerToggle = async () => {
     if (!isProblemOwner) {
       alert('Only the problem owner can select the Best Answer.');
@@ -126,12 +118,10 @@ const AnswerCard = ({
     try {
       setTogglingBestAnswer(true);
       if (isBestAnswer) {
-        // Remove Best Answer
         await removeBestAnswer(problemId, token);
         setIsBestAnswer(false);
         if (onBestAnswerChange) onBestAnswerChange(null);
       } else {
-        // Set as Best Answer
         await setBestAnswer(problemId, answer._id, token);
         setIsBestAnswer(true);
         if (onBestAnswerChange) onBestAnswerChange(answer._id);
@@ -147,22 +137,20 @@ const AnswerCard = ({
     <div
       className={`rounded-3xl border transition-all p-6 sm:p-7 space-y-4 ${
         isBestAnswer
-          ? 'bg-gradient-to-r from-amber-50/60 via-white to-amber-50/30 border-amber-300 shadow-xl ring-2 ring-amber-300/60 best-answer-glow'
-          : 'glass-card-3d border-slate-200/90 shadow-xs hover:border-slate-300'
+          ? 'bg-[#141414]/90 backdrop-blur-md border-white/30 shadow-xl ring-1 ring-white/30'
+          : 'glass-card-3d border-white/10 shadow-xs'
       }`}
     >
-      {/* Header Badges: Best Answer & Team Answer */}
+      {/* Header Badges: Best Answer & Team Answer (Text Only) */}
       <div className="flex items-center gap-2 flex-wrap">
         {isBestAnswer && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#222222] border border-white/30 text-white text-xs font-black tracking-wide uppercase shadow-md">
-            <span>⭐</span>
-            <span>BEST ANSWER</span>
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#222222] border border-white/30 text-white text-xs font-black tracking-wide uppercase shadow-md">
+            BEST ANSWER
           </div>
         )}
 
         {answer.isTeamAnswer && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1a1a1a] border border-white/20 text-slate-200 text-xs font-bold tracking-wide shadow-sm">
-            <span>🤝</span>
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#1a1a1a] border border-white/20 text-slate-200 text-xs font-bold tracking-wide shadow-sm">
             <span>TEAM ANSWER</span>
             {answer.team?.name && (
               <span className="text-white font-black ml-1">• {answer.team.name}</span>
@@ -181,7 +169,7 @@ const AnswerCard = ({
                 : 'bg-[#181818] text-slate-200 border-white/10'
             }`}
           >
-            {answer.isTeamAnswer ? '🤝' : answerAuthorInitial}
+            {answerAuthorInitial}
           </div>
           <div>
             <div className="text-sm font-bold text-white flex items-center gap-2">
@@ -206,10 +194,9 @@ const AnswerCard = ({
               {answer.teamMembers.map((member) => (
                 <span
                   key={member._id || member}
-                  className="px-2 py-0.5 rounded-md bg-[#1c1c1c] border border-white/10 text-slate-200 text-[11px] font-semibold flex items-center gap-1"
+                  className="px-2 py-0.5 rounded-md bg-[#1c1c1c] border border-white/10 text-slate-200 text-[11px] font-semibold"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                  <span>{member.name || member.username || 'Member'}</span>
+                  {member.name || member.username || 'Member'}
                 </span>
               ))}
             </div>
@@ -224,7 +211,6 @@ const AnswerCard = ({
               onClick={() => onDeleteAnswer(answer._id)}
               size="xs"
               variant="danger"
-              title="Delete your answer"
             >
               Delete
             </GlassAiButton>
@@ -234,9 +220,9 @@ const AnswerCard = ({
               onClick={() => setShowReportModal(true)}
               size="xs"
               variant="glass"
-              title="Report inappropriate answer"
-              icon={<Flag className="w-3.5 h-3.5 text-rose-500" />}
-            />
+            >
+              Report
+            </GlassAiButton>
           )}
         </div>
       </div>
@@ -246,9 +232,8 @@ const AnswerCard = ({
         <MarkdownRenderer content={answer.content} />
       </div>
 
-      {/* Interactive Actions Bar */}
-      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
-        {/* Voting & Reviews Buttons */}
+      {/* Interactive Actions Bar (Text Only) */}
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/10">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {/* Helpful Button */}
           <GlassAiButton
@@ -257,13 +242,8 @@ const AnswerCard = ({
             disabled={isAnswerAuthor || voting}
             size="xs"
             variant={userVote === 'helpful' ? "success" : "glass"}
-            title={
-              isAnswerAuthor
-                ? 'You cannot vote on your own answer'
-                : 'Mark this answer as helpful'
-            }
           >
-            👍 {helpfulCount} <span className="hidden sm:inline">Helpful</span>
+            {helpfulCount} Helpful
           </GlassAiButton>
 
           {/* Not Helpful Button */}
@@ -273,13 +253,8 @@ const AnswerCard = ({
             disabled={isAnswerAuthor || voting}
             size="xs"
             variant={userVote === 'not_helpful' ? "danger" : "glass"}
-            title={
-              isAnswerAuthor
-                ? 'You cannot vote on your own answer'
-                : 'Mark this answer as not helpful'
-            }
           >
-            👎 {notHelpfulCount} <span className="hidden sm:inline">Not Helpful</span>
+            {notHelpfulCount} Not Helpful
           </GlassAiButton>
 
           {/* Toggle Reviews Section Button */}
@@ -289,7 +264,7 @@ const AnswerCard = ({
             size="xs"
             variant={showReviews ? "primary" : "glass"}
           >
-            ⭐ Reviews ({reviewCount})
+            Reviews ({reviewCount})
           </GlassAiButton>
         </div>
 
@@ -303,7 +278,7 @@ const AnswerCard = ({
             size="xs"
             variant={isBestAnswer ? "primary" : "glass"}
           >
-            ⭐ {isBestAnswer ? 'Unmark Best Answer' : 'Mark as Best Answer'}
+            {isBestAnswer ? 'Unmark Best Answer' : 'Select as Best Answer'}
           </GlassAiButton>
         )}
       </div>
