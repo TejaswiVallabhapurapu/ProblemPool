@@ -341,7 +341,7 @@ const TeamWorkspace = () => {
   const currentUserId = user?._id?.toString();
   const isLeader = team.leaderId?._id?.toString() === currentUserId;
   const isSubmitted = team.status === 'SUBMITTED' || team.status === 'COMPLETED';
-  const problemData = team.problemId || ;
+  const problemData = team.problemId || {};
 
   return (
     <div className="relative min-h-screen text-white">
