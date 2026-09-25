@@ -14,6 +14,8 @@ import Notifications from './pages/Notifications';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
+import Leaderboard from './pages/Leaderboard';
+import Challenges from './pages/Challenges';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
               <Route path="/problems" element={<Problems />} />
               <Route path="/problems/tag/:tag" element={<Problems />} />
               <Route path="/problems/category/:category" element={<Problems />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/challenges" element={<Challenges />} />
               <Route
                 path="/create-problem"
                 element={

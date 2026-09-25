@@ -1289,6 +1289,160 @@ export const toggleUserSuspension = async (userId, data, token) => {
   });
 };
 
+/* ==========================================================================
+   LEADERBOARD & WEEKLY CHALLENGES (SECTION 9)
+   ========================================================================== */
+
+/**
+ * Get leaderboard rankings
+ * @param {Object} params - { category, timeframe, limit }
+ */
+export const getLeaderboard = async (params = {}) => {
+  const queryParams = new URLSearchParams();
+  if (params.category) queryParams.set('category', params.category);
+  if (params.timeframe) queryParams.set('timeframe', params.timeframe);
+  if (params.limit) queryParams.set('limit', params.limit);
+
+  const qs = queryParams.toString();
+  return await safeFetch(`/leaderboard${qs ? `?${qs}` : ''}`);
+};
+
+/**
+ * Get all challenges (active, upcoming, completed)
+ * @param {Object} params - { status, category, difficulty }
+ * @param {string} token
+ */
+export const getChallenges = async (params = {}, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  const queryParams = new URLSearchParams();
+  if (params.status) queryParams.set('status', params.status);
+  if (params.category) queryParams.set('category', params.category);
+  if (params.difficulty) queryParams.set('difficulty', params.difficulty);
+
+  const qs = queryParams.toString();
+  return await safeFetch(`/challenges${qs ? `?${qs}` : ''}`, {
+    headers,
+  });
+};
+
+/**
+ * Get single challenge details with submissions
+ * @param {string} id
+ * @param {string} token
+ */
+export const getChallengeById = async (id, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/challenges/${id}`, {
+    headers,
+  });
+};
+
+/**
+ * Create a new challenge (Admin only)
+ * @param {Object} data - { title, description, category, tags, difficulty, startDate, endDate, pointsReward }
+ * @param {string} token
+ */
+export const createChallenge = async (data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/challenges', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Update challenge (Admin only)
+ * @param {string} id
+ * @param {Object} data
+ * @param {string} token
+ */
+export const updateChallenge = async (id, data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/challenges/${id}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Delete challenge (Admin only)
+ * @param {string} id
+ * @param {string} token
+ */
+export const deleteChallenge = async (id, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/challenges/${id}`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Submit challenge solution
+ * @param {string} id
+ * @param {Object} data - { content }
+ * @param {string} token
+ */
+export const submitChallengeSolution = async (id, data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/challenges/${id}/submit`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Select best answer for challenge (Admin only)
+ * @param {string} id - Challenge ID
+ * @param {string} answerId - Answer ID
+ * @param {string} token
+ */
+export const selectChallengeBestAnswer = async (id, answerId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/challenges/${id}/best-answer/${answerId}`, {
+    method: 'PUT',
+    headers,
+  });
+};
+
+
 
 
 

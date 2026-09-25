@@ -67,11 +67,17 @@ const Navbar = () => {
             <NavLink to="/problems" className={navLinkClass}>
               Problems
             </NavLink>
+            <NavLink to="/leaderboard" className={navLinkClass}>
+              🏆 Leaderboard
+            </NavLink>
+            <NavLink to="/challenges" className={navLinkClass}>
+              🧩 Challenges
+            </NavLink>
 
             {isAuthenticated ? (
               <>
                 <NavLink to="/saved-problems" className={navLinkClass}>
-                  🔖 Saved Problems
+                  🔖 Saved
                 </NavLink>
 
                 {/* Notification Bell Dropdown */}
@@ -224,6 +230,20 @@ const Navbar = () => {
                 className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
               >
                 🔔 Notifications
+              </NavLink>
+              <NavLink
+                to="/leaderboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+              >
+                🏆 Leaderboard
+              </NavLink>
+              <NavLink
+                to="/challenges"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+              >
+                🧩 Weekly Challenges
               </NavLink>
               <NavLink
                 to="/saved-problems"
