@@ -3,7 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { createProblem, checkSimilarProblems } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
-import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import MarkdownRenderer from '../components/MarkdownRenderer';
+import MarkdownToolbar from '../components/MarkdownToolbar';
+import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 
 const SUGGESTED_TAGS = [
   'React',
@@ -31,6 +33,8 @@ const CreateProblem = () => {
     location: '',
   });
 
+  const [descTab, setDescTab] = useState('write');
+  const descriptionTextareaRef = useRef(null);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
 
@@ -486,22 +490,57 @@ const CreateProblem = () => {
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-semibold text-slate-900 mb-1.5">
-              Description <span className="text-rose-500">*</span>
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={6}
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Describe the problem in detail: error messages, code context, environment setup, and what you have already tried..."
-              className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
+            <div className="flex items-center justify-between mb-1.5">
+              <label htmlFor="description" className="block text-sm font-semibold text-slate-900">
+                Description <span className="text-rose-500">*</span>
+              </label>
+              <span className="text-xs text-slate-400 font-medium">Markdown & code blocks supported</span>
+            </div>
+
+            <div
+              className={`rounded-2xl border transition-all overflow-hidden bg-white shadow-xs ${
                 fieldErrors.description
-                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                  : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
+                  ? 'border-rose-300 ring-2 ring-rose-100'
+                  : 'border-slate-200 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100'
               }`}
-            />
+            >
+              <MarkdownToolbar
+                textareaRef={descriptionTextareaRef}
+                value={formData.description}
+                onChange={(val) => {
+                  setFormData((prev) => ({ ...prev, description: val }));
+                  if (fieldErrors.description) {
+                    setFieldErrors((prev) => ({ ...prev, description: null }));
+                  }
+                }}
+                activeTab={descTab}
+                setActiveTab={setDescTab}
+              />
+
+              {descTab === 'write' ? (
+                <textarea
+                  ref={descriptionTextareaRef}
+                  id="description"
+                  name="description"
+                  rows={8}
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe the problem in detail: error messages, code context (e.g. ```java ... ```), environment setup, and what you have already tried..."
+                  className="w-full px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent font-mono"
+                />
+              ) : (
+                <div className="p-4 min-h-[200px] max-h-[450px] overflow-y-auto bg-slate-50/50">
+                  {formData.description.trim() ? (
+                    <MarkdownRenderer content={formData.description} />
+                  ) : (
+                    <p className="text-sm text-slate-400 italic">
+                      Nothing to preview yet. Switch back to Write mode and type some markdown or code blocks.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
             {fieldErrors.description && (
               <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.description}</p>
             )}

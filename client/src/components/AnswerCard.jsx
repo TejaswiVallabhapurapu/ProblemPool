@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { voteAnswer, removeAnswerVote, setBestAnswer, removeBestAnswer } from '../services/api';
 import ReviewSection from './ReviewSection';
+import MarkdownRenderer from './MarkdownRenderer';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -193,9 +194,9 @@ const AnswerCard = ({
         )}
       </div>
 
-      {/* Content */}
-      <div className="text-sm sm:text-base text-slate-800 leading-relaxed whitespace-pre-line pl-1 sm:pl-2">
-        {answer.content}
+      {/* Markdown Rich Content */}
+      <div className="pl-1 sm:pl-2">
+        <MarkdownRenderer content={answer.content} />
       </div>
 
       {/* Interactive Actions Bar */}

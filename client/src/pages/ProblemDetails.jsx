@@ -13,7 +13,9 @@ import {
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
-import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight } from 'lucide-react';
+import MarkdownRenderer from '../components/MarkdownRenderer';
+import MarkdownToolbar from '../components/MarkdownToolbar';
+import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -68,6 +70,7 @@ const ProblemDetails = () => {
 
   // Answer form states
   const [answerContent, setAnswerContent] = useState('');
+  const [answerTab, setAnswerTab] = useState('write');
   const [submittingAnswer, setSubmittingAnswer] = useState(false);
   const [answerError, setAnswerError] = useState('');
   const [answerSuccess, setAnswerSuccess] = useState('');
@@ -413,13 +416,14 @@ const ProblemDetails = () => {
               </div>
             </div>
 
-            {/* Full Description */}
-            <div className="prose prose-slate max-w-none">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">
-                Problem Description
+            {/* Full Description with Markdown & Syntax Highlighting */}
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-slate-400" />
+                <span>Problem Description</span>
               </h2>
-              <div className="text-slate-700 text-base leading-relaxed whitespace-pre-line bg-slate-50/50 p-6 rounded-xl border border-slate-100">
-                {problem.description}
+              <div className="bg-slate-50/60 p-5 sm:p-7 rounded-2xl border border-slate-100">
+                <MarkdownRenderer content={problem.description} />
               </div>
             </div>
 
@@ -547,22 +551,49 @@ const ProblemDetails = () => {
                 )}
 
                 <form onSubmit={handleAnswerSubmit} className="space-y-4">
-                  <textarea
-                    rows={4}
-                    value={answerContent}
-                    onChange={(e) => {
-                      setAnswerContent(e.target.value);
-                      if (answerError) setAnswerError('');
-                    }}
-                    placeholder="Write your solution, explanation, or suggestion for this problem..."
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
-                  />
+                  <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+                    <MarkdownToolbar
+                      value={answerContent}
+                      onChange={(newVal) => {
+                        setAnswerContent(newVal);
+                        if (answerError) setAnswerError('');
+                      }}
+                      activeTab={answerTab}
+                      onTabChange={setAnswerTab}
+                    />
 
-                  <div className="flex justify-end">
+                    {answerTab === 'write' ? (
+                      <textarea
+                        rows={6}
+                        value={answerContent}
+                        onChange={(e) => {
+                          setAnswerContent(e.target.value);
+                          if (answerError) setAnswerError('');
+                        }}
+                        placeholder="Explain your solution, steps to resolve, or code examples using Markdown (e.g. ```java ... ```)..."
+                        className="w-full px-4 py-3 bg-white text-slate-900 text-sm placeholder-slate-400 focus:outline-none font-mono text-[13px] leading-relaxed resize-y"
+                      />
+                    ) : (
+                      <div className="p-4 sm:p-5 min-h-[160px] bg-slate-50/40">
+                        {answerContent.trim() ? (
+                          <MarkdownRenderer content={answerContent} />
+                        ) : (
+                          <span className="text-xs text-slate-400 italic">
+                            Nothing to preview yet. Write some Markdown or code in the Write tab!
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] text-slate-400 font-medium">
+                      💡 Tip: Use <code className="bg-slate-100 text-indigo-600 px-1 py-0.5 rounded font-mono">```language</code> for syntax-highlighted code blocks with a copy button.
+                    </span>
                     <button
                       type="submit"
                       disabled={submittingAnswer || !answerContent.trim()}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold text-sm shadow-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold text-sm shadow-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed shrink-0"
                     >
                       {submittingAnswer ? (
                         <>
