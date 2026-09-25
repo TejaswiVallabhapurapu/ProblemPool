@@ -25,6 +25,12 @@ const notificationSchema = new mongoose.Schema(
         'follow',
         'badge',
         'reputation',
+        'team',
+        'team_join',
+        'team_leave',
+        'team_removed',
+        'team_task',
+        'team_submit',
         'system',
       ],
       required: true,
@@ -42,7 +48,7 @@ const notificationSchema = new mongoose.Schema(
     },
     referenceType: {
       type: String,
-      enum: ['problem', 'answer', 'review', 'reply', 'user', 'badge', 'reputation', 'system'],
+      enum: ['problem', 'answer', 'review', 'reply', 'user', 'badge', 'reputation', 'team', 'system'],
       default: 'system',
     },
     referenceId: {
