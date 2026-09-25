@@ -16,6 +16,7 @@ import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
 import Leaderboard from './pages/Leaderboard';
 import Challenges from './pages/Challenges';
+import Platform from './pages/Platform';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Routes>
               {/* Public Landing & Authentication */}
               <Route path="/" element={<Home />} />
+              <Route path="/platform" element={<Platform />} />
               <Route path="/home" element={<Navigate to="/dashboard" replace />} />
               <Route
                 path="/dashboard"
