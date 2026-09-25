@@ -27,7 +27,7 @@ import {
   clearAllNotifications,
 } from '../services/api';
 import GlassAiButton from '../components/GlassAiButton';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 
 const NOTIFICATION_ICONS = {
