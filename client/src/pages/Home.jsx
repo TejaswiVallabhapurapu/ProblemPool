@@ -51,6 +51,7 @@ const Home = () => {
   const [loadingFeed, setLoadingFeed] = useState(true);
 
   useEffect(() => {
+    document.title = isAuthenticated ? 'Dashboard - ProblemPool' : 'ProblemPool - Turn Real Problems Into Real Solutions';
     let isMounted = true;
 
     // 1. Fetch Platform General Stats

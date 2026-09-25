@@ -19,7 +19,10 @@ const ProtectedRoute = ({ children }) => {
     return (
       <Navigate
         to="/login"
-        state={{ message: 'Please log in to post a problem', from: location.pathname }}
+        state={{
+          message: 'Please log in to access this page.',
+          from: location.pathname + location.search,
+        }}
         replace
       />
     );

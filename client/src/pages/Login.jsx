@@ -57,8 +57,8 @@ const Login = () => {
         password: formData.password,
       });
 
-      // Redirect to the originally attempted page (if any) or Home
-      const destination = location.state?.from || '/';
+      // Redirect to the originally attempted page (if any) or Dashboard
+      const destination = location.state?.from || '/dashboard';
       navigate(destination, { replace: true });
     } catch (err) {
       setServerError(err.message || 'Login failed. Please check your credentials.');

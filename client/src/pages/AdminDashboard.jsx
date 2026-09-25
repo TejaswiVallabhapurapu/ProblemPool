@@ -247,10 +247,10 @@ const AdminDashboard = () => {
           You must be signed in with an authorized <span className="font-semibold text-slate-900">Administrator</span> account to access the ProblemPool Moderation Dashboard.
         </p>
         <Link
-          to="/"
+          to="/dashboard"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition"
         >
-          <span>Return to Home</span>
+          <span>Return to Dashboard</span>
         </Link>
       </div>
     );

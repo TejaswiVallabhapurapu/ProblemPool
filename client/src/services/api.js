@@ -66,6 +66,9 @@ const handleApiResponse = async (response) => {
   }
 
   if (!response.ok) {
+    if (response.status === 401 && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth:session-expired'));
+    }
     const errorMessage =
       data?.message ||
       (response.status === 401
@@ -241,9 +244,14 @@ export const getProblemsByTag = async (tag, token = null) => {
 /**
  * Fetch a single problem by ID
  * @param {string} id - MongoDB ObjectId
+ * @param {string} [token] - Optional JWT Token
  */
-export const getProblem = async (id) => {
-  return await safeFetch(`/problems/${id}`);
+export const getProblem = async (id, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch(`/problems/${id}`, { headers });
 };
 
 /**

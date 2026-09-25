@@ -134,7 +134,7 @@ const ProblemDetails = () => {
 
       // Fetch problem details, answers, saved problem status, and related problems in parallel
       const promises = [
-        getProblem(id),
+        getProblem(id, token),
         getProblemAnswers(id, currentSort, token).catch((err) => {
           console.warn('Failed to load answers:', err);
           return { success: true, answers: [] };

@@ -61,8 +61,8 @@ const Navbar = () => {
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
-            <NavLink to="/" end className={navLinkClass}>
-              Home
+            <NavLink to={isAuthenticated ? "/dashboard" : "/"} end className={navLinkClass}>
+              Dashboard
             </NavLink>
             <NavLink to="/problems" className={navLinkClass}>
               Problems
@@ -194,12 +194,12 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-5 space-y-3">
           <NavLink
-            to="/"
+            to={isAuthenticated ? "/dashboard" : "/"}
             end
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
           >
-            Home
+            Dashboard
           </NavLink>
           <NavLink
             to="/problems"

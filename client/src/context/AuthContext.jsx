@@ -22,19 +22,30 @@ export const AuthProvider = ({ children }) => {
       if (storedToken) {
         try {
           const res = await getCurrentUser(storedToken);
-          if (res.success && res.user) {
+          if (res && res.success && res.user) {
             setUser(res.user);
             localStorage.setItem('problempool_user', JSON.stringify(res.user));
+          } else {
+            logout();
           }
         } catch (err) {
           console.warn('Session expired or invalid token:', err.message);
           logout();
         }
+      } else {
+        logout();
       }
       setLoading(false);
     };
 
     initializeAuth();
+
+    const handleSessionExpired = () => {
+      logout();
+    };
+
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+    return () => window.removeEventListener('auth:session-expired', handleSessionExpired);
   }, []);
 
   const signup = async (userData) => {
