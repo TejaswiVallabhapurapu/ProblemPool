@@ -75,6 +75,8 @@ const ProblemDetails = () => {
   const [saveNotice, setSaveNotice] = useState(null);
   const [showCollectionModal, setShowCollectionModal] = useState(false);
   const [showReportProblemModal, setShowReportProblemModal] = useState(false);
+  const [showDeleteProblemModal, setShowDeleteProblemModal] = useState(false);
+  const [deleteProblemError, setDeleteProblemError] = useState(null);
 
   // Answer form states
   const [answerContent, setAnswerContent] = useState('');
