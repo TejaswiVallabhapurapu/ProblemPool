@@ -226,7 +226,7 @@ const Navbar = () => {
     if (!isAuthenticated) {
       e.preventDefault();
       navigate('/login', {
-        state: { message: 'Please log in to post a problem', from: '/create-problem' },
+        state: { message: 'Please sign in to post a problem', from: '/create-problem' },
       });
       setMobileMenuOpen(false);
     }
@@ -410,9 +410,9 @@ const Navbar = () => {
               </>
             ) : (
               <div className="flex items-center gap-2.5">
-                {/* Modern Animated Login Button (Preserved existing design) */}
+                {/* Modern Animated Sign In Button (Preserved existing design) */}
                 <AnimatedButton to="/login" variant="login" size="sm">
-                  Login
+                  Sign In
                 </AnimatedButton>
 
                 {/* Modern Animated Sign Up Button (Preserved existing design) */}
@@ -573,7 +573,7 @@ const Navbar = () => {
                   fullWidth
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Login
+                  Sign In
                 </AnimatedButton>
                 <AnimatedButton
                   to="/signup"

@@ -97,7 +97,7 @@ const ProblemCard = ({
     e.stopPropagation();
 
     if (!isAuthenticated || !token) {
-      setNotice('Please login to save problems.');
+      setNotice('Please sign in to save problems.');
       setTimeout(() => setNotice(null), 3500);
       return;
     }
@@ -198,7 +198,7 @@ const ProblemCard = ({
               onClick={() => navigate('/login')}
               className="text-indigo-400 hover:text-indigo-300 underline font-semibold ml-1"
             >
-              Login
+              Sign In
             </button>
           )}
         </div>
