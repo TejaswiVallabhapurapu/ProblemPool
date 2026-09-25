@@ -1459,5 +1459,5 @@ const Profile = () => {
 export default Profile;
 `;
 
-fs.writeFileSync(path.join(__dirname, '../../../client/src/pages/Profile.jsx'), profileContent, 'utf8');
+fs.writeFileSync(path.join(__dirname, '../client/src/pages/Profile.jsx'), profileContent, 'utf8');
 console.log('Successfully updated Profile.jsx with dark theme and high-contrast typography!');
