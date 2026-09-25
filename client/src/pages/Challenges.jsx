@@ -266,9 +266,9 @@ const Challenges = () => {
   const [userProgress, setUserProgress] = useState(() => {
     try {
       const saved = localStorage.getItem(progressStorageKey);
-      return saved ? JSON.parse(saved) : ;
+      return saved ? JSON.parse(saved) : {};
     } catch {
-      return ;
+      return {};
     }
   });
 
