@@ -7,12 +7,12 @@ import {
   User,
   Mail,
   Lock,
-  Loader2,
   AlertCircle,
   Info,
   Sparkles,
   ArrowRight,
 } from 'lucide-react';
+import { Loader } from '../components/Loader';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -262,7 +262,7 @@ const Signup = () => {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader size="sm" />
                     <span>Creating account...</span>
                   </>
                 ) : (

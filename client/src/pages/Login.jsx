@@ -7,13 +7,13 @@ import '@designcodeio/threeui/style.css';
 import {
   Mail,
   Lock,
-  Loader2,
   AlertCircle,
   CheckCircle2,
   Info,
   Sparkles,
   ArrowRight,
 } from 'lucide-react';
+import { Loader } from '../components/Loader';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -221,7 +221,7 @@ const Login = () => {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader size="sm" />
                     <span>Signing in...</span>
                   </>
                 ) : (
