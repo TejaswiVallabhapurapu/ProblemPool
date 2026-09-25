@@ -8,6 +8,12 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Name is required'],
       trim: true,
     },
+    username: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      sparse: true,
+    },
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -20,6 +26,31 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
+    },
+    bio: {
+      type: String,
+      default: '',
+      maxlength: [500, 'Bio cannot exceed 500 characters'],
+      trim: true,
+    },
+    avatar: {
+      type: String,
+      default: '',
+    },
+    location: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    title: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    reputation: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
   },
   {

@@ -321,15 +321,31 @@ const voteReview = async (req, res) => {
       user: req.user._id,
     });
 
+const { adjustReputation, REPUTATION_RULES } = require('../services/reputationService');
+
     let hasVoted = false;
     if (existingVote) {
       // Toggle off if already voted
+      adjustReputation({
+        userId: review.user,
+        points: -REPUTATION_RULES.HELPFUL_REVIEW_VOTE,
+        reason: 'Helpful vote removed on your review',
+        referenceType: 'review_vote',
+        referenceId: review._id,
+      });
       await ReviewVote.findByIdAndDelete(existingVote._id);
       hasVoted = false;
     } else {
       await ReviewVote.create({
         review: reviewId,
         user: req.user._id,
+      });
+      adjustReputation({
+        userId: review.user,
+        points: REPUTATION_RULES.HELPFUL_REVIEW_VOTE,
+        reason: 'Your review received a helpful vote',
+        referenceType: 'review_vote',
+        referenceId: review._id,
       });
       hasVoted = true;
     }
@@ -362,6 +378,22 @@ const removeReviewVote = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Invalid review ID format',
+      });
+    }
+
+    const review = await Review.findById(reviewId);
+    const existingVote = await ReviewVote.findOne({
+      review: reviewId,
+      user: req.user._id,
+    });
+
+    if (existingVote && review) {
+      adjustReputation({
+        userId: review.user,
+        points: -REPUTATION_RULES.HELPFUL_REVIEW_VOTE,
+        reason: 'Helpful vote removed on your review',
+        referenceType: 'review_vote',
+        referenceId: reviewId,
       });
     }
 

@@ -9,6 +9,7 @@ import Problems from './pages/Problems';
 import CreateProblem from './pages/CreateProblem';
 import ProblemDetails from './pages/ProblemDetails';
 import SavedProblems from './pages/SavedProblems';
+import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -38,6 +39,15 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/profile/:idOrUsername" element={<Profile />} />
               <Route path="/problems/:id" element={<ProblemDetails />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />

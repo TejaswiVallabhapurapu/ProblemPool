@@ -143,11 +143,22 @@ const createAnswer = async (req, res) => {
       });
     }
 
+const { adjustReputation, REPUTATION_RULES } = require('../services/reputationService');
+
     // Create answer associated with problem & logged-in user
     const newAnswer = await Answer.create({
       problem: problemId,
       user: req.user._id,
       content: content.trim(),
+    });
+
+    // Award reputation points for answering (+5)
+    adjustReputation({
+      userId: req.user._id,
+      points: REPUTATION_RULES.POST_ANSWER,
+      reason: `Posted an answer to: "${problem.title.slice(0, 45)}..."`,
+      referenceType: 'answer',
+      referenceId: newAnswer._id,
     });
 
     // Populate user info for immediate frontend display
@@ -294,9 +305,35 @@ const voteAnswer = async (req, res) => {
     if (existingVote) {
       if (existingVote.voteType === voteType) {
         // Same vote clicked again -> remove vote (toggle off)
+        if (existingVote.voteType === 'helpful') {
+          adjustReputation({
+            userId: answer.user,
+            points: -REPUTATION_RULES.HELPFUL_ANSWER_VOTE,
+            reason: 'Helpful vote removed on your answer',
+            referenceType: 'answer_vote',
+            referenceId: answer._id,
+          });
+        }
         await AnswerVote.findByIdAndDelete(existingVote._id);
       } else {
-        // Change vote (e.g. from helpful to not_helpful)
+        // Change vote (e.g. from helpful to not_helpful or vice versa)
+        if (existingVote.voteType === 'helpful' && voteType === 'not_helpful') {
+          adjustReputation({
+            userId: answer.user,
+            points: -REPUTATION_RULES.HELPFUL_ANSWER_VOTE,
+            reason: 'Helpful vote changed on your answer',
+            referenceType: 'answer_vote',
+            referenceId: answer._id,
+          });
+        } else if (existingVote.voteType === 'not_helpful' && voteType === 'helpful') {
+          adjustReputation({
+            userId: answer.user,
+            points: REPUTATION_RULES.HELPFUL_ANSWER_VOTE,
+            reason: 'Your answer received a helpful vote',
+            referenceType: 'answer_vote',
+            referenceId: answer._id,
+          });
+        }
         existingVote.voteType = voteType;
         await existingVote.save();
       }
@@ -307,6 +344,16 @@ const voteAnswer = async (req, res) => {
         user: req.user._id,
         voteType,
       });
+
+      if (voteType === 'helpful') {
+        adjustReputation({
+          userId: answer.user,
+          points: REPUTATION_RULES.HELPFUL_ANSWER_VOTE,
+          reason: 'Your answer received a helpful vote',
+          referenceType: 'answer_vote',
+          referenceId: answer._id,
+        });
+      }
     }
 
     // Return updated counts and active user vote
@@ -343,6 +390,22 @@ const removeAnswerVote = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Invalid answer ID format',
+      });
+    }
+
+    const answer = await Answer.findById(answerId);
+    const existingVote = await AnswerVote.findOne({
+      answer: answerId,
+      user: req.user._id,
+    });
+
+    if (existingVote && existingVote.voteType === 'helpful' && answer) {
+      adjustReputation({
+        userId: answer.user,
+        points: -REPUTATION_RULES.HELPFUL_ANSWER_VOTE,
+        reason: 'Helpful vote removed on your answer',
+        referenceType: 'answer_vote',
+        referenceId: answerId,
       });
     }
 

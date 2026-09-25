@@ -577,3 +577,107 @@ export const getMySavedProblemIds = async (token) => {
   });
 };
 
+/**
+ * Get complete profile statistics, reputation, level, achievements, and completion
+ * @param {string} token
+ */
+export const getMyProfileStats = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/stats', {
+    headers,
+  });
+};
+
+/**
+ * Update user profile details (name, username, bio, location, title, avatar)
+ * @param {Object} profileData
+ * @param {string} token
+ */
+export const updateMyProfile = async (profileData, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/profile', {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(profileData),
+  });
+};
+
+/**
+ * Get user reputation history events
+ * @param {string} token
+ */
+export const getMyReputationHistory = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/reputation-history', {
+    headers,
+  });
+};
+
+/**
+ * Get user activity timeline
+ * @param {string} token
+ */
+export const getMyActivityTimeline = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/activity', {
+    headers,
+  });
+};
+
+/**
+ * Get problems posted by current user
+ * @param {string} token
+ */
+export const getMyProblems = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/problems', {
+    headers,
+  });
+};
+
+/**
+ * Get answers posted by current user
+ * @param {string} token
+ */
+export const getMyAnswers = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/answers', {
+    headers,
+  });
+};
+
+/**
+ * Get public profile by username or userId
+ * @param {string} idOrUsername
+ */
+export const getPublicUserProfile = async (idOrUsername) => {
+  return await safeFetch(`/users/profile/${encodeURIComponent(idOrUsername)}`);
+};
+
+

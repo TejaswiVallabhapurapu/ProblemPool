@@ -88,15 +88,19 @@ const Navbar = () => {
                   <span>Post Problem</span>
                 </Link>
 
-                {/* User badge */}
-                <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-                  <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+                {/* Profile Link & User badge */}
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 pl-2 border-l border-slate-200 hover:opacity-80 transition group"
+                  title="View Profile & Reputation"
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <span className="text-sm font-semibold text-slate-800 max-w-[140px] truncate">
+                  <span className="text-sm font-semibold text-slate-800 max-w-[140px] truncate group-hover:text-indigo-600">
                     {user?.name}
                   </span>
-                </div>
+                </Link>
 
                 {/* Logout Button */}
                 <button
@@ -186,14 +190,19 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <div className="pt-2 border-t border-slate-100 space-y-2">
-              <div className="flex items-center gap-2 px-3 py-2">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-50 transition"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-xs">
                   {user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
                 <div className="text-sm font-semibold text-slate-800 truncate">
                   {user?.name}
+                  <span className="block text-[11px] text-indigo-600 font-normal">View Community Profile →</span>
                 </div>
-              </div>
+              </Link>
               <NavLink
                 to="/saved-problems"
                 onClick={() => setMobileMenuOpen(false)}

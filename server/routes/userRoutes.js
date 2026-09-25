@@ -4,12 +4,30 @@ const {
   getMySavedProblems,
   getMySavedProblemIds,
 } = require('../controllers/savedProblemController');
+const {
+  getMyProfileStats,
+  getPublicUserProfile,
+  updateMyProfile,
+  getMyReputationHistory,
+  getMyActivityTimeline,
+  getMyProblems,
+  getMyAnswers,
+} = require('../controllers/profileController');
 const { protect } = require('../middleware/authMiddleware');
 
-// Get saved problems for current logged-in user
-router.get('/me/saved-problems', protect, getMySavedProblems);
+// Logged-in user stats & profile
+router.get('/me/stats', protect, getMyProfileStats);
+router.put('/me/profile', protect, updateMyProfile);
+router.get('/me/activity', protect, getMyActivityTimeline);
+router.get('/me/reputation-history', protect, getMyReputationHistory);
+router.get('/me/problems', protect, getMyProblems);
+router.get('/me/answers', protect, getMyAnswers);
 
-// Fast endpoint to get list of saved problem IDs for current user
+// Saved problems for current logged-in user
+router.get('/me/saved-problems', protect, getMySavedProblems);
 router.get('/me/saved-problems/ids', protect, getMySavedProblemIds);
+
+// Public user profile (by ObjectId or username)
+router.get('/profile/:idOrUsername', getPublicUserProfile);
 
 module.exports = router;

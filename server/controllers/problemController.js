@@ -115,6 +115,8 @@ const getProblemById = async (req, res) => {
   }
 };
 
+const { adjustReputation, REPUTATION_RULES } = require('../services/reputationService');
+
 // @desc    Create a new problem (Protected)
 // @route   POST /api/problems
 const createProblem = async (req, res) => {
@@ -137,6 +139,15 @@ const createProblem = async (req, res) => {
       location: location.trim(),
       createdBy: req.user._id,
       bestAnswer: null,
+    });
+
+    // Award reputation points for posting a problem (+2)
+    adjustReputation({
+      userId: req.user._id,
+      points: REPUTATION_RULES.POST_PROBLEM,
+      reason: `Posted a problem: "${newProblem.title.slice(0, 50)}"`,
+      referenceType: 'problem',
+      referenceId: newProblem._id,
     });
 
     const populatedProblem = await Problem.findById(newProblem._id)
@@ -313,6 +324,31 @@ const setBestAnswer = async (req, res) => {
       });
     }
 
+    // If replacing an existing best answer, deduct 15 from the previous answer author
+    if (problem.bestAnswer && problem.bestAnswer.toString() !== answerId.toString()) {
+      const oldAnswer = await Answer.findById(problem.bestAnswer);
+      if (oldAnswer) {
+        adjustReputation({
+          userId: oldAnswer.user,
+          points: -REPUTATION_RULES.BEST_ANSWER,
+          reason: `Best Answer changed on: "${problem.title.slice(0, 45)}..."`,
+          referenceType: 'best_answer',
+          referenceId: oldAnswer._id,
+        });
+      }
+    }
+
+    // Award 15 reputation to newly marked best answer author
+    if (!problem.bestAnswer || problem.bestAnswer.toString() !== answerId.toString()) {
+      adjustReputation({
+        userId: answer.user,
+        points: REPUTATION_RULES.BEST_ANSWER,
+        reason: `Your answer was selected as Best Answer on: "${problem.title.slice(0, 45)}..."`,
+        referenceType: 'best_answer',
+        referenceId: answer._id,
+      });
+    }
+
     problem.bestAnswer = answerId;
     await problem.save();
 
@@ -358,6 +394,19 @@ const removeBestAnswer = async (req, res) => {
         success: false,
         message: 'Only the problem owner can remove the Best Answer',
       });
+    }
+
+    if (problem.bestAnswer) {
+      const oldAnswer = await Answer.findById(problem.bestAnswer);
+      if (oldAnswer) {
+        adjustReputation({
+          userId: oldAnswer.user,
+          points: -REPUTATION_RULES.BEST_ANSWER,
+          reason: `Best Answer designation removed on: "${problem.title.slice(0, 45)}..."`,
+          referenceType: 'best_answer',
+          referenceId: oldAnswer._id,
+        });
+      }
     }
 
     problem.bestAnswer = null;
