@@ -17,6 +17,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import Leaderboard from './pages/Leaderboard';
 import Challenges from './pages/Challenges';
 import Platform from './pages/Platform';
+import TeamUpDiscovery from './pages/TeamUpDiscovery';
+import TeamWorkspace from './pages/TeamWorkspace';
 
 function App() {
   return (
@@ -72,6 +74,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProblemDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/problems/:problemId/team/:teamId"
+                element={
+                  <ProtectedRoute>
+                    <TeamWorkspace />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/team-up"
+                element={
+                  <ProtectedRoute>
+                    <TeamUpDiscovery />
                   </ProtectedRoute>
                 }
               />
