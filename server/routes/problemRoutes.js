@@ -73,4 +73,11 @@ router.route('/:problemId/answers')
 router.route('/:problemId/answers/:answerId')
   .delete(protect, deleteAnswer);
 
+// Collaborative Teams under problem
+const { getTeamsByProblem, createTeam: createProblemTeam } = require('../controllers/teamController');
+
+router.route('/:problemId/teams')
+  .get(optionalProtect, getTeamsByProblem)
+  .post(protect, createProblemTeam);
+
 module.exports = router;

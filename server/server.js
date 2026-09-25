@@ -15,6 +15,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const leaderboardRoutes = require('./routes/leaderboardRoutes');
 const challengeRoutes = require('./routes/challengeRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const teamRoutes = require('./routes/teamRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -105,6 +106,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/challenges', challengeRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/teams', teamRoutes);
 
 // Health check endpoints for root and /api (used by uptime monitors & hosting platforms)
 app.get(['/', '/api'], (req, res) => {
