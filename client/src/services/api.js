@@ -1,11 +1,35 @@
 /**
  * ProblemPool API Client
- * Automatically normalizes API_BASE_URL for both localhost and production deployment (Render/Vercel)
+ * Automatically normalizes and selects API_BASE_URL for both localhost and production deployments (Vercel / Render)
  */
-const getApiBaseUrl = () => {
-  let url = import.meta.env.VITE_API_URL;
+export const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+
+  // Determine if running locally
+  const isLocalhost =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '0.0.0.0' ||
+      window.location.hostname === '');
+
+  // If in browser on a production domain (e.g., *.vercel.app, custom domain)
+  if (typeof window !== 'undefined' && !isLocalhost) {
+    // If VITE_API_URL is missing or incorrectly set to localhost, fallback to live Render backend
+    if (
+      !envUrl ||
+      typeof envUrl !== 'string' ||
+      envUrl.trim() === '' ||
+      envUrl.includes('localhost') ||
+      envUrl.includes('127.0.0.1')
+    ) {
+      return 'https://problempool.onrender.com/api';
+    }
+  }
+
+  // Fallback for local development if VITE_API_URL is not provided
+  let url = envUrl;
   if (!url || typeof url !== 'string' || url.trim() === '') {
-    // Default for local development
     return 'http://localhost:5000/api';
   }
 
@@ -18,8 +42,6 @@ const getApiBaseUrl = () => {
   }
   return url;
 };
-
-const API_BASE_URL = getApiBaseUrl();
 
 /**
  * Helper to safely parse JSON or text response
@@ -58,23 +80,38 @@ const handleApiResponse = async (response) => {
 };
 
 /**
+ * Helper wrapper for network fetch with friendlier error handling
+ */
+const safeFetch = async (endpoint, options = {}) => {
+  const baseUrl = getApiBaseUrl();
+  const fullUrl = `${baseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+
+  try {
+    const response = await fetch(fullUrl, options);
+    return await handleApiResponse(response);
+  } catch (error) {
+    console.error(`API Request to ${fullUrl} failed:`, error);
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error(
+        'Unable to reach backend server. Please verify your connection or allow a moment for the server to wake up.'
+      );
+    }
+    throw error;
+  }
+};
+
+/**
  * Register a new user
  * @param {Object} userData - { name, email, password }
  */
 export const signupUser = async (userData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error('signupUser error:', error);
-    throw error;
-  }
+  return await safeFetch('/auth/signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
 };
 
 /**
@@ -82,19 +119,13 @@ export const signupUser = async (userData) => {
  * @param {Object} credentials - { email, password }
  */
 export const loginUser = async (credentials) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-    });
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error('loginUser error:', error);
-    throw error;
-  }
+  return await safeFetch('/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
 };
 
 /**
@@ -102,33 +133,21 @@ export const loginUser = async (credentials) => {
  * @param {string} token - JWT Token
  */
 export const getCurrentUser = async (token) => {
-  try {
-    const headers = {};
-    if (token && token !== 'null' && token !== 'undefined') {
-      headers.Authorization = `Bearer ${token.trim()}`;
-    }
-
-    const response = await fetch(`${API_BASE_URL}/auth/me`, {
-      headers,
-    });
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error('getCurrentUser error:', error);
-    throw error;
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
   }
+
+  return await safeFetch('/auth/me', {
+    headers,
+  });
 };
 
 /**
  * Fetch all problems (newest first)
  */
 export const getProblems = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/problems`);
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error('getProblems error:', error);
-    throw error;
-  }
+  return await safeFetch('/problems');
 };
 
 /**
@@ -136,13 +155,7 @@ export const getProblems = async () => {
  * @param {string} id - MongoDB ObjectId
  */
 export const getProblem = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/problems/${id}`);
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error(`getProblem(${id}) error:`, error);
-    throw error;
-  }
+  return await safeFetch(`/problems/${id}`);
 };
 
 /**
@@ -151,24 +164,18 @@ export const getProblem = async (id) => {
  * @param {string} token - JWT Token
  */
 export const createProblem = async (problemData, token) => {
-  try {
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    if (token && token !== 'null' && token !== 'undefined') {
-      headers.Authorization = `Bearer ${token.trim()}`;
-    }
-
-    const response = await fetch(`${API_BASE_URL}/problems`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(problemData),
-    });
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error('createProblem error:', error);
-    throw error;
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
   }
+
+  return await safeFetch('/problems', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(problemData),
+  });
 };
 
 /**
@@ -177,21 +184,15 @@ export const createProblem = async (problemData, token) => {
  * @param {string} [token] - Optional JWT Token
  */
 export const deleteProblem = async (id, token) => {
-  try {
-    const headers = {};
-    if (token && token !== 'null' && token !== 'undefined') {
-      headers.Authorization = `Bearer ${token.trim()}`;
-    }
-
-    const response = await fetch(`${API_BASE_URL}/problems/${id}`, {
-      method: 'DELETE',
-      headers,
-    });
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error(`deleteProblem(${id}) error:`, error);
-    throw error;
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
   }
+
+  return await safeFetch(`/problems/${id}`, {
+    method: 'DELETE',
+    headers,
+  });
 };
 
 /**
@@ -199,15 +200,7 @@ export const deleteProblem = async (id, token) => {
  * @param {string} category
  */
 export const getProblemsByCategory = async (category) => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/problems/category/${encodeURIComponent(category)}`
-    );
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error(`getProblemsByCategory(${category}) error:`, error);
-    throw error;
-  }
+  return await safeFetch(`/problems/category/${encodeURIComponent(category)}`);
 };
 
 /**
@@ -215,13 +208,7 @@ export const getProblemsByCategory = async (category) => {
  * @param {string} problemId - MongoDB Problem ObjectId
  */
 export const getProblemAnswers = async (problemId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/problems/${problemId}/answers`);
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error(`getProblemAnswers(${problemId}) error:`, error);
-    throw error;
-  }
+  return await safeFetch(`/problems/${problemId}/answers`);
 };
 
 /**
@@ -231,24 +218,18 @@ export const getProblemAnswers = async (problemId) => {
  * @param {string} token - JWT Token
  */
 export const submitAnswer = async (problemId, content, token) => {
-  try {
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    if (token && token !== 'null' && token !== 'undefined') {
-      headers.Authorization = `Bearer ${token.trim()}`;
-    }
-
-    const response = await fetch(`${API_BASE_URL}/problems/${problemId}/answers`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ content }),
-    });
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error(`submitAnswer(${problemId}) error:`, error);
-    throw error;
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
   }
+
+  return await safeFetch(`/problems/${problemId}/answers`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ content }),
+  });
 };
 
 export const createAnswer = submitAnswer;
@@ -260,22 +241,13 @@ export const createAnswer = submitAnswer;
  * @param {string} token - JWT Token
  */
 export const deleteAnswer = async (problemId, answerId, token) => {
-  try {
-    const headers = {};
-    if (token && token !== 'null' && token !== 'undefined') {
-      headers.Authorization = `Bearer ${token.trim()}`;
-    }
-
-    const response = await fetch(
-      `${API_BASE_URL}/problems/${problemId}/answers/${answerId}`,
-      {
-        method: 'DELETE',
-        headers,
-      }
-    );
-    return await handleApiResponse(response);
-  } catch (error) {
-    console.error(`deleteAnswer(${problemId}, ${answerId}) error:`, error);
-    throw error;
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
   }
+
+  return await safeFetch(`/problems/${problemId}/answers/${answerId}`, {
+    method: 'DELETE',
+    headers,
+  });
 };
