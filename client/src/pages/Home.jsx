@@ -47,6 +47,11 @@ const Home = () => {
   const [activeFeedTab, setActiveFeedTab] = useState('recommended');
   const [loadingFeed, setLoadingFeed] = useState(true);
 
+  // Collaborative problems state for "Help Others / Team Up"
+  const [collaborativeProblems, setCollaborativeProblems] = useState([]);
+  const [loadingCollab, setLoadingCollab] = useState(true);
+  const [collabFilter, setCollabFilter] = useState('recent');
+
   useEffect(() => {
     document.title = isAuthenticated
       ? 'Dashboard - ProblemPool'
@@ -94,13 +99,29 @@ const Home = () => {
       }
     };
 
+    // 3. Fetch Collaborative Problems
+    const loadCollaborativeProblems = async () => {
+      try {
+        setLoadingCollab(true);
+        const res = await getCollaborativeProblems({ filter: collabFilter, limit: 6 });
+        if (res?.success && isMounted) {
+          setCollaborativeProblems(res.problems || []);
+        }
+      } catch (err) {
+        console.warn('Failed to load collaborative problems:', err);
+      } finally {
+        if (isMounted) setLoadingCollab(false);
+      }
+    };
+
     loadGeneralStats();
     loadPersonalizedFeed();
+    loadCollaborativeProblems();
 
     return () => {
       isMounted = false;
     };
-  }, [token, isAuthenticated]);
+  }, [token, isAuthenticated, collabFilter]);
 
   const activeProblems =
     activeFeedTab === 'recommended'
@@ -416,6 +437,143 @@ const Home = () => {
                     problem={problem}
                   />
                 ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* 3.5. COLLABORATIVE PROBLEMS (HELP OTHERS / TEAM UP) SECTION */}
+        <section className="relative z-10 py-16 sm:py-20 bg-[#0c0c0c] backdrop-blur-md border-b border-white/10">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
+                  <Users className="w-3.5 h-3.5 text-slate-300" />
+                  <span>Team Up & Solve Together</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+                  🤝 Collaborative Problems
+                </h2>
+                <p className="text-slate-400 text-sm sm:text-base mt-1.5 max-w-2xl">
+                  Form a team with other problem solvers to tackle complex engineering, algorithmic, and domain challenges together.
+                </p>
+              </div>
+
+              <GlassAiButton
+                to="/team-up"
+                size="sm"
+                variant="primary"
+                icon={<ArrowRight className="w-4 h-4" />}
+                iconPosition="right"
+              >
+                Browse All Teams
+              </GlassAiButton>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar">
+              {[
+                { id: 'recent', label: '🕒 Most Recent' },
+                { id: 'members_needed', label: '👥 Most Members Needed' },
+                { id: 'unanswered', label: '❓ Unanswered' },
+                { id: 'popular', label: '🔥 Popular' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setCollabFilter(tab.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                    collabFilter === tab.id
+                      ? 'bg-[#242424] text-white border border-white/25 shadow-md'
+                      : 'bg-[#141414] text-slate-400 hover:text-white border border-[#242424]'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Collaborative Problem Cards Grid */}
+            {loadingCollab ? (
+              <LoaderContainer minHeight="20vh" message="Loading collaborative problems..." />
+            ) : collaborativeProblems.length === 0 ? (
+              <div className="p-8 text-center rounded-2xl bg-[#141414] border border-white/10">
+                <p className="text-slate-400 text-sm mb-4">No collaborative problems found under this filter.</p>
+                <GlassAiButton to="/create-problem" size="sm" variant="primary">
+                  Post a Problem with Team Up
+                </GlassAiButton>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {collaborativeProblems.map((problem) => {
+                  const activeTeamCount = problem.activeTeamCount || 0;
+                  const totalMemberSlots = activeTeamCount * 5;
+                  const currentMembers = problem.totalTeamMembers || 0;
+                  const membersNeeded = Math.max(0, totalMemberSlots - currentMembers);
+
+                  return (
+                    <div
+                      key={problem._id}
+                      className="rounded-2xl bg-[#141414] border border-white/10 hover:border-white/25 p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-xl group"
+                    >
+                      <div>
+                        {/* Badges */}
+                        <div className="flex items-center justify-between gap-2 mb-3">
+                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#1c1c1c] text-slate-300 border border-white/10">
+                            {problem.category || 'General'}
+                          </span>
+                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+                            problem.difficulty === 'hard'
+                              ? 'bg-rose-950/60 text-rose-300 border border-rose-800/40'
+                              : problem.difficulty === 'medium'
+                              ? 'bg-amber-950/60 text-amber-300 border border-amber-800/40'
+                              : 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/40'
+                          }`}>
+                            {problem.difficulty || 'medium'}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <Link
+                          to={`/problems/${problem._id}`}
+                          className="text-base font-bold text-white group-hover:text-slate-300 line-clamp-2 mb-2 transition"
+                        >
+                          {problem.title}
+                        </Link>
+
+                        <p className="text-xs text-slate-400 line-clamp-2 mb-4">
+                          {problem.description}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+                        <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
+                          <div className="flex items-center gap-1.5">
+                            <Users className="w-3.5 h-3.5 text-slate-400" />
+                            <span>{activeTeamCount} {activeTeamCount === 1 ? 'Team' : 'Teams'} Active</span>
+                          </div>
+                          <span className="text-slate-400">
+                            {membersNeeded > 0 ? `${membersNeeded} slots available` : 'Form new team'}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-[11px] text-slate-500 font-medium">
+                            By {problem.author?.name || 'Problem Solvers'}
+                          </span>
+                          <GlassAiButton
+                            to={`/problems/${problem._id}`}
+                            size="xs"
+                            variant="primary"
+                            icon={<ArrowRight className="w-3 h-3" />}
+                            iconPosition="right"
+                          >
+                            View Problem
+                          </GlassAiButton>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
