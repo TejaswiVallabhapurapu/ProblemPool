@@ -747,13 +747,9 @@ const AdminDashboard = () => {
 
                           <td className="py-3.5 px-4">
                             {u.isSuspended ? (
-                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950/40 text-rose-300 border border-rose-500/20">
-                                � Suspended
-                              </span>
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-950/40 text-rose-300 border border-rose-500/20">Suspended</span>
                             ) : (
-                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/40 text-emerald-300 border border-emerald-500/20">
-                                ✅ Active
-                              </span>
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950/40 text-emerald-300 border border-emerald-500/20">Active</span>
                             )}
                           </td>
 
