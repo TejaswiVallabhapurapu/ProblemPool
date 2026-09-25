@@ -23,7 +23,7 @@ import { useAuth } from '../context/AuthContext';
 import ProblemCard from '../components/ProblemCard';
 import CategoryFilter, { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import GlassAiButton from '../components/GlassAiButton';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 
 const STATUS_OPTIONS = [
@@ -198,7 +198,7 @@ const Problems = () => {
 
   return (
     <div className="relative min-h-screen">
-      <KnowledgeNetworkBackground variant="constellation" />
+      <ParticlesBackground />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
