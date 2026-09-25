@@ -325,7 +325,7 @@ const Problems = () => {
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
                 {popularTags.map((item) => {
-                  const isSelected = selectedTag.toLowerCase() === item.tag.toLowerCase();
+                  const isSelected = (selectedTag || '').toLowerCase() === (item?.tag || '').toLowerCase();
                   return (
                     <button
                       key={item.tag}

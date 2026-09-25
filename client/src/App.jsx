@@ -21,6 +21,7 @@ import Platform from './pages/Platform';
 import TeamUpDiscovery from './pages/TeamUpDiscovery';
 import TeamWorkspace from './pages/TeamWorkspace';
 import WebThreadsBackground from './components/WebThreadsBackground';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function AppContent() {
   const location = useLocation();
@@ -215,11 +216,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
