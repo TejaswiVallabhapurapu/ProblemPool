@@ -8,7 +8,21 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('problempool_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      if (!savedUser) return null;
+      const parsed = JSON.parse(savedUser);
+      const rawUser = parsed?.user || parsed;
+      if (rawUser && (rawUser._id || rawUser.name || rawUser.email || rawUser.username)) {
+        return {
+          _id: rawUser._id || '',
+          name: rawUser.name || '',
+          email: rawUser.email || '',
+          username: rawUser.username || '',
+          role: rawUser.role || 'user',
+          avatar: rawUser.avatar || '',
+          reputation: rawUser.reputation || 0,
+        };
+      }
+      return null;
     } catch {
       return null;
     }
@@ -22,9 +36,19 @@ export const AuthProvider = ({ children }) => {
       if (storedToken) {
         try {
           const res = await getCurrentUser(storedToken);
-          if (res && res.success && res.user) {
-            setUser(res.user);
-            localStorage.setItem('problempool_user', JSON.stringify(res.user));
+          const raw = res?.user || res?.data?.user || res?.data;
+          if (res && res.success && raw) {
+            const cleanUser = {
+              _id: raw._id || '',
+              name: raw.name || '',
+              email: raw.email || '',
+              username: raw.username || '',
+              role: raw.role || 'user',
+              avatar: raw.avatar || '',
+              reputation: raw.reputation || 0,
+            };
+            setUser(cleanUser);
+            localStorage.setItem('problempool_user', JSON.stringify(cleanUser));
           } else {
             logout();
           }
@@ -54,11 +78,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const data = await loginUser(credentials);
-    if (data.success && data.token && data.user) {
+    const rawUser = data?.user || data?.data?.user || data?.data;
+    if (data?.success && data?.token && rawUser) {
+      const cleanUser = {
+        _id: rawUser._id || '',
+        name: rawUser.name || '',
+        email: rawUser.email || '',
+        username: rawUser.username || '',
+        role: rawUser.role || 'user',
+        avatar: rawUser.avatar || '',
+        reputation: rawUser.reputation || 0,
+      };
       setToken(data.token);
-      setUser(data.user);
+      setUser(cleanUser);
       localStorage.setItem('problempool_token', data.token);
-      localStorage.setItem('problempool_user', JSON.stringify(data.user));
+      localStorage.setItem('problempool_user', JSON.stringify(cleanUser));
     }
     return data;
   };
