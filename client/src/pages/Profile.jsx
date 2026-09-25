@@ -23,7 +23,6 @@ import {
   ShieldCheck,
   Check,
   X,
-  Loader2,
   FolderSearch,
   Users,
   UserPlus,
@@ -35,6 +34,7 @@ import {
 } from 'lucide-react';
 import ReportModal from '../components/ReportModal';
 import GlassAiButton from '../components/GlassAiButton';
+import { Loader, LoaderContainer } from '../components/Loader';
 import { useAuth } from '../context/AuthContext';
 import {
   getMyProfileStats,
@@ -355,22 +355,9 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-3xl border border-slate-200 p-8 animate-pulse mb-8 space-y-6">
-          <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-2xl bg-slate-200" />
-            <div className="space-y-3 flex-1">
-              <div className="h-6 w-48 bg-slate-200 rounded" />
-              <div className="h-4 w-32 bg-slate-100 rounded" />
-              <div className="h-4 w-64 bg-slate-100 rounded" />
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-28 bg-white rounded-2xl border border-slate-200 animate-pulse" />
-          ))}
-        </div>
+      <div className="relative min-h-screen">
+        <ParticlesBackground />
+        <LoaderContainer minHeight="70vh" message="Loading profile..." />
       </div>
     );
   }

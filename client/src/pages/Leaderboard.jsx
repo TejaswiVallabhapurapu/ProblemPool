@@ -137,10 +137,7 @@ const Leaderboard = () => {
 
       {/* Loading State */}
       {loading ? (
-        <div className="py-24 flex flex-col items-center justify-center text-slate-400 gap-3">
-          <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
-          <span className="text-sm font-semibold">Calculating community rankings...</span>
-        </div>
+        <LoaderContainer minHeight="40vh" message="Calculating community rankings..." />
       ) : error ? (
         <div className="bg-white rounded-3xl border border-rose-200 p-8 text-center max-w-md mx-auto">
           <p className="text-sm text-rose-600 font-semibold mb-4">{error}</p>
