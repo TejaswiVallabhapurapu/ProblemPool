@@ -305,22 +305,22 @@ const Challenges = () => {
     const merged = [...CORE_CHALLENGES];
     dbChallenges.forEach((dbc) => {
       // Map MongoDB challenge format if not already in core
-      if (!merged.some((c) => c.id === dbc._id || c.title.toLowerCase() === dbc.title.toLowerCase())) {
+      if (dbc && !merged.some((c) => c.id === dbc._id || (c.title || '').toLowerCase() === (dbc.title || '').toLowerCase())) {
         merged.push({
           id: dbc._id,
-          title: dbc.title,
-          description: dbc.description,
+          title: dbc.title || 'Community Challenge',
+          description: dbc.description || '',
           category: dbc.category || 'Programming',
           difficulty: dbc.difficulty || 'Medium',
-          duration: `${Math.max(1, Math.round((new Date(dbc.endDate) - new Date(dbc.startDate)) / (1000 * 60 * 60 * 24)))} Days`,
+          duration: `${Math.max(1, Math.round((new Date(dbc.endDate || Date.now()) - new Date(dbc.startDate || Date.now())) / (1000 * 60 * 60 * 24)))} Days`,
           problemsCount: 1,
           rewardPoints: dbc.pointsReward || 50,
           rules: ['Submit your best solution using Markdown & code blocks.'],
           problems: [
             {
               id: 1,
-              title: dbc.title,
-              description: dbc.description,
+              title: dbc.title || 'Challenge Problem',
+              description: dbc.description || '',
             },
           ],
           isDbChallenge: true,
@@ -347,10 +347,10 @@ const Challenges = () => {
       // Search Query Filter
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
-        const matchTitle = ch.title.toLowerCase().includes(q);
-        const matchDesc = ch.description.toLowerCase().includes(q);
-        const matchCat = ch.category.toLowerCase().includes(q);
-        const matchProb = ch.problems?.some((p) => p.title.toLowerCase().includes(q));
+        const matchTitle = (ch.title || '').toLowerCase().includes(q);
+        const matchDesc = (ch.description || '').toLowerCase().includes(q);
+        const matchCat = (ch.category || '').toLowerCase().includes(q);
+        const matchProb = ch.problems?.some((p) => (p.title || '').toLowerCase().includes(q));
         if (!matchTitle && !matchDesc && !matchCat && !matchProb) {
           return false;
         }

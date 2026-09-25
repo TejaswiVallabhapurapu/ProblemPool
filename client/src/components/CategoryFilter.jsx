@@ -24,7 +24,7 @@ const CategoryFilter = ({ selectedCategory, onSelectCategory }) => {
   return (
     <div className="flex flex-wrap items-center gap-2">
       {POPULAR_CATEGORIES.map((category) => {
-        const isSelected = selectedCategory.toLowerCase() === category.toLowerCase();
+        const isSelected = (selectedCategory || '').toLowerCase() === (category || '').toLowerCase();
         return (
           <button
             key={category}
