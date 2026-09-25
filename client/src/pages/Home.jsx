@@ -19,6 +19,7 @@ import KnowledgeCore3D from '../components/KnowledgeCore3D';
 import KnowledgeFlowVisual from '../components/KnowledgeFlowVisual';
 import EmptyState3D from '../components/EmptyState3D';
 import GlassAiButton from '../components/GlassAiButton';
+import { LoaderContainer } from '../components/Loader';
 
 const Home = () => {
   const { user: authUser, token, isAuthenticated } = useAuth();
@@ -376,25 +377,7 @@ const Home = () => {
 
             {/* Feed Content Loading */}
             {loadingFeed ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <div
-                    key={n}
-                    className="glass-card-3d rounded-3xl border border-purple-500/30 bg-slate-900/70 p-6 space-y-4 animate-pulse"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div className="h-5 w-24 bg-purple-900/50 rounded-full" />
-                      <div className="h-4 w-16 bg-purple-900/30 rounded" />
-                    </div>
-                    <div className="h-6 w-3/4 bg-purple-900/50 rounded" />
-                    <div className="space-y-2">
-                      <div className="h-4 w-full bg-purple-900/30 rounded" />
-                      <div className="h-4 w-5/6 bg-purple-900/30 rounded" />
-                    </div>
-                    <div className="h-8 w-full bg-purple-900/20 rounded-xl" />
-                  </div>
-                ))}
-              </div>
+              <LoaderContainer minHeight="30vh" message="Loading personalized problem pool..." />
             ) : activeProblems.length === 0 ? (
               /* 3D Animated Empty State */
               <div className="py-8">
