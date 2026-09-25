@@ -14,9 +14,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { getProblems, getPersonalizedFeed } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
-import AnimatedBackground from '../components/AnimatedBackground';
+import AeroShards from '../components/AeroShards';
 import KnowledgeCore3D from '../components/KnowledgeCore3D';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
 import KnowledgeFlowVisual from '../components/KnowledgeFlowVisual';
 import EmptyState3D from '../components/EmptyState3D';
 import GlassAiButton from '../components/GlassAiButton';
