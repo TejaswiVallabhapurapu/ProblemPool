@@ -10,6 +10,7 @@ import {
   deleteReply,
 } from '../services/api';
 import GlassAiButton from './GlassAiButton';
+import { Loader } from './Loader';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -386,7 +387,10 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
 
       {/* Reviews List */}
       {loading ? (
-        <div className="py-6 text-center text-xs text-slate-400">Loading reviews...</div>
+        <div className="py-6 flex flex-col items-center justify-center gap-2">
+          <Loader size="sm" />
+          <span className="text-xs text-slate-400">Loading reviews...</span>
+        </div>
       ) : error ? (
         <div className="text-xs text-rose-600 text-center py-4">{error}</div>
       ) : reviews.length === 0 ? (
