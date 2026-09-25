@@ -164,7 +164,7 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 1. HERO SECTION WITH AEROSHARDS 3D BACKGROUND */}
       {/* ========================================================= */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+      <section className="relative min-h-[85vh] flex flex-col justify-center overflow-hidden border-b border-white/10 py-12 lg:py-16">
         {/* AeroShards Interactive 3D Background */}
         <div className="absolute inset-0 z-0">
           <AeroShards
@@ -188,33 +188,49 @@ const Platform = () => {
         {/* Ambient Dark Gradient Overlay */}
         <div className="absolute inset-0 z-1 bg-gradient-to-b from-[#080808]/40 via-[#080808]/70 to-[#080808] pointer-events-none" />
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center flex flex-col items-center">
-          {/* Public Platform Badge */}
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-lg">
-            <span>ProblemPool • Collaborative Problem-Solving Platform</span>
-          </div>
+        {/* Hero Content: Two-Column Grid Layout */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Column: Heading, Description, & Details (~58%) */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left">
+              {/* Public Platform Badge */}
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-lg">
+                <span>ProblemPool • Collaborative Problem-Solving Platform</span>
+              </div>
 
-          {/* Large Hero Heading */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight mb-4 max-w-4xl text-balance">
-            Turn Problems Into{' '}
-            <span className="shimmer-text">
-              Solutions.
-            </span>
-          </h1>
+              {/* Large Hero Heading */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight mb-4 text-balance">
+                Turn Problems Into{' '}
+                <span className="shimmer-text">
+                  Solutions.
+                </span>
+              </h1>
 
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
-            Ask questions, share knowledge, collaborate with others, and solve real problems together.
-          </p>
+              {/* Subtitle */}
+              <p className="text-base sm:text-lg text-slate-300 max-w-xl mb-8 leading-relaxed font-medium">
+                Ask questions, share knowledge, collaborate with others, and solve real problems together.
+              </p>
 
-          {/* 3D Knowledge Core Globe Visualization */}
-          <div className="w-full flex items-center justify-center my-4">
-            <KnowledgeCore3D />
+              {/* Feature Highlight Bullets */}
+              <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400 pt-3 border-t border-white/10 w-full">
+                <span>Verified Solutions</span>
+                <span>•</span>
+                <span>Real-Time Squads</span>
+                <span>•</span>
+                <span>Reputation Recognition</span>
+              </div>
+            </div>
+
+            {/* Right Column: 3D Knowledge Core Globe Visualization (~42%) */}
+            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end w-full relative">
+              <div className="w-full flex items-center justify-center lg:justify-end">
+                <KnowledgeCore3D />
+              </div>
+            </div>
           </div>
 
           {/* Static Interactive Concept Banner */}
-          <div className="w-full max-w-4xl p-4 sm:p-5 rounded-3xl bg-[#111111]/90 border border-white/10 backdrop-blur-md shadow-2xl mt-4">
+          <div className="w-full max-w-5xl mx-auto p-4 sm:p-5 rounded-3xl bg-[#111111]/90 border border-white/10 backdrop-blur-md shadow-2xl mt-12 lg:mt-16">
             <div className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3 text-center">
               The Problem-Solving Lifecycle
             </div>
