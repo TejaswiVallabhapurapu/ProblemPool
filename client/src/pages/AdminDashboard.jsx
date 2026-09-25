@@ -883,7 +883,6 @@ const AdminDashboard = () => {
                 loading={actionLoading}
                 variant={suspendModalUser.isSuspended ? 'success' : 'danger'}
                 size="sm"
-                icon={suspendModalUser.isSuspended ? UserCheck : UserX}
               >
                 {suspendModalUser.isSuspended ? 'Yes, Unsuspend User' : 'Yes, Suspend User'}
               </GlassAiButton>

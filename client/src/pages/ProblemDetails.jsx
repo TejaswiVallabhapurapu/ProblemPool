@@ -668,14 +668,12 @@ const ProblemDetails = () => {
                             {team.members?.map((m) => (
                               <span
                                 key={m._id}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#1a1a1a] border border-white/10 text-[11px] font-semibold text-slate-300"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#1a1a1a] border border-white/10 text-[11px] font-medium text-neutral-300"
                               >
-                                {m._id === team.leaderId?._id ? (
-                                  
-                                ) : (
-                                  <User className="w-2.5 h-2.5 text-slate-500" />
-                                )}
                                 <span>{m.name}</span>
+                                {m._id === team.leaderId?._id && (
+                                  <span className="text-[9px] font-mono text-neutral-400 font-semibold uppercase">(Leader)</span>
+                                )}
                               </span>
                             ))}
                           </div>
