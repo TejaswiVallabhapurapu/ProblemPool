@@ -146,71 +146,80 @@
 }
 
 /* ===================================================
-   VARIANTS
+   VARIANTS - Monochrome Dark Edition
    =================================================== */
 
-/* 1. SIGNUP / PRIMARY (Vibrant Indigo-Violet-Cyan Flow) */
+/* 1. SIGNUP / PRIMARY (Sleek Metallic Silver Conic Flow) */
 .shader-variant-signup .shader-btn-glow {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899, #3b82f6);
+  background: linear-gradient(135deg, #ffffff, #888888, #333333);
+  opacity: 0.25;
+}
+
+.shader-variant-signup:hover .shader-btn-glow {
+  opacity: 0.6;
 }
 
 .shader-variant-signup .shader-border-spinner {
   background: conic-gradient(
     from 0deg,
-    #6366f1 0deg,
-    #8b5cf6 72deg,
-    #ec4899 144deg,
-    #3b82f6 216deg,
-    #06b6d4 288deg,
-    #6366f1 360deg
+    #111111 0deg,
+    #444444 72deg,
+    #ffffff 144deg,
+    #777777 216deg,
+    #222222 288deg,
+    #111111 360deg
   );
 }
 
 .shader-variant-signup .shader-btn-inner {
-  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 45%, #7c3aed 100%);
+  background: #1a1a1a;
   color: #ffffff;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4),
-              inset 0 -1px 2px rgba(0, 0, 0, 0.25);
+  border: 1px solid #333333;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15),
+              inset 0 -1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .shader-variant-signup:hover .shader-btn-inner {
-  background: linear-gradient(135deg, #4338ca 0%, #4f46e5 45%, #6d28d9 100%);
+  background: #282828;
+  border-color: #555555;
   color: #ffffff;
 }
 
-/* 2. LOGIN / SECONDARY (Frosted Glass Capsule with Sleek Glowing Indigo Trim) */
+/* 2. LOGIN / SECONDARY (Dark Glass Capsule with Subtle Metallic Trim) */
 .shader-variant-login .shader-btn-glow {
-  background: linear-gradient(135deg, #818cf8, #a78bfa, #60a5fa);
-  opacity: 0.35;
+  background: linear-gradient(135deg, #666666, #333333, #111111);
+  opacity: 0.2;
 }
 
 .shader-variant-login:hover .shader-btn-glow {
-  opacity: 0.85;
+  opacity: 0.5;
 }
 
 .shader-variant-login .shader-border-spinner {
   background: conic-gradient(
     from 0deg,
-    rgba(99, 102, 241, 0.5) 0deg,
-    rgba(139, 92, 246, 0.8) 90deg,
-    rgba(192, 132, 252, 0.95) 180deg,
-    rgba(59, 130, 246, 0.75) 270deg,
-    rgba(99, 102, 241, 0.5) 360deg
+    rgba(255, 255, 255, 0.1) 0deg,
+    rgba(255, 255, 255, 0.3) 90deg,
+    rgba(255, 255, 255, 0.6) 180deg,
+    rgba(255, 255, 255, 0.2) 270deg,
+    rgba(255, 255, 255, 0.1) 360deg
   );
 }
 
 .shader-variant-login .shader-btn-inner {
-  background: rgba(255, 255, 255, 0.94);
+  background: #141414;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  color: #3730a3;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95),
-              inset 0 -1px 1.5px rgba(99, 102, 241, 0.1);
+  color: #cccccc;
+  border: 1px solid #2a2a2a;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.08),
+              inset 0 -1px 1.5px rgba(0, 0, 0, 0.4);
 }
 
 .shader-variant-login:hover .shader-btn-inner {
-  background: rgba(255, 255, 255, 1);
-  color: #4338ca;
+  background: #202020;
+  border-color: #444444;
+  color: #ffffff;
 }
 
 /* ===================================================

@@ -6,9 +6,9 @@ import React, { useEffect, useRef, useState } from 'react';
  * with dynamic lighting, pointer repulsion, flow morphing, and ripple wave physics.
  */
 const AeroShards = ({
-  backgroundColor = '#120F17',
-  shardColor = '#896ABD',
-  accentColor = '#A855F7',
+  backgroundColor = '#080808',
+  shardColor = '#333333',
+  accentColor = '#777777',
   placement = 'full',
   flow = 'stream',
   material = 'pearl',
