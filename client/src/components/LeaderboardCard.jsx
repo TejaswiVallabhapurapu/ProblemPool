@@ -16,7 +16,7 @@ export const LeaderboardCard = ({
   const isSilver = rank === 2;
   const isBronze = rank === 3;
 
-  const initial = leader.name?.charAt(0).toUpperCase() || 'U';
+  const initial = leader?.name?.charAt?.(0)?.toUpperCase() || leader?.username?.charAt?.(0)?.toUpperCase() || 'U';
 
   const circleColors = isGold
     ? {

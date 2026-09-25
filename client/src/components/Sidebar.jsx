@@ -64,7 +64,7 @@ const Sidebar = () => {
             to="/profile"
             className="w-8 h-8 rounded-full bg-[#1c1c1c] border border-white/20 text-white flex items-center justify-center font-bold text-xs shadow-xs"
           >
-            {user?.name?.charAt(0).toUpperCase() || 'U'}
+            {user?.name?.charAt?.(0)?.toUpperCase() || user?.username?.charAt?.(0)?.toUpperCase() || 'U'}
           </Link>
         </div>
       </div>
@@ -178,14 +178,14 @@ const Sidebar = () => {
             className="flex items-center gap-3 p-2.5 rounded-xl bg-[#141414] border border-white/10 hover:border-white/20 transition group"
           >
             <div className="w-8 h-8 rounded-full bg-[#202020] border border-white/15 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
+              {user?.name?.charAt?.(0)?.toUpperCase() || user?.username?.charAt?.(0)?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-xs font-bold text-white truncate group-hover:text-slate-200">
-                {user?.name || 'Problem Solver'}
+                {user?.name || user?.username || 'Problem Solver'}
               </div>
               <div className="text-[11px] text-slate-400 truncate">
-                @{user?.username || user?.email?.split('@')[0] || 'solver'}
+                @{user?.username || (typeof user?.email === 'string' ? user.email.split('@')[0] : 'solver')}
               </div>
             </div>
           </Link>
