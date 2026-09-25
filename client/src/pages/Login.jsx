@@ -15,7 +15,7 @@ const Login = () => {
     password: '',
   });
 
-  const [fieldErrors, setFieldErrors] = useState();
+  const [fieldErrors, setFieldErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
   const [socialNotice, setSocialNotice] = useState(null);
@@ -27,7 +27,7 @@ const Login = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (fieldErrors[name]) {
+    if (fieldErrors && fieldErrors[name]) {
       setFieldErrors((prev) => ({ ...prev, [name]: null }));
     }
     setServerError('');

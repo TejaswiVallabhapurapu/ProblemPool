@@ -49,13 +49,13 @@ const CreateProblem = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [fieldErrors, setFieldErrors] = useState();
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // AI Problem Assistant states
   const [improvingAi, setImprovingAi] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiError, setAiError] = useState(null);
-  const [appliedFields, setAppliedFields] = useState();
+  const [appliedFields, setAppliedFields] = useState({});
 
   const handleImproveWithAI = async () => {
     const titleVal = formData.title.trim();
