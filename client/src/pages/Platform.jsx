@@ -1,21 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Sparkles,
-  Users,
-  CheckCircle2,
-  Trophy,
-  Code2,
-  ShieldCheck,
-  Zap,
-  ArrowRight,
-  Layers,
-  HelpCircle,
-  MessageSquare,
-  Flame,
-  Star,
-  Lock,
-} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import GlassAiButton from '../components/GlassAiButton';
 import AnimatedButton from '../components/AnimatedButton';
@@ -109,58 +93,49 @@ const PLATFORM_STEPS = [
     step: '01',
     title: 'Ask a Problem',
     desc: 'Describe the programming obstacle, architectural dilemma, or bug you are facing with code snippets and context.',
-    icon: '📝',
   },
   {
     step: '02',
     title: 'Discover Problems',
     desc: 'Browse challenging questions across tech stacks, domain tags, difficulty levels, and personalized interest feeds.',
-    icon: '🔍',
   },
   {
     step: '03',
     title: 'Help Others',
     desc: 'Share verified solutions, code improvements, and architectural guidance to earn helpful community votes.',
-    icon: '💡',
   },
   {
     step: '04',
     title: 'Collaborate & Team Up',
     desc: 'Form small squads of up to 5 developers to tackle complex multi-step problems together in private workspaces.',
-    icon: '🤝',
   },
   {
     step: '05',
     title: 'Accepted Solution',
     desc: 'The problem owner selects the Best Answer, marking the problem Solved and awarding reputation to the solver or team.',
-    icon: '🏆',
   },
 ];
 
 const KEY_PILLARS = [
   {
-    icon: <Zap className="w-5 h-5 text-slate-300" />,
     title: 'Problem-First Innovation',
     description:
       'A structured environment centered on real technical blockers, system design challenges, and verified code solutions.',
   },
   {
-    icon: <Users className="w-5 h-5 text-slate-300" />,
     title: 'Team Up Collaboration',
     description:
       'Voluntarily form small teams of up to 5 problem solvers to brainstorm, assign tasks, and co-author joint solutions.',
   },
   {
-    icon: <ShieldCheck className="w-5 h-5 text-slate-300" />,
     title: 'Peer-Reviewed Accuracy',
     description:
       'Every answer is subject to community helpful voting and problem owner verification, ensuring high-signal code quality.',
   },
   {
-    icon: <Trophy className="w-5 h-5 text-slate-300" />,
     title: 'Reputation & Growth',
     description:
-      'Climb the community leaderboard, showcase verified contributions, and earn badges for solving real-world challenges.',
+      'Climb the community leaderboard, showcase verified contributions, and earn recognition for solving real-world challenges.',
   },
 ];
 
@@ -184,20 +159,13 @@ const Platform = () => {
     }
   };
 
-  const scrollToHowItWorks = () => {
-    const el = document.getElementById('how-it-works');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="relative min-h-screen bg-[#080808] text-slate-100 selection:bg-white selection:text-black overflow-hidden">
       {/* ========================================================= */}
       {/* 1. HERO SECTION WITH AEROSHARDS 3D BACKGROUND */}
       {/* ========================================================= */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-white/10">
-        {/* AeroShards Interactive 3D Background - Monochrome Silver & Charcoal */}
+        {/* AeroShards Interactive 3D Background */}
         <div className="absolute inset-0 z-0">
           <AeroShards
             backgroundColor="#080808"
@@ -223,8 +191,7 @@ const Platform = () => {
         {/* Hero Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center flex flex-col items-center">
           {/* Public Platform Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-lg">
-            <Sparkles className="w-4 h-4 text-slate-400" />
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-lg">
             <span>ProblemPool • Collaborative Problem-Solving Platform</span>
           </div>
 
@@ -253,17 +220,17 @@ const Platform = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
               {[
-                { label: '1. Ask Problem', icon: '📝' },
-                { label: '2. Discover', icon: '🔍' },
-                { label: '3. Help Others', icon: '💡' },
-                { label: '4. Team Up', icon: '🤝' },
-                { label: '5. Solved', icon: '🏆' },
+                { step: '01', label: 'Ask Problem' },
+                { step: '02', label: 'Discover' },
+                { step: '03', label: 'Help Others' },
+                { step: '04', label: 'Team Up' },
+                { step: '05', label: 'Solved' },
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-2xl bg-[#161616] border border-white/5 flex flex-col items-center justify-center gap-1.5 hover:border-white/20 transition"
+                  className="p-3 rounded-2xl bg-[#161616] border border-white/5 flex flex-col items-center justify-center gap-1 hover:border-white/20 transition"
                 >
-                  <span className="text-xl sm:text-2xl">{item.icon}</span>
+                  <span className="text-xs font-mono text-slate-500 font-bold">{item.step}</span>
                   <span className="text-xs font-extrabold text-slate-200">{item.label}</span>
                 </div>
               ))}
@@ -278,8 +245,7 @@ const Platform = () => {
       <section className="relative z-10 py-20 bg-[#0d0d0d] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
-              <Layers className="w-3.5 h-3.5 text-slate-400" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
               <span>Core Foundations</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -297,8 +263,8 @@ const Platform = () => {
                 className="p-6 rounded-3xl bg-[#141414] border border-white/10 hover:border-white/25 transition-all duration-300 flex flex-col justify-between group shadow-lg"
               >
                 <div>
-                  <div className="w-10 h-10 rounded-2xl bg-[#1c1c1c] border border-white/10 flex items-center justify-center mb-4 group-hover:scale-105 transition">
-                    {pillar.icon}
+                  <div className="text-xs font-mono text-slate-500 font-bold uppercase tracking-wider mb-3">
+                    0{idx + 1}
                   </div>
                   <h3 className="text-base font-bold text-white mb-2 group-hover:text-slate-200 transition">
                     {pillar.title}
@@ -319,8 +285,7 @@ const Platform = () => {
       <section id="how-it-works" className="relative z-10 py-24 bg-[#080808] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-slate-400" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
               <span>Step-By-Step Flow</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
@@ -338,7 +303,6 @@ const Platform = () => {
                 className="p-6 sm:p-7 rounded-3xl bg-[#141414] border border-white/10 hover:border-white/25 transition-all duration-300 group shadow-xl"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl">{step.icon}</span>
                   <span className="text-xs font-black px-2.5 py-1 rounded-full bg-[#202020] border border-white/10 text-slate-300">
                     STEP {step.step}
                   </span>
@@ -355,7 +319,7 @@ const Platform = () => {
             {/* Extra CTA step card */}
             <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-[#181818] to-[#121212] border border-white/20 flex flex-col justify-between shadow-xl">
               <div>
-                <span className="text-3xl mb-4 block">🚀</span>
+                <span className="text-xs font-mono text-slate-500 font-bold uppercase tracking-wider mb-2 block">Next Step</span>
                 <h3 className="text-lg font-bold text-white mb-2">Ready to Get Started?</h3>
                 <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6">
                   Create your free account to access all problems, join teams, and solve coding challenges.
@@ -365,8 +329,6 @@ const Platform = () => {
                 onClick={handleGetStarted}
                 size="sm"
                 variant="primary"
-                icon={<ArrowRight className="w-4 h-4" />}
-                iconPosition="right"
               >
                 Join ProblemPool
               </GlassAiButton>
@@ -383,12 +345,11 @@ const Platform = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Left Description */}
             <div className="lg:col-span-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
-                <Users className="w-3.5 h-3.5 text-slate-300" />
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
                 <span>Feature Spotlight</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
-                🤝 Collaborative Problem Solving
+                Collaborative Problem Solving
               </h2>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
                 Some engineering hurdles are too complex to solve alone. ProblemPool allows users to voluntarily team up in small squads of up to 5 developers.
@@ -410,15 +371,12 @@ const Platform = () => {
                   },
                   {
                     title: 'Distributed Reputation Credit',
-                    desc: 'When a Team Answer is chosen as Best Answer, every team member earns +15 reputation.',
+                    desc: 'When a Team Answer is chosen as Best Answer, every team member earns reputation.',
                   },
                 ].map((feat, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-1" />
-                    <div>
-                      <h4 className="text-xs font-bold text-white">{feat.title}</h4>
-                      <p className="text-[11px] text-slate-400">{feat.desc}</p>
-                    </div>
+                  <div key={idx} className="p-3.5 rounded-2xl bg-[#141414] border border-white/10">
+                    <h4 className="text-xs font-bold text-white mb-0.5">{feat.title}</h4>
+                    <p className="text-[11px] text-slate-400">{feat.desc}</p>
                   </div>
                 ))}
               </div>
@@ -427,8 +385,6 @@ const Platform = () => {
                 onClick={handleGetStarted}
                 size="md"
                 variant="primary"
-                icon={<ArrowRight className="w-4 h-4" />}
-                iconPosition="right"
               >
                 Experience Team Collaboration
               </GlassAiButton>
@@ -439,12 +395,9 @@ const Platform = () => {
               <div className="rounded-3xl bg-[#141414] border border-white/15 p-6 shadow-2xl space-y-4">
                 {/* Team Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">🤝</span>
-                    <div>
-                      <h3 className="text-sm font-bold text-white">ML Model Optimization Squad</h3>
-                      <span className="text-[11px] text-slate-400 font-medium">3 / 5 Members Active</span>
-                    </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white">ML Model Optimization Squad</h3>
+                    <span className="text-[11px] text-slate-400 font-medium">3 / 5 Members Active</span>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-700/50 text-emerald-300 text-[10px] font-extrabold uppercase">
                     Active Team
@@ -453,14 +406,14 @@ const Platform = () => {
 
                 {/* Team Members Strip */}
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-2.5 py-1 rounded-full bg-[#1e1e1e] border border-white/10 text-xs text-white font-bold flex items-center gap-1.5">
-                    👑 Alex Rivera (Leader)
+                  <span className="px-2.5 py-1 rounded-full bg-[#1e1e1e] border border-white/10 text-xs text-white font-bold">
+                    Alex Rivera (Leader)
                   </span>
                   <span className="px-2.5 py-1 rounded-full bg-[#181818] border border-white/10 text-xs text-slate-300 font-semibold">
-                    👤 Sarah Chen
+                    Sarah Chen
                   </span>
                   <span className="px-2.5 py-1 rounded-full bg-[#181818] border border-white/10 text-xs text-slate-300 font-semibold">
-                    👤 David Kumar
+                    David Kumar
                   </span>
                 </div>
 
@@ -470,20 +423,17 @@ const Platform = () => {
                     Team Action Items
                   </div>
                   <div className="space-y-1.5 text-xs">
-                    <div className="flex items-center gap-2 text-slate-300 line-through opacity-70">
-                      <span className="text-emerald-400">☑</span>
+                    <div className="flex items-center justify-between text-slate-300">
                       <span>Analyze memory profiling trace</span>
-                      <span className="text-[10px] text-slate-500 ml-auto">Sarah</span>
+                      <span className="text-[10px] text-emerald-400 font-bold">Completed</span>
                     </div>
-                    <div className="flex items-center gap-2 text-slate-300 line-through opacity-70">
-                      <span className="text-emerald-400">☑</span>
+                    <div className="flex items-center justify-between text-slate-300">
                       <span>Implement batch stream pooling</span>
-                      <span className="text-[10px] text-slate-500 ml-auto">David</span>
+                      <span className="text-[10px] text-emerald-400 font-bold">Completed</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white font-medium">
-                      <span className="text-slate-400">□</span>
+                    <div className="flex items-center justify-between text-white font-medium">
                       <span>Benchmark throughput & verify solution</span>
-                      <span className="text-[10px] text-slate-400 ml-auto">Alex</span>
+                      <span className="text-[10px] text-amber-400 font-bold">In Progress</span>
                     </div>
                   </div>
                 </div>
@@ -510,8 +460,7 @@ const Platform = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
-                <Code2 className="w-3.5 h-3.5 text-slate-400" />
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
                 <span>Coding Tracks</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -526,8 +475,6 @@ const Platform = () => {
               onClick={handleGetStarted}
               size="sm"
               variant="secondary"
-              icon={<ArrowRight className="w-4 h-4" />}
-              iconPosition="right"
             >
               Explore Challenges
             </GlassAiButton>
@@ -559,8 +506,7 @@ const Platform = () => {
       <section className="relative z-10 py-20 bg-[#0d0d0d] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
-              <Trophy className="w-3.5 h-3.5 text-slate-400" />
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
               <span>Leaderboard & Reputation</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
@@ -587,7 +533,7 @@ const Platform = () => {
             <div className="order-1 md:order-2 md:-translate-y-4">
               <LeaderboardCard
                 leader={STATIC_TOP_SOLVERS[0]}
-                metricLabel="👑 Champion • Reputation"
+                metricLabel="Champion • Reputation"
                 isPodium={true}
                 podiumRank={1}
               />
@@ -609,7 +555,6 @@ const Platform = () => {
               onClick={handleGetStarted}
               size="sm"
               variant="glass"
-              icon={<Trophy className="w-4 h-4" />}
             >
               Join to Climb Leaderboard
             </GlassAiButton>
@@ -622,8 +567,7 @@ const Platform = () => {
       {/* ========================================================= */}
       <section className="relative z-10 py-20 bg-[#080808] border-b border-white/10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
-            <Star className="w-3.5 h-3.5 text-slate-400" />
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
             <span>Why Developers Choose ProblemPool</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-8">
@@ -632,7 +576,7 @@ const Platform = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
             <div className="p-6 rounded-3xl bg-[#141414] border border-white/10">
-              <div className="text-2xl mb-3">🎯</div>
+              <div className="text-xs font-mono text-slate-500 font-bold uppercase tracking-wider mb-2">Focus</div>
               <h3 className="text-sm font-bold text-white mb-1.5">No Trivial Noise</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Focused technical discussion with clean code syntax formatting and problem-first categorization.
@@ -640,7 +584,7 @@ const Platform = () => {
             </div>
 
             <div className="p-6 rounded-3xl bg-[#141414] border border-white/10">
-              <div className="text-2xl mb-3">🤝</div>
+              <div className="text-xs font-mono text-slate-500 font-bold uppercase tracking-wider mb-2">Teamwork</div>
               <h3 className="text-sm font-bold text-white mb-1.5">Team Collaboration</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Voluntarily create squads to tackle tough multi-file bugs or large-scale architectural design questions.
@@ -648,7 +592,7 @@ const Platform = () => {
             </div>
 
             <div className="p-6 rounded-3xl bg-[#141414] border border-white/10">
-              <div className="text-2xl mb-3">🏅</div>
+              <div className="text-xs font-mono text-slate-500 font-bold uppercase tracking-wider mb-2">Signal</div>
               <h3 className="text-sm font-bold text-white mb-1.5">Verified Knowledge</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Accepted Best Answers resolve threads, creating an open library of verified solutions for future developers.
@@ -663,8 +607,8 @@ const Platform = () => {
       {/* ========================================================= */}
       <section className="relative z-10 py-24 bg-[#0d0d0d] text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="w-16 h-16 rounded-3xl bg-[#181818] border border-white/15 text-white flex items-center justify-center mx-auto mb-6 shadow-xl text-2xl">
-            🚀
+          <div className="text-xs font-mono text-slate-500 font-bold uppercase tracking-widest mb-4">
+            Join the Community
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
             Ready to solve problems together?
@@ -679,7 +623,7 @@ const Platform = () => {
               variant="signup"
               size="lg"
             >
-              Join ProblemPool →
+              Join ProblemPool
             </AnimatedButton>
 
             <AnimatedButton
