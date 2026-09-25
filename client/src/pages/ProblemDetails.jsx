@@ -21,7 +21,6 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import AddToCollectionModal from '../components/AddToCollectionModal';
 import GlassAiButton from '../components/GlassAiButton';
-import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 import { Loader, LoaderContainer } from '../components/Loader';
 import {
@@ -365,7 +364,6 @@ const ProblemDetails = () => {
 
   return (
     <div className="relative min-h-screen">
-      <ParticlesBackground />
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
       {/* Back button */}
       <div className="mb-6">
