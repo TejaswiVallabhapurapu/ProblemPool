@@ -9,6 +9,7 @@ const Reply = require('../models/Reply');
 const SavedProblem = require('../models/SavedProblem');
 const ReputationHistory = require('../models/ReputationHistory');
 const Achievement = require('../models/Achievement');
+const Follow = require('../models/Follow');
 const {
   getUserFullStats,
   BADGES_DEFINITIONS,
@@ -55,7 +56,7 @@ const getMyProfileStats = async (req, res) => {
 /**
  * @desc    Get public profile by ID or username
  * @route   GET /api/users/profile/:idOrUsername
- * @access  Public
+ * @access  Public (optional JWT)
  */
 const getPublicUserProfile = async (req, res) => {
   try {
@@ -63,10 +64,10 @@ const getPublicUserProfile = async (req, res) => {
 
     let user = null;
     if (mongoose.Types.ObjectId.isValid(idOrUsername)) {
-      user = await User.findById(idOrUsername).select('name username bio avatar location title reputation createdAt').lean();
+      user = await User.findById(idOrUsername).select('name username bio avatar location title reputation interests createdAt').lean();
     }
     if (!user) {
-      user = await User.findOne({ username: idOrUsername.toLowerCase() }).select('name username bio avatar location title reputation createdAt').lean();
+      user = await User.findOne({ username: idOrUsername.toLowerCase() }).select('name username bio avatar location title reputation interests createdAt').lean();
     }
 
     if (!user) {
@@ -75,7 +76,19 @@ const getPublicUserProfile = async (req, res) => {
 
     const statsData = await getUserFullStats(user._id);
 
-    // Sanitize for public consumption (omit email and private completion metrics)
+    const currentUserId = req.user ? req.user._id.toString() : null;
+    const isSelf = currentUserId ? currentUserId === user._id.toString() : false;
+    let isFollowing = false;
+    if (currentUserId && !isSelf) {
+      isFollowing = Boolean(await Follow.exists({ follower: req.user._id, following: user._id }));
+    }
+
+    const [followersCount, followingCount] = await Promise.all([
+      Follow.countDocuments({ following: user._id }),
+      Follow.countDocuments({ follower: user._id }),
+    ]);
+
+    // Sanitize for public consumption
     const publicProfile = {
       _id: user._id,
       name: user.name,
@@ -84,10 +97,17 @@ const getPublicUserProfile = async (req, res) => {
       avatar: user.avatar || '',
       location: user.location || '',
       title: user.title || '',
+      interests: Array.isArray(user.interests) ? user.interests : [],
       createdAt: user.createdAt,
-      stats: statsData.stats,
+      stats: {
+        ...statsData.stats,
+        followersCount,
+        followingCount,
+      },
       level: statsData.level,
       achievements: statsData.achievements,
+      isFollowing,
+      isSelf,
     };
 
     return res.status(200).json({
@@ -103,13 +123,13 @@ const getPublicUserProfile = async (req, res) => {
 };
 
 /**
- * @desc    Update current user profile info (name, username, bio, location, title, avatar)
+ * @desc    Update current user profile info (name, username, bio, location, title, avatar, interests)
  * @route   PUT /api/users/me/profile
  * @access  Private
  */
 const updateMyProfile = async (req, res) => {
   try {
-    const { name, username, bio, location, title, avatar } = req.body;
+    const { name, username, bio, location, title, avatar, interests } = req.body;
     const userId = req.user._id;
 
     const user = await User.findById(userId);
@@ -122,6 +142,9 @@ const updateMyProfile = async (req, res) => {
     if (location !== undefined) user.location = location.trim();
     if (title !== undefined) user.title = title.trim();
     if (avatar !== undefined) user.avatar = avatar.trim();
+    if (interests !== undefined && Array.isArray(interests)) {
+      user.interests = Array.from(new Set(interests.map((i) => String(i).trim()))).filter(Boolean);
+    }
 
     if (username && username.trim()) {
       const cleanUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
@@ -403,6 +426,49 @@ const getMyAnswers = async (req, res) => {
 };
 
 /**
+ * @desc    Update current user's learning & domain interests
+ * @route   PUT /api/users/me/interests
+ * @access  Private (JWT)
+ */
+const updateUserInterests = async (req, res) => {
+  try {
+    const { interests } = req.body;
+
+    if (!Array.isArray(interests)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Interests must be an array of strings',
+      });
+    }
+
+    const sanitizedInterests = Array.from(
+      new Set(interests.map((item) => String(item).trim()).filter(Boolean))
+    ).slice(0, 30);
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { interests: sanitizedInterests },
+      { new: true }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Interests updated successfully',
+      interests: user.interests,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update interests: ' + error.message,
+    });
+  }
+};
+
+/**
  * @desc    Follow or Unfollow a user
  * @route   POST /api/users/:id/follow
  * @access  Private (JWT)
@@ -433,27 +499,40 @@ const followUser = async (req, res) => {
       });
     }
 
-    const currentUser = await User.findById(req.user._id);
-    const followingList = currentUser.following || [];
-    const isFollowing = followingList.some((id) => id.toString() === targetUserId.toString());
+    const existingFollow = await Follow.findOne({
+      follower: req.user._id,
+      following: targetUserId,
+    });
 
-    if (isFollowing) {
+    let isFollowing = false;
+
+    if (existingFollow) {
       // Unfollow
-      currentUser.following = followingList.filter((id) => id.toString() !== targetUserId.toString());
-      await currentUser.save();
-
-      return res.status(200).json({
-        success: true,
-        message: `Unfollowed ${targetUser.name}`,
-        isFollowing: false,
+      await Follow.deleteOne({ _id: existingFollow._id });
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { following: targetUserId },
       });
+      isFollowing = false;
     } else {
       // Follow
-      currentUser.following.push(targetUserId);
-      await currentUser.save();
+      try {
+        await Follow.create({
+          follower: req.user._id,
+          following: targetUserId,
+        });
+      } catch (err) {
+        // If unique index race condition
+        if (err.code !== 11000) throw err;
+      }
+
+      await User.findByIdAndUpdate(req.user._id, {
+        $addToSet: { following: targetUserId },
+      });
+      isFollowing = true;
 
       // Notify target user
       const { createNotification } = require('../services/notificationService');
+      const currentUser = await User.findById(req.user._id).select('name username');
       createNotification({
         recipient: targetUser._id,
         sender: currentUser._id,
@@ -464,13 +543,20 @@ const followUser = async (req, res) => {
         referenceId: currentUser._id,
         link: `/profile/${currentUser.username || currentUser._id}`,
       });
-
-      return res.status(200).json({
-        success: true,
-        message: `Now following ${targetUser.name}`,
-        isFollowing: true,
-      });
     }
+
+    const [followersCount, followingCount] = await Promise.all([
+      Follow.countDocuments({ following: targetUserId }),
+      Follow.countDocuments({ follower: targetUserId }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      message: isFollowing ? `Now following ${targetUser.name}` : `Unfollowed ${targetUser.name}`,
+      isFollowing,
+      followersCount,
+      followingCount,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -479,13 +565,165 @@ const followUser = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get list of followers for a user
+ * @route   GET /api/users/:id/followers or /api/users/profile/:idOrUsername/followers
+ * @access  Public (optional JWT for isFollowing state)
+ */
+const getUserFollowers = async (req, res) => {
+  try {
+    const { id, idOrUsername } = req.params;
+    const identifier = id || idOrUsername;
+
+    let targetUser = null;
+    if (mongoose.Types.ObjectId.isValid(identifier)) {
+      targetUser = await User.findById(identifier).select('_id name username').lean();
+    }
+    if (!targetUser) {
+      targetUser = await User.findOne({ username: identifier.toLowerCase() }).select('_id name username').lean();
+    }
+
+    if (!targetUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const followDocs = await Follow.find({ following: targetUser._id })
+      .populate('follower', 'name username bio avatar location title reputation interests createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const currentUserId = req.user ? req.user._id.toString() : null;
+
+    // Batch get current user's follow status for all listed followers
+    let currentUserFollowSet = new Set();
+    if (currentUserId) {
+      const myFollows = await Follow.find({ follower: currentUserId }).select('following').lean();
+      currentUserFollowSet = new Set(myFollows.map((f) => f.following.toString()));
+    }
+
+    const followers = followDocs
+      .filter((doc) => doc.follower != null)
+      .map((doc) => {
+        const u = doc.follower;
+        const rep = u.reputation || 0;
+        const level = getUserLevel(rep);
+        const isSelf = currentUserId ? currentUserId === u._id.toString() : false;
+        const isFollowing = currentUserId ? currentUserFollowSet.has(u._id.toString()) : false;
+
+        return {
+          _id: u._id,
+          name: u.name,
+          username: u.username || u.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
+          bio: u.bio || '',
+          avatar: u.avatar || '',
+          location: u.location || '',
+          title: u.title || '',
+          reputation: rep,
+          level,
+          interests: Array.isArray(u.interests) ? u.interests : [],
+          isFollowing,
+          isSelf,
+          followedAt: doc.createdAt,
+        };
+      });
+
+    return res.status(200).json({
+      success: true,
+      count: followers.length,
+      followers,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve followers: ' + error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Get list of users followed by a user
+ * @route   GET /api/users/:id/following or /api/users/profile/:idOrUsername/following
+ * @access  Public (optional JWT for isFollowing state)
+ */
+const getUserFollowing = async (req, res) => {
+  try {
+    const { id, idOrUsername } = req.params;
+    const identifier = id || idOrUsername;
+
+    let targetUser = null;
+    if (mongoose.Types.ObjectId.isValid(identifier)) {
+      targetUser = await User.findById(identifier).select('_id name username').lean();
+    }
+    if (!targetUser) {
+      targetUser = await User.findOne({ username: identifier.toLowerCase() }).select('_id name username').lean();
+    }
+
+    if (!targetUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const followDocs = await Follow.find({ follower: targetUser._id })
+      .populate('following', 'name username bio avatar location title reputation interests createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const currentUserId = req.user ? req.user._id.toString() : null;
+
+    let currentUserFollowSet = new Set();
+    if (currentUserId) {
+      const myFollows = await Follow.find({ follower: currentUserId }).select('following').lean();
+      currentUserFollowSet = new Set(myFollows.map((f) => f.following.toString()));
+    }
+
+    const following = followDocs
+      .filter((doc) => doc.following != null)
+      .map((doc) => {
+        const u = doc.following;
+        const rep = u.reputation || 0;
+        const level = getUserLevel(rep);
+        const isSelf = currentUserId ? currentUserId === u._id.toString() : false;
+        const isFollowing = currentUserId ? currentUserFollowSet.has(u._id.toString()) : false;
+
+        return {
+          _id: u._id,
+          name: u.name,
+          username: u.username || u.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
+          bio: u.bio || '',
+          avatar: u.avatar || '',
+          location: u.location || '',
+          title: u.title || '',
+          reputation: rep,
+          level,
+          interests: Array.isArray(u.interests) ? u.interests : [],
+          isFollowing,
+          isSelf,
+          followedAt: doc.createdAt,
+        };
+      });
+
+    return res.status(200).json({
+      success: true,
+      count: following.length,
+      following,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve following list: ' + error.message,
+    });
+  }
+};
+
 module.exports = {
   getMyProfileStats,
   getPublicUserProfile,
   updateMyProfile,
+  updateUserInterests,
   getMyReputationHistory,
   getMyActivityTimeline,
   getMyProblems,
   getMyAnswers,
   followUser,
+  getUserFollowers,
+  getUserFollowing,
 };

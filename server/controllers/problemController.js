@@ -7,6 +7,7 @@ const ReviewVote = require('../models/ReviewVote');
 const Reply = require('../models/Reply');
 const SavedProblem = require('../models/SavedProblem');
 const User = require('../models/User');
+const Follow = require('../models/Follow');
 const { adjustReputation, REPUTATION_RULES } = require('../services/reputationService');
 const { createNotification } = require('../services/notificationService');
 
@@ -830,6 +831,219 @@ const removeBestAnswer = async (req, res) => {
   }
 };
 
+/**
+ * Batch formatter for problems list to prevent N+1 queries
+ */
+const batchFormatProblems = async (rawProblems) => {
+  if (!rawProblems || rawProblems.length === 0) return [];
+
+  const problemIds = rawProblems.map((p) => p._id);
+
+  // 1. Batch answers lookup
+  const answers = await Answer.find({ problem: { $in: problemIds } })
+    .select('_id problem')
+    .lean();
+
+  const answersCountMap = new Map();
+  const problemAnswerIdsMap = new Map();
+
+  answers.forEach((a) => {
+    const pId = a.problem.toString();
+    answersCountMap.set(pId, (answersCountMap.get(pId) || 0) + 1);
+    if (!problemAnswerIdsMap.has(pId)) {
+      problemAnswerIdsMap.set(pId, []);
+    }
+    problemAnswerIdsMap.get(pId).push(a._id);
+  });
+
+  const allAnswerIds = answers.map((a) => a._id);
+
+  // 2. Batch helpful votes
+  const helpfulVotes = await AnswerVote.find({
+    answer: { $in: allAnswerIds },
+    voteType: 'helpful',
+  })
+    .select('answer')
+    .lean();
+
+  const answerToHelpfulCountMap = new Map();
+  helpfulVotes.forEach((v) => {
+    const aId = v.answer.toString();
+    answerToHelpfulCountMap.set(aId, (answerToHelpfulCountMap.get(aId) || 0) + 1);
+  });
+
+  // 3. Batch saves count
+  const saves = await SavedProblem.find({ problem: { $in: problemIds } })
+    .select('problem')
+    .lean();
+
+  const savesCountMap = new Map();
+  saves.forEach((s) => {
+    const pId = s.problem.toString();
+    savesCountMap.set(pId, (savesCountMap.get(pId) || 0) + 1);
+  });
+
+  return rawProblems.map((p) => {
+    const pId = p._id.toString();
+    const answersCount = answersCountMap.get(pId) || 0;
+    const answerIds = problemAnswerIdsMap.get(pId) || [];
+    let totalHelpfulVotes = 0;
+    answerIds.forEach((aId) => {
+      totalHelpfulVotes += answerToHelpfulCountMap.get(aId.toString()) || 0;
+    });
+    const savesCount = savesCountMap.get(pId) || 0;
+    const computedStatus = computeProblemStatus(p, answersCount);
+
+    return {
+      ...p,
+      tags: Array.isArray(p.tags) ? p.tags : [],
+      views: p.views || 0,
+      answersCount,
+      totalHelpfulVotes,
+      savesCount,
+      status: computedStatus,
+    };
+  });
+};
+
+/**
+ * @desc    Get Personalized Home Feed
+ *          Sections: Recommended, Following, Trending, Unanswered, Recent
+ * @route   GET /api/problems/feed
+ * @access  Public (optional JWT for personalized recommendations and following feed)
+ */
+const getPersonalizedFeed = async (req, res) => {
+  try {
+    const userId = req.user ? req.user._id : null;
+    let userInterests = [];
+    let followedUserIds = [];
+
+    if (userId) {
+      // Reload user interests to get most up to date preferences
+      const currentUser = await User.findById(userId).select('interests').lean();
+      if (currentUser && Array.isArray(currentUser.interests)) {
+        userInterests = currentUser.interests
+          .map((i) => String(i).trim().toLowerCase())
+          .filter(Boolean);
+      }
+
+      // Get user's following list from Follow model
+      const follows = await Follow.find({ follower: userId }).select('following').lean();
+      followedUserIds = follows.map((f) => f.following);
+    }
+
+    // 1. Fetch Recommended Problems
+    let recommendedQuery = {};
+    if (userInterests.length > 0) {
+      // Find problems matching any of user's interests (tags or category)
+      const interestRegexes = userInterests.map((i) => new RegExp(`^${i}$`, 'i'));
+      recommendedQuery = {
+        $or: [
+          { tags: { $in: userInterests } },
+          { category: { $in: interestRegexes } },
+        ],
+      };
+      if (userId) {
+        recommendedQuery.createdBy = { $ne: userId };
+      }
+    }
+
+    const rawRecommended = await Problem.find(recommendedQuery)
+      .populate('createdBy', 'name username avatar email')
+      .populate('bestAnswer')
+      .sort({ views: -1, createdAt: -1 })
+      .limit(9)
+      .lean();
+
+    // If no interests or not enough recommended items, fill with top viewed / active
+    let recommendedProblems = rawRecommended;
+    if (recommendedProblems.length < 3) {
+      const existingIds = new Set(recommendedProblems.map((p) => p._id.toString()));
+      const fallbackProblems = await Problem.find({ _id: { $nin: Array.from(existingIds) } })
+        .populate('createdBy', 'name username avatar email')
+        .populate('bestAnswer')
+        .sort({ views: -1, createdAt: -1 })
+        .limit(9 - recommendedProblems.length)
+        .lean();
+      recommendedProblems = [...recommendedProblems, ...fallbackProblems];
+    }
+
+    // 2. Fetch Problems from People You Follow
+    let rawFollowing = [];
+    if (followedUserIds.length > 0) {
+      rawFollowing = await Problem.find({ createdBy: { $in: followedUserIds } })
+        .populate('createdBy', 'name username avatar email')
+        .populate('bestAnswer')
+        .sort({ createdAt: -1 })
+        .limit(9)
+        .lean();
+    }
+
+    // 3. Fetch Trending Problems
+    const rawTrending = await Problem.find()
+      .populate('createdBy', 'name username avatar email')
+      .populate('bestAnswer')
+      .sort({ views: -1, createdAt: -1 })
+      .limit(6)
+      .lean();
+
+    // 4. Fetch Unanswered Problems Candidate List
+    const rawUnansweredCandidates = await Problem.find({ bestAnswer: null })
+      .populate('createdBy', 'name username avatar email')
+      .populate('bestAnswer')
+      .sort({ createdAt: -1 })
+      .limit(25)
+      .lean();
+
+    // 5. Fetch Recently Asked Problems
+    const rawRecent = await Problem.find()
+      .populate('createdBy', 'name username avatar email')
+      .populate('bestAnswer')
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .lean();
+
+    // Format all in parallel batch
+    const [
+      formattedRecommended,
+      formattedFollowing,
+      formattedTrending,
+      formattedUnansweredAll,
+      formattedRecent,
+    ] = await Promise.all([
+      batchFormatProblems(recommendedProblems),
+      batchFormatProblems(rawFollowing),
+      batchFormatProblems(rawTrending),
+      batchFormatProblems(rawUnansweredCandidates),
+      batchFormatProblems(rawRecent),
+    ]);
+
+    const formattedUnanswered = formattedUnansweredAll
+      .filter((p) => p.answersCount === 0)
+      .slice(0, 6);
+
+    return res.status(200).json({
+      success: true,
+      isPersonalized: Boolean(userId),
+      hasInterests: userInterests.length > 0,
+      hasFollowing: followedUserIds.length > 0,
+      userInterests: req.user?.interests || [],
+      feed: {
+        recommended: formattedRecommended,
+        following: formattedFollowing,
+        trending: formattedTrending,
+        unanswered: formattedUnanswered,
+        recent: formattedRecent,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to generate personalized feed: ' + error.message,
+    });
+  }
+};
+
 module.exports = {
   getProblems,
   searchProblems,
@@ -842,8 +1056,10 @@ module.exports = {
   getPopularTags,
   getTrendingProblems,
   getPopularProblems,
+  getPersonalizedFeed,
   setBestAnswer,
   removeBestAnswer,
   normalizeTags,
   computeProblemStatus,
+  batchFormatProblems,
 };

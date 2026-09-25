@@ -782,9 +782,69 @@ export const getMyAnswers = async (token) => {
 /**
  * Get public profile by username or userId
  * @param {string} idOrUsername
+ * @param {string} [token]
  */
-export const getPublicUserProfile = async (idOrUsername) => {
-  return await safeFetch(`/users/profile/${encodeURIComponent(idOrUsername)}`);
+export const getPublicUserProfile = async (idOrUsername, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch(`/users/profile/${encodeURIComponent(idOrUsername)}`, { headers });
+};
+
+/**
+ * Get list of followers for a user
+ * @param {string} idOrUsername
+ * @param {string} [token]
+ */
+export const getUserFollowers = async (idOrUsername, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch(`/users/profile/${encodeURIComponent(idOrUsername)}/followers`, { headers });
+};
+
+/**
+ * Get list of users followed by a user
+ * @param {string} idOrUsername
+ * @param {string} [token]
+ */
+export const getUserFollowing = async (idOrUsername, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch(`/users/profile/${encodeURIComponent(idOrUsername)}/following`, { headers });
+};
+
+/**
+ * Update user learning/domain interests (Protected)
+ * @param {Array<string>} interests
+ * @param {string} token
+ */
+export const updateUserInterests = async (interests, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch('/users/me/interests', {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ interests }),
+  });
+};
+
+/**
+ * Get Personalized Feed for Home page (Recommended, Following, Trending, Unanswered, Recent)
+ * @param {string} [token]
+ */
+export const getPersonalizedFeed = async (token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch('/problems/feed', { headers });
 };
 
 /**

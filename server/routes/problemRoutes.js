@@ -12,6 +12,7 @@ const {
   getPopularTags,
   getTrendingProblems,
   getPopularProblems,
+  getPersonalizedFeed,
   setBestAnswer,
   removeBestAnswer,
 } = require('../controllers/problemController');
@@ -26,7 +27,8 @@ const {
 } = require('../controllers/savedProblemController');
 const { protect, optionalProtect } = require('../middleware/authMiddleware');
 
-// Search, Tags, Trending & Popular endpoints (must come before /:id)
+// Search, Feed, Tags, Trending & Popular endpoints (must come before /:id)
+router.get('/feed', optionalProtect, getPersonalizedFeed);
 router.get('/search', optionalProtect, searchProblems);
 router.get('/trending', optionalProtect, getTrendingProblems);
 router.get('/popular', optionalProtect, getPopularProblems);

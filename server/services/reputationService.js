@@ -7,6 +7,7 @@ const ReviewVote = require('../models/ReviewVote');
 const SavedProblem = require('../models/SavedProblem');
 const ReputationHistory = require('../models/ReputationHistory');
 const Achievement = require('../models/Achievement');
+const Follow = require('../models/Follow');
 const { createNotification } = require('./notificationService');
 
 // Reputation Constants
@@ -171,6 +172,8 @@ const getUserFullStats = async (userId) => {
   const answersCount = await Answer.countDocuments({ user: userId });
   const reviewsCount = await Review.countDocuments({ user: userId });
   const savedCount = await SavedProblem.countDocuments({ user: userId });
+  const followersCount = await Follow.countDocuments({ following: userId });
+  const followingCount = await Follow.countDocuments({ follower: userId });
 
   // 2. Fetch answer IDs created by this user
   const userAnswers = await Answer.find({ user: userId }).select('_id').lean();
@@ -220,6 +223,8 @@ const getUserFullStats = async (userId) => {
     bestAnswersCount,
     reviewsCount,
     savedCount,
+    followersCount,
+    followingCount,
   };
 
   // 7. Calculate Profile Completion
@@ -260,6 +265,7 @@ const getUserFullStats = async (userId) => {
       avatar: user.avatar || '',
       location: user.location || '',
       title: user.title || '',
+      interests: Array.isArray(user.interests) ? user.interests : [],
       createdAt: user.createdAt,
     },
     stats,

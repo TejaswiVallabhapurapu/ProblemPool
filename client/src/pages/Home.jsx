@@ -11,29 +11,52 @@ import {
   TrendingUp,
   Clock,
   Layers,
+  Users,
+  HelpCircle,
+  Tag,
+  CheckCircle2,
+  ChevronRight,
+  Loader2,
+  Filter,
 } from 'lucide-react';
-import { getProblems, getTrendingProblems } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { getProblems, getPersonalizedFeed } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
 import AnimatedBackground from '../components/AnimatedBackground';
 
 const Home = () => {
+  const { user: authUser, token, isAuthenticated } = useAuth();
+
   const [stats, setStats] = useState({
     problemsCount: 0,
     categoriesCount: 0,
     communitiesCount: 0,
   });
-  const [trendingProblems, setTrendingProblems] = useState([]);
-  const [recentProblems, setRecentProblems] = useState([]);
-  const [loadingTrending, setLoadingTrending] = useState(true);
-  const [loadingRecent, setLoadingRecent] = useState(true);
+
+  // Feed states
+  const [feedData, setFeedData] = useState({
+    recommended: [],
+    following: [],
+    trending: [],
+    unanswered: [],
+    recent: [],
+  });
+  const [feedMeta, setFeedMeta] = useState({
+    isPersonalized: false,
+    hasInterests: false,
+    hasFollowing: false,
+    userInterests: [],
+  });
+  const [activeFeedTab, setActiveFeedTab] = useState('recommended');
+  const [loadingFeed, setLoadingFeed] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
-    // Fetch Stats & Recent Problems
-    const loadGeneralData = async () => {
+    // 1. Fetch Platform General Stats
+    const loadGeneralStats = async () => {
       try {
-        const response = await getProblems({ sort: 'newest', limit: 3 });
+        const response = await getProblems({ sort: 'newest', limit: 30 });
         if (response?.success && isMounted) {
           const list = response.problems || [];
           const uniqueCategories = new Set(list.map((p) => p.category?.trim()).filter(Boolean));
@@ -44,37 +67,51 @@ const Home = () => {
             categoriesCount: uniqueCategories.size || 8,
             communitiesCount: uniqueLocations.size || 5,
           });
-          setRecentProblems(list.slice(0, 3));
         }
       } catch (err) {
-        console.error('Failed to load home page statistics:', err);
-      } finally {
-        if (isMounted) setLoadingRecent(false);
+        console.warn('Failed to load home page statistics:', err);
       }
     };
 
-    // Fetch Trending Problems
-    const loadTrendingData = async () => {
+    // 2. Fetch Complete Personalized Feed
+    const loadPersonalizedFeed = async () => {
       try {
-        setLoadingTrending(true);
-        const trendingRes = await getTrendingProblems({ limit: 6 });
-        if (trendingRes?.success && isMounted) {
-          setTrendingProblems(trendingRes.problems || []);
+        setLoadingFeed(true);
+        const res = await getPersonalizedFeed(token);
+        if (res?.success && isMounted) {
+          setFeedData(res.feed || {});
+          setFeedMeta({
+            isPersonalized: res.isPersonalized,
+            hasInterests: res.hasInterests,
+            hasFollowing: res.hasFollowing,
+            userInterests: res.userInterests || [],
+          });
         }
       } catch (err) {
-        console.error('Failed to load trending problems:', err);
+        console.warn('Failed to load feed:', err);
       } finally {
-        if (isMounted) setLoadingTrending(false);
+        if (isMounted) setLoadingFeed(false);
       }
     };
 
-    loadGeneralData();
-    loadTrendingData();
+    loadGeneralStats();
+    loadPersonalizedFeed();
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [token, isAuthenticated]);
+
+  const activeProblems =
+    activeFeedTab === 'recommended'
+      ? feedData.recommended
+      : activeFeedTab === 'following'
+      ? feedData.following
+      : activeFeedTab === 'trending'
+      ? feedData.trending
+      : activeFeedTab === 'unanswered'
+      ? feedData.unanswered
+      : feedData.recent;
 
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden">
@@ -100,7 +137,7 @@ const Home = () => {
           opacity={1.00}
         />
 
-        {/* Hero Content positioned above background */}
+        {/* Hero Content */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pointer-events-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-indigo-200/80 text-indigo-700 text-xs sm:text-sm font-semibold mb-8 shadow-xs animate-fadeIn">
             <Sparkles className="w-4 h-4 text-indigo-600 animate-pulse" />
@@ -115,7 +152,7 @@ const Home = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-            Discover real-world problems, share challenges and create opportunities for meaningful solutions.
+            Discover real-world problems, share challenges, follow expert solvers, and collaborate on meaningful solutions.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -175,36 +212,121 @@ const Home = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* 3. 🔥 TRENDING PROBLEMS SECTION */}
+      {/* 3. PERSONALIZED COMMUNITY HOME FEED SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-16 sm:py-20 bg-gradient-to-b from-slate-50/80 to-white border-b border-slate-200/70">
+      <section className="relative z-10 py-16 sm:py-20 bg-gradient-to-b from-slate-50/80 via-white to-slate-50/50 border-b border-slate-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+          {/* Feed Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold mb-2">
-                <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-                <span>Hot Activity</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold mb-2.5">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Smart Community Feed</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
-                <span>🔥 Trending Problems</span>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+                Personalized Problem Pool
               </h2>
-              <p className="text-slate-600 text-sm sm:text-base mt-1.5 max-w-xl">
-                High-engagement challenges sparking active community discussions, answers, views, and saves.
+              <p className="text-slate-600 text-sm sm:text-base mt-1.5 max-w-2xl">
+                Discover challenges matched to your technical interests, problem solvers you follow, trending discussions, and unanswered questions.
               </p>
             </div>
 
             <Link
-              to="/problems?sort=most_viewed"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100/80 border border-rose-200/80 transition-colors self-start sm:self-auto shrink-0"
+              to="/problems"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition-colors self-start md:self-auto shrink-0"
             >
-              <span>View All Trending</span>
+              <span>Explore All Problems</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          {loadingTrending ? (
+          {/* Feed Navigation Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar border-b border-slate-200">
+            {[
+              {
+                id: 'recommended',
+                label: '✨ Recommended for You',
+                badge: feedMeta.hasInterests ? `${feedMeta.userInterests.length} Topics` : null,
+              },
+              {
+                id: 'following',
+                label: '👥 People You Follow',
+                badge: feedData.following.length > 0 ? `${feedData.following.length}` : null,
+              },
+              {
+                id: 'trending',
+                label: '🔥 Trending Problems',
+                badge: feedData.trending.length > 0 ? `${feedData.trending.length}` : null,
+              },
+              {
+                id: 'unanswered',
+                label: '❓ Unanswered Problems',
+                badge: feedData.unanswered.length > 0 ? `${feedData.unanswered.length}` : null,
+              },
+              {
+                id: 'recent',
+                label: '🕒 Recently Asked',
+                badge: feedData.recent.length > 0 ? `${feedData.recent.length}` : null,
+              },
+            ].map((tab) => {
+              const isActive = activeFeedTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveFeedTab(tab.id)}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                    isActive
+                      ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-200'
+                      : 'text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span
+                      className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-full ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : 'bg-indigo-50 text-indigo-700 border border-indigo-100'
+                      }`}
+                    >
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Context Banner: Recommendations based on user interests */}
+          {activeFeedTab === 'recommended' && feedMeta.hasInterests && (
+            <div className="mb-6 p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="flex flex-wrap items-center gap-1.5 text-indigo-900">
+                <span className="font-bold">🎯 Curated for your interests:</span>
+                {feedMeta.userInterests.slice(0, 5).map((interest) => (
+                  <span
+                    key={interest}
+                    className="px-2 py-0.5 rounded-md bg-white border border-indigo-200 text-indigo-700 font-semibold"
+                  >
+                    {interest}
+                  </span>
+                ))}
+                {feedMeta.userInterests.length > 5 && (
+                  <span className="text-slate-500">+{feedMeta.userInterests.length - 5} more</span>
+                )}
+              </div>
+              <Link
+                to="/profile?tab=overview"
+                className="text-indigo-600 hover:text-indigo-800 font-bold underline shrink-0"
+              >
+                Manage Interests →
+              </Link>
+            </div>
+          )}
+
+          {/* Feed Content Loading */}
+          {loadingFeed ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((n) => (
+              {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div
                   key={n}
                   className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 animate-pulse shadow-xs"
@@ -222,23 +344,61 @@ const Home = () => {
                 </div>
               ))}
             </div>
-          ) : trendingProblems.length === 0 ? (
-            <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-12 text-center max-w-md mx-auto">
-              <div className="text-3xl mb-3">🔥</div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">No trending problems yet</h3>
-              <p className="text-xs text-slate-500 mb-4">
-                Be the first to post a problem and start solving real-world challenges!
-              </p>
-              <Link
-                to="/create-problem"
-                className="inline-flex px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Post a Problem
-              </Link>
+          ) : activeProblems.length === 0 ? (
+            /* Empty State */
+            <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-12 text-center max-w-lg mx-auto shadow-xs">
+              {activeFeedTab === 'following' ? (
+                <>
+                  <div className="text-4xl mb-3">👥</div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">
+                    No problems from followed solvers yet
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-6 max-w-sm mx-auto">
+                    Follow other problem solvers and developers to see their latest challenges right here in your stream.
+                  </p>
+                  <Link
+                    to="/problems"
+                    className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                  >
+                    Discover People & Problems
+                  </Link>
+                </>
+              ) : activeFeedTab === 'unanswered' ? (
+                <>
+                  <div className="text-4xl mb-3">🎉</div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">
+                    All questions currently have answers!
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-6">
+                    Check out recent submissions or post a new challenging problem for the community.
+                  </p>
+                  <Link
+                    to="/create-problem"
+                    className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                  >
+                    Post a Problem
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="text-4xl mb-3">💡</div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">No problems found</h3>
+                  <p className="text-xs text-slate-500 mb-6">
+                    Be the pioneer to post a problem in this category and kick off the solution process!
+                  </p>
+                  <Link
+                    to="/create-problem"
+                    className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                  >
+                    Post a Problem
+                  </Link>
+                </>
+              )}
             </div>
           ) : (
+            /* Problem Cards Grid */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {trendingProblems.map((problem) => (
+              {activeProblems.map((problem) => (
                 <ProblemCard key={problem._id} problem={problem} />
               ))}
             </div>
@@ -249,7 +409,7 @@ const Home = () => {
       {/* ========================================================= */}
       {/* 4. HOW PROBLEMMPOOL WORKS */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-20 md:py-24 bg-slate-50/90 backdrop-blur-sm">
+      <section className="relative z-10 py-20 md:py-24 bg-white backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -262,86 +422,49 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1: Identify */}
-            <div className="bg-white rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
+            <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
               <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                 <Compass className="w-6 h-6" />
               </div>
               <div className="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">
                 Step 1
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Identify</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Identify & Ask</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Share real problems that people experience in everyday life.
+                Share real problems, specify technical tags and problem categories experienced in work, projects, or daily life.
               </p>
             </div>
 
             {/* Card 2: Discover */}
-            <div className="bg-white rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
+            <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
               <div className="w-12 h-12 rounded-xl bg-violet-50 border border-violet-100 text-violet-600 flex items-center justify-center font-bold text-lg mb-6 group-hover:bg-violet-600 group-hover:text-white transition-colors">
                 <Search className="w-6 h-6" />
               </div>
               <div className="text-xs font-bold uppercase tracking-wider text-violet-600 mb-2">
                 Step 2
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Discover</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Discover & Connect</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Explore problems shared by people from different communities and domains.
+                Follow top contributors, customize your domain interests, and explore curated feeds matching your focus.
               </p>
             </div>
 
             {/* Card 3: Solve */}
-            <div className="bg-white rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
+            <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
               <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                 <Lightbulb className="w-6 h-6" />
               </div>
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">
                 Step 3
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Solve</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Solve & Earn Reputation</h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Find opportunities to build ideas and solutions around meaningful problems.
+                Provide helpful solutions, get awarded Accepted Best Answer, unlock badges, and grow your developer reputation.
               </p>
             </div>
           </div>
         </div>
       </section>
-
-      {/* ========================================================= */}
-      {/* 5. RECENT PROBLEMS PREVIEW */}
-      {/* ========================================================= */}
-      {recentProblems.length > 0 && (
-        <section className="relative z-10 py-16 bg-white border-t border-slate-200/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold mb-2">
-                  <Clock className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Fresh Additions</span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Recent Problems
-                </h2>
-                <p className="text-slate-600 text-sm mt-1">
-                  Check out the latest challenges submitted by the community.
-                </p>
-              </div>
-              <Link
-                to="/problems?sort=newest"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700"
-              >
-                <span>View all problems</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {recentProblems.map((problem) => (
-                <ProblemCard key={problem._id} problem={problem} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 };
