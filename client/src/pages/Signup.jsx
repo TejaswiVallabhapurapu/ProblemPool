@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import AnimatedButton from '../components/AnimatedButton';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import '@designcodeio/threeui/style.css';
+import {
+  User,
+  Mail,
+  Lock,
+  Loader2,
+  AlertCircle,
+  Info,
+  Sparkles,
+  ArrowRight,
+} from 'lucide-react';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -17,6 +28,7 @@ const Signup = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [socialNotice, setSocialNotice] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +37,7 @@ const Signup = () => {
       setFieldErrors((prev) => ({ ...prev, [name]: null }));
     }
     setServerError('');
+    setSocialNotice(null);
   };
 
   const validate = () => {
@@ -59,6 +72,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError('');
+    setSocialNotice(null);
 
     if (!validate()) {
       return;
@@ -74,7 +88,7 @@ const Signup = () => {
 
       // Navigate to /login with flash success message
       navigate('/login', {
-        state: { successMessage: 'Account created successfully. Please login.' },
+        state: { successMessage: 'Account created successfully. Please sign in.' },
       });
     } catch (err) {
       setServerError(err.message || 'Failed to create account. Please try again.');
@@ -83,153 +97,260 @@ const Signup = () => {
     }
   };
 
-  return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-600 text-white mb-4 shadow-md shadow-indigo-200">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.765z" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            Create an Account
-          </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Join ProblemPool to share challenges and spark community solutions.
-          </p>
-        </div>
+  const handleSocialClick = (provider) => {
+    setSocialNotice(
+      `${provider} registration is currently not configured on this server. Please create your account with email and password.`
+    );
+    setTimeout(() => {
+      setSocialNotice(null);
+    }, 6000);
+  };
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+  return (
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center px-4 py-12 sm:px-6 lg:px-8 overflow-hidden">
+      {/* Dynamic 3D constellation background matching ProblemPool aesthetic */}
+      <KnowledgeNetworkBackground variant="constellation" />
+
+      <div className="relative z-10 w-full max-w-md my-auto">
+        {/* Main Uiverse Authentication Card */}
+        <div className="uiverse-auth-container">
+          {/* Centered Large "Sign Up" Heading */}
+          <div className="text-center">
+            <h1 className="uiverse-heading">Sign Up</h1>
+            <p className="mt-1.5 text-xs text-slate-500 font-medium">
+              Create your account on <span className="font-bold text-indigo-600">ProblemPool</span>
+            </p>
+          </div>
+
+          {/* Server / Auth Error Notice */}
           {serverError && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-2.5">
-              <svg className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-              </svg>
-              <span>{serverError}</span>
+            <div className="mt-4 p-3.5 rounded-2xl bg-rose-50/90 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
+              <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+              <span className="font-medium">{serverError}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          {/* Social Provider Notice */}
+          {socialNotice && (
+            <div className="mt-4 p-3.5 rounded-2xl bg-indigo-50/95 border border-indigo-200 text-indigo-800 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
+              <Info className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+              <span className="font-medium">{socialNotice}</span>
+            </div>
+          )}
+
+          {/* Sign Up Form */}
+          <form onSubmit={handleSubmit} noValidate className="uiverse-form">
             {/* Full Name */}
             <div>
-              <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
+              <label
+                htmlFor="name"
+                className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1"
+              >
                 Full Name
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
+                autoComplete="name"
+                required
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="e.g. John Doe"
-                className={`w-full px-4 py-2.5 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
-                  fieldErrors.name
-                    ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                    : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
-                }`}
+                placeholder="e.g. Alex Johnson"
+                className={`uiverse-input ${fieldErrors.name ? 'input-error' : ''}`}
+                aria-invalid={Boolean(fieldErrors.name)}
+                aria-describedby={fieldErrors.name ? 'name-error' : undefined}
               />
               {fieldErrors.name && (
-                <p className="mt-1 text-xs text-rose-600 font-medium">{fieldErrors.name}</p>
+                <p id="name-error" className="mt-1 text-xs text-rose-600 font-medium px-1">
+                  {fieldErrors.name}
+                </p>
               )}
             </div>
 
-            {/* Email */}
+            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1"
+              >
                 Email Address
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="email"
+                required
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className={`w-full px-4 py-2.5 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
-                  fieldErrors.email
-                    ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                    : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
-                }`}
+                className={`uiverse-input ${fieldErrors.email ? 'input-error' : ''}`}
+                aria-invalid={Boolean(fieldErrors.email)}
+                aria-describedby={fieldErrors.email ? 'email-error' : undefined}
               />
               {fieldErrors.email && (
-                <p className="mt-1 text-xs text-rose-600 font-medium">{fieldErrors.email}</p>
+                <p id="email-error" className="mt-1 text-xs text-rose-600 font-medium px-1">
+                  {fieldErrors.email}
+                </p>
               )}
             </div>
 
-            {/* Password */}
+            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1"
+              >
                 Password
               </label>
               <input
                 type="password"
                 id="password"
                 name="password"
+                autoComplete="new-password"
+                required
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="•••••••• (min 6 characters)"
-                className={`w-full px-4 py-2.5 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
-                  fieldErrors.password
-                    ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                    : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
-                }`}
+                className={`uiverse-input ${fieldErrors.password ? 'input-error' : ''}`}
+                aria-invalid={Boolean(fieldErrors.password)}
+                aria-describedby={fieldErrors.password ? 'password-error' : undefined}
               />
               {fieldErrors.password && (
-                <p className="mt-1 text-xs text-rose-600 font-medium">{fieldErrors.password}</p>
+                <p id="password-error" className="mt-1 text-xs text-rose-600 font-medium px-1">
+                  {fieldErrors.password}
+                </p>
               )}
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 px-1"
+              >
                 Confirm Password
               </label>
               <input
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
+                autoComplete="new-password"
+                required
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className={`w-full px-4 py-2.5 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
-                  fieldErrors.confirmPassword
-                    ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                    : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
-                }`}
+                className={`uiverse-input ${fieldErrors.confirmPassword ? 'input-error' : ''}`}
+                aria-invalid={Boolean(fieldErrors.confirmPassword)}
+                aria-describedby={fieldErrors.confirmPassword ? 'confirmPassword-error' : undefined}
               />
               {fieldErrors.confirmPassword && (
-                <p className="mt-1 text-xs text-rose-600 font-medium">{fieldErrors.confirmPassword}</p>
+                <p id="confirmPassword-error" className="mt-1 text-xs text-rose-600 font-medium px-1">
+                  {fieldErrors.confirmPassword}
+                </p>
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Sign Up Button */}
             <div className="pt-2">
-              <AnimatedButton
+              <button
                 type="submit"
-                variant="signup"
-                size="lg"
-                fullWidth
-                loading={loading}
+                disabled={loading}
+                className="uiverse-button"
+                aria-label="Create ProblemPool Account"
               >
-                Sign Up
-              </AnimatedButton>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Creating account...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Sign Up</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </>
+                )}
+              </button>
             </div>
           </form>
 
-          {/* Navigation to Login */}
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center">
-            <p className="text-sm text-slate-600">
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
+          {/* Social Sign Up Section */}
+          <div className="uiverse-social-container">
+            <div className="uiverse-social-title">
+              <span>Or Sign Up with</span>
+            </div>
+
+            <div className="uiverse-social-accounts">
+              {/* Google Button */}
+              <button
+                type="button"
+                onClick={() => handleSocialClick('Google')}
+                className="uiverse-social-button group"
+                title="Sign up with Google (Liquid Metal Interactive)"
+                aria-label="Sign up with Google"
               >
-                Login
-              </Link>
-            </p>
+                <svg className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+              </button>
+
+              {/* Apple Button */}
+              <button
+                type="button"
+                onClick={() => handleSocialClick('Apple')}
+                className="uiverse-social-button group"
+                title="Apple Sign-Up (Coming Soon)"
+                aria-label="Sign up with Apple (Coming Soon)"
+              >
+                <svg className="w-5 h-5 fill-current text-slate-800 transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.86c.62-.75 1.04-1.8 0.92-2.86-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.72-.94 2.74 1 .08 2.03-.5 2.65-1.23z" />
+                </svg>
+              </button>
+
+              {/* X / Twitter Button */}
+              <button
+                type="button"
+                onClick={() => handleSocialClick('X')}
+                className="uiverse-social-button group"
+                title="X / Twitter Sign-Up (Coming Soon)"
+                aria-label="Sign up with X (Coming Soon)"
+              >
+                <svg className="w-4 h-4 fill-current text-slate-800 transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* User Licence Agreement */}
+          <p className="uiverse-agreement">
+            By signing up, you agree to our{' '}
+            <Link to="#" onClick={(e) => e.preventDefault()}>
+              User Licence Agreement
+            </Link>{' '}
+            and Privacy Policy.
+          </p>
+
+          {/* Sign Up ↔ Sign In Navigation */}
+          <div className="uiverse-footer-nav">
+            Already have an account?
+            <Link to="/login">Sign In</Link>
           </div>
         </div>
       </div>
