@@ -518,7 +518,7 @@ const AdminDashboard = () => {
                               <div className="mt-1.5 pt-1.5 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-neutral-400">
                                 <span>Author:</span>
                                 <span className="font-semibold text-slate-200">
-                                  {targetAuthor.name}
+                                  {targetAuthor?.name || targetAuthor?.username || 'Author'}
                                 </span>
                                 {targetAuthor.isSuspended && (
                                   <span className="text-[10px] font-bold text-rose-400 bg-rose-950/40 px-1 rounded">
@@ -713,8 +713,8 @@ const AdminDashboard = () => {
                       return (
                         <tr key={u._id} className="hover:bg-[#181818] transition-colors">
                           <td className="py-3.5 px-4">
-                            <div className="font-bold text-white">{u.name}</div>
-                            <div className="text-[11px] text-neutral-400">{u.email}</div>
+                            <div className="font-bold text-white">{u?.name || u?.username || 'User'}</div>
+                            <div className="text-[11px] text-neutral-400">{u?.email}</div>
                           </td>
 
                           <td className="py-3.5 px-4">
@@ -833,9 +833,9 @@ const AdminDashboard = () => {
             </div>
 
             <h3 className="text-lg font-bold text-white mb-1">
-              {suspendModalUser.isSuspended
-                ? `Unsuspend "${suspendModalUser.name}"?`
-                : `Suspend "${suspendModalUser.name}"?`}
+              {suspendModalUser?.isSuspended
+                ? `Unsuspend "${suspendModalUser?.name || suspendModalUser?.username || 'User'}"?`
+                : `Suspend "${suspendModalUser?.name || suspendModalUser?.username || 'User'}"?`}
             </h3>
 
             <p className="text-xs text-slate-300 mb-4 leading-relaxed">

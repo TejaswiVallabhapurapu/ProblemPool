@@ -320,7 +320,7 @@ const CreateProblem = () => {
           </div>
           {user && (
             <div className="text-xs bg-white/10 border border-white/15 text-slate-200 px-3 py-1.5 rounded-lg self-start sm:self-auto font-medium">
-              Posting as <span className="font-bold">{user.name}</span>
+              Posting as <span className="font-bold">{user?.name || user?.username || 'User'}</span>
             </div>
           )}
         </div>
