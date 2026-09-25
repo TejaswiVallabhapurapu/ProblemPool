@@ -3,6 +3,21 @@ import { loginUser, signupUser, getCurrentUser } from '../services/api';
 
 const AuthContext = createContext();
 
+export const normalizeUser = (raw) => {
+  if (!raw || typeof raw !== 'object') return null;
+  const target = raw.user && typeof raw.user === 'object' ? raw.user : raw;
+  if (!target._id && !target.name && !target.email && !target.username) return null;
+  return {
+    _id: target._id || '',
+    name: target.name || '',
+    email: target.email || '',
+    username: target.username || '',
+    role: target.role || 'user',
+    avatar: target.avatar || '',
+    reputation: typeof target.reputation === 'number' ? target.reputation : (Number(target.reputation) || 0),
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('problempool_token'));
   const [user, setUser] = useState(() => {
@@ -10,19 +25,7 @@ export const AuthProvider = ({ children }) => {
       const savedUser = localStorage.getItem('problempool_user');
       if (!savedUser) return null;
       const parsed = JSON.parse(savedUser);
-      const rawUser = parsed?.user || parsed;
-      if (rawUser && (rawUser._id || rawUser.name || rawUser.email || rawUser.username)) {
-        return {
-          _id: rawUser._id || '',
-          name: rawUser.name || '',
-          email: rawUser.email || '',
-          username: rawUser.username || '',
-          role: rawUser.role || 'user',
-          avatar: rawUser.avatar || '',
-          reputation: rawUser.reputation || 0,
-        };
-      }
-      return null;
+      return normalizeUser(parsed);
     } catch {
       return null;
     }
@@ -36,17 +39,9 @@ export const AuthProvider = ({ children }) => {
       if (storedToken) {
         try {
           const res = await getCurrentUser(storedToken);
-          const raw = res?.user || res?.data?.user || res?.data;
-          if (res && res.success && raw) {
-            const cleanUser = {
-              _id: raw._id || '',
-              name: raw.name || '',
-              email: raw.email || '',
-              username: raw.username || '',
-              role: raw.role || 'user',
-              avatar: raw.avatar || '',
-              reputation: raw.reputation || 0,
-            };
+          const raw = res?.user || res?.data?.user || res?.data || res;
+          const cleanUser = normalizeUser(raw);
+          if (res && res.success && cleanUser) {
             setUser(cleanUser);
             localStorage.setItem('problempool_user', JSON.stringify(cleanUser));
           } else {
@@ -78,17 +73,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const data = await loginUser(credentials);
-    const rawUser = data?.user || data?.data?.user || data?.data;
-    if (data?.success && data?.token && rawUser) {
-      const cleanUser = {
-        _id: rawUser._id || '',
-        name: rawUser.name || '',
-        email: rawUser.email || '',
-        username: rawUser.username || '',
-        role: rawUser.role || 'user',
-        avatar: rawUser.avatar || '',
-        reputation: rawUser.reputation || 0,
-      };
+    const cleanUser = normalizeUser(data?.user || data?.data?.user || data?.data || data);
+    if (data?.success && data?.token && cleanUser) {
       setToken(data.token);
       setUser(cleanUser);
       localStorage.setItem('problempool_token', data.token);
