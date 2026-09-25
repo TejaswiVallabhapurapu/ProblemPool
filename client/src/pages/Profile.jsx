@@ -110,15 +110,46 @@ const Profile = () => {
         }
         const data = await getMyProfileStats(token);
         if (data && data.success) {
-          setProfileData(data);
+          const raw = data.profile || data;
+          const normalized = {
+            success: true,
+            user: {
+              _id: raw.user?._id || raw._id,
+              name: raw.user?.name || raw.name || '',
+              username: raw.user?.username || raw.username || '',
+              bio: raw.user?.bio || raw.bio || '',
+              location: raw.user?.location || raw.location || '',
+              title: raw.user?.title || raw.title || '',
+              avatar: raw.user?.avatar || raw.avatar || '',
+              interests: Array.isArray(raw.user?.interests) ? raw.user.interests : (Array.isArray(raw.interests) ? raw.interests : []),
+              createdAt: raw.user?.createdAt || raw.createdAt,
+            },
+            stats: raw.stats || {
+              reputation: raw.user?.reputation || raw.reputation || 0,
+              problemsCount: 0,
+              answersCount: 0,
+              helpfulVotesReceived: 0,
+              bestAnswersCount: 0,
+              reviewsCount: 0,
+              savedCount: 0,
+              followersCount: raw.followersCount || 0,
+              followingCount: raw.followingCount || 0,
+            },
+            level: raw.level || { name: 'Initiate', minRep: 0, next: 50, progress: 0 },
+            achievements: raw.achievements || [],
+            profileCompletion: raw.profileCompletion || { percentage: 100, completedTasks: [], pendingTasks: [] },
+            isFollowing: Boolean(raw.isFollowing ?? data.isFollowing),
+            isSelf: true,
+          };
+          setProfileData(normalized);
           setEditForm({
-            name: data.user.name || '',
-            username: data.user.username || '',
-            bio: data.user.bio || '',
-            location: data.user.location || '',
-            title: data.user.title || '',
-            avatar: data.user.avatar || '',
-            interests: data.user.interests || [],
+            name: normalized.user.name,
+            username: normalized.user.username,
+            bio: normalized.user.bio,
+            location: normalized.user.location,
+            title: normalized.user.title,
+            avatar: normalized.user.avatar,
+            interests: normalized.user.interests,
           });
         } else {
           setError(data?.message || 'Failed to load profile');
@@ -127,8 +158,39 @@ const Profile = () => {
         // Public profile lookup
         const data = await getPublicUserProfile(idOrUsername, token);
         if (data && data.success) {
-          setProfileData(data);
-          setIsFollowing(!!data.isFollowing);
+          const raw = data.profile || data;
+          const normalized = {
+            success: true,
+            user: {
+              _id: raw.user?._id || raw._id,
+              name: raw.user?.name || raw.name || '',
+              username: raw.user?.username || raw.username || '',
+              bio: raw.user?.bio || raw.bio || '',
+              location: raw.user?.location || raw.location || '',
+              title: raw.user?.title || raw.title || '',
+              avatar: raw.user?.avatar || raw.avatar || '',
+              interests: Array.isArray(raw.user?.interests) ? raw.user.interests : (Array.isArray(raw.interests) ? raw.interests : []),
+              createdAt: raw.user?.createdAt || raw.createdAt,
+            },
+            stats: raw.stats || {
+              reputation: raw.user?.reputation || raw.reputation || 0,
+              problemsCount: 0,
+              answersCount: 0,
+              helpfulVotesReceived: 0,
+              bestAnswersCount: 0,
+              reviewsCount: 0,
+              savedCount: 0,
+              followersCount: raw.followersCount || 0,
+              followingCount: raw.followingCount || 0,
+            },
+            level: raw.level || { name: 'Initiate', minRep: 0, next: 50, progress: 0 },
+            achievements: raw.achievements || [],
+            profileCompletion: raw.profileCompletion || { percentage: 100, completedTasks: [], pendingTasks: [] },
+            isFollowing: Boolean(raw.isFollowing ?? data.isFollowing),
+            isSelf: Boolean(raw.isSelf ?? data.isSelf),
+          };
+          setProfileData(normalized);
+          setIsFollowing(!!normalized.isFollowing);
         } else {
           setError(data?.message || 'User profile not found');
         }
