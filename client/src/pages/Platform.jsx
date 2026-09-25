@@ -237,42 +237,36 @@ const PLATFORM_STEPS = [
     title: 'Ask a Problem',
     desc: 'Describe the programming obstacle, architectural dilemma, or bug you are facing with code snippets and context.',
     icon: '📝',
-    color: 'from-indigo-600 to-violet-500',
   },
   {
     step: '02',
     title: 'Community Discovery',
     desc: 'Other developers and problem solvers discover your question through category filters, tags, and personalized feeds.',
     icon: '🔍',
-    color: 'from-purple-600 to-indigo-500',
   },
   {
     step: '03',
     title: 'Collaborative Answers',
     desc: 'Passionate contributors provide structured solutions, code improvements, and architectural guidance.',
     icon: '💡',
-    color: 'from-sky-500 to-indigo-600',
   },
   {
     step: '04',
     title: 'Helpful Recognition',
     desc: 'The community votes on answers that provide genuine value, surfacing the most insightful explanations.',
     icon: '👍',
-    color: 'from-emerald-500 to-teal-600',
   },
   {
     step: '05',
     title: 'Accepted Solution',
     desc: 'The problem creator marks the accepted Best Answer, resolving the thread for future developers searching the same issue.',
     icon: '🏆',
-    color: 'from-amber-500 to-yellow-500',
   },
   {
     step: '06',
     title: 'Reputation & Growth',
     desc: 'Helpful contributors gain reputation points, unlock milestone badges, and climb the platform leaderboard.',
     icon: '📈',
-    color: 'from-rose-500 to-purple-600',
   },
 ];
 
@@ -305,17 +299,17 @@ const Platform = () => {
   });
 
   return (
-    <div className="relative min-h-screen bg-slate-950 text-slate-100 selection:bg-purple-500 selection:text-white overflow-hidden">
+    <div className="relative min-h-screen bg-[#080808] text-slate-100 selection:bg-white selection:text-black overflow-hidden">
       {/* ========================================================= */}
       {/* 1. HERO SECTION WITH AEROSHARDS 3D BACKGROUND */}
       {/* ========================================================= */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden border-b border-purple-500/20">
-        {/* AeroShards Interactive 3D Background */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+        {/* AeroShards Interactive 3D Background - Monochrome Silver & Charcoal */}
         <div className="absolute inset-0 z-0">
           <AeroShards
-            backgroundColor="#0a0a12"
-            shardColor="#7c3aed"
-            accentColor="#a855f7"
+            backgroundColor="#080808"
+            shardColor="#2e2e2e"
+            accentColor="#666666"
             placement="full"
             flow="stream"
             material="pearl"
@@ -331,27 +325,27 @@ const Platform = () => {
         </div>
 
         {/* Ambient Dark Gradient Overlay */}
-        <div className="absolute inset-0 z-1 bg-gradient-to-b from-slate-950/40 via-slate-950/60 to-slate-950 pointer-events-none" />
+        <div className="absolute inset-0 z-1 bg-gradient-to-b from-[#080808]/40 via-[#080808]/70 to-[#080808] pointer-events-none" />
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center flex flex-col items-center">
           {/* Public Platform Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 text-xs sm:text-sm font-bold mb-6 shadow-lg shadow-purple-950/50 animate-in fade-in zoom-in duration-300">
-            <Sparkles className="w-4 h-4 text-purple-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-lg animate-in fade-in zoom-in duration-300">
+            <Sparkles className="w-4 h-4 text-slate-400" />
             <span>ProblemPool Community Platform</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
           </div>
 
           {/* Large Hero Heading */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight mb-6 max-w-4xl text-balance">
             Turn Real Problems Into{' '}
-            <span className="bg-gradient-to-r from-purple-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent">
+            <span className="shimmer-text">
               Real Solutions
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-purple-100/90 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
             Ask challenging technical questions, share verified solutions, solve curated coding challenges, and build verified reputation with problem solvers worldwide.
           </p>
 
@@ -376,8 +370,8 @@ const Platform = () => {
           </div>
 
           {/* Platform Flow Concept Ribbon */}
-          <div className="w-full max-w-4xl p-4 sm:p-6 rounded-3xl bg-slate-900/80 border border-purple-500/30 backdrop-blur-md shadow-2xl">
-            <div className="text-xs font-bold uppercase tracking-widest text-purple-300 mb-4 text-center">
+          <div className="w-full max-w-4xl p-4 sm:p-6 rounded-3xl bg-[#111111]/90 border border-white/10 backdrop-blur-md shadow-2xl">
+            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 text-center">
               The Problem-Solving Lifecycle
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
@@ -390,7 +384,7 @@ const Platform = () => {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-2xl bg-purple-950/40 border border-purple-500/20 flex flex-col items-center justify-center gap-1.5 hover:border-purple-400 transition"
+                  className="p-3 rounded-2xl bg-[#161616] border border-white/5 flex flex-col items-center justify-center gap-1.5 hover:border-white/20 transition"
                 >
                   <span className="text-2xl">{item.icon}</span>
                   <span className="text-xs font-extrabold text-slate-200">{item.label}</span>
@@ -404,13 +398,13 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 2. PROBLEM DISCOVERY PREVIEW SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-20 bg-slate-900/60 border-b border-purple-500/20 backdrop-blur-xs">
+      <section className="relative z-10 py-20 bg-[#0d0d0d] border-b border-white/10 backdrop-blur-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950/70 border border-purple-500/30 text-purple-300 text-xs font-bold mb-2">
-                <HelpCircle className="w-3.5 h-3.5 text-purple-400" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
                 <span>Public Problem Explorer</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -432,15 +426,15 @@ const Platform = () => {
           </div>
 
           {/* Interactive Search Bar Preview */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-slate-950/80 border border-purple-500/30 mb-8 space-y-4 shadow-xl">
+          <div className="p-4 sm:p-5 rounded-3xl bg-[#121212] border border-white/10 mb-8 space-y-4 shadow-xl">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="🔍 Search problems, topics, or solutions (e.g. Java, React, MongoDB)..."
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-900 border border-purple-500/30 text-white placeholder-slate-400 text-sm sm:text-base focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-900 transition"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-[#181818] border border-[#2e2e2e] text-white placeholder-[#777777] text-sm sm:text-base focus:outline-none focus:border-[#555555] transition"
               />
             </div>
 
@@ -453,8 +447,8 @@ const Platform = () => {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
                     selectedCategory === cat
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-950'
-                      : 'bg-slate-900 text-purple-200 border border-purple-500/30 hover:border-purple-400'
+                      ? 'bg-[#2a2a2a] text-white border border-white/20 shadow-md'
+                      : 'bg-[#181818] text-slate-400 border border-[#2a2a2a] hover:border-[#444444] hover:text-white'
                   }`}
                 >
                   {cat}
@@ -477,10 +471,10 @@ const Platform = () => {
           </div>
 
           {/* Get Started Prompt */}
-          <div className="p-6 rounded-3xl bg-gradient-to-r from-purple-950/60 to-indigo-950/60 border border-purple-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="p-6 rounded-3xl bg-[#141414] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-lg">
             <div>
               <h3 className="text-base font-bold text-white">Looking for answers to your specific bug?</h3>
-              <p className="text-xs text-purple-200/80 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Join ProblemPool to post code snippets, receive verified peer answers, and bookmark solutions.
               </p>
             </div>
@@ -500,12 +494,12 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 3. HELP OTHERS / UNANSWERED QUESTIONS SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-20 bg-slate-950 border-b border-purple-500/20">
+      <section className="relative z-10 py-20 bg-[#080808] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/70 border border-amber-500/30 text-amber-300 text-xs font-bold mb-2">
-                <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
+                <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
                 <span>Knowledge Sharing</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -544,12 +538,12 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 4. CHALLENGES PREVIEW SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-20 bg-slate-900/60 border-b border-purple-500/20 backdrop-blur-xs">
+      <section className="relative z-10 py-20 bg-[#0d0d0d] border-b border-white/10 backdrop-blur-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/70 border border-indigo-500/30 text-indigo-300 text-xs font-bold mb-2">
-                <Code2 className="w-3.5 h-3.5 text-indigo-400" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
+                <Code2 className="w-3.5 h-3.5 text-slate-400" />
                 <span>Coding Challenges</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -594,11 +588,11 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 5. LEADERBOARD PREVIEW SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-20 bg-slate-950 border-b border-purple-500/20">
+      <section className="relative z-10 py-20 bg-[#080808] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/70 border border-amber-500/30 text-amber-300 text-xs font-bold mb-2">
-              <Trophy className="w-3.5 h-3.5 text-amber-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2">
+              <Trophy className="w-3.5 h-3.5 text-slate-400" />
               <span>Leaderboard & Reputation</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
@@ -658,17 +652,17 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 6. HOW PROBLEMPOOL WORKS SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-24 bg-slate-900/80 border-b border-purple-500/20">
+      <section className="relative z-10 py-24 bg-[#0d0d0d] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950/70 border border-purple-500/30 text-purple-300 text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-slate-400" />
               <span>Platform Workflow</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
               How ProblemPool Works
             </h2>
-            <p className="text-purple-200/80 text-base leading-relaxed">
+            <p className="text-slate-400 text-base leading-relaxed">
               From asking your first question to accepting the best solution and earning community standing.
             </p>
           </div>
@@ -677,15 +671,15 @@ const Platform = () => {
             {PLATFORM_STEPS.map((step) => (
               <div
                 key={step.step}
-                className="p-6 sm:p-7 rounded-3xl bg-slate-950/90 border border-purple-500/30 hover:border-purple-400 transition-all duration-300 group shadow-xl"
+                className="p-6 sm:p-7 rounded-3xl bg-[#141414] border border-white/10 hover:border-white/25 transition-all duration-300 group shadow-xl"
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-3xl">{step.icon}</span>
-                  <span className="text-xs font-black px-2.5 py-1 rounded-full bg-purple-950 border border-purple-500/30 text-purple-300">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-full bg-[#202020] border border-white/10 text-slate-300">
                     STEP {step.step}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-slate-300 transition-colors">
                   {step.title}
                 </h3>
                 <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
@@ -700,15 +694,15 @@ const Platform = () => {
       {/* ========================================================= */}
       {/* 7. FINAL CALL TO ACTION SECTION */}
       {/* ========================================================= */}
-      <section className="relative z-10 py-24 bg-gradient-to-b from-slate-950 via-purple-950/30 to-slate-950 text-center">
+      <section className="relative z-10 py-24 bg-[#080808] text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-950/60 text-2xl">
+          <div className="w-16 h-16 rounded-3xl bg-[#181818] border border-white/15 text-white flex items-center justify-center mx-auto mb-6 shadow-xl text-2xl">
             🚀
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4">
             Ready to Be Part of the Community?
           </h2>
-          <p className="text-base sm:text-lg text-purple-200/80 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
             Join thousands of developers turning tricky coding bugs and architectural hurdles into resolved community knowledge.
           </p>
 
