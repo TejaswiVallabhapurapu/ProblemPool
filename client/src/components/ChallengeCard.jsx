@@ -1,15 +1,4 @@
 import React from 'react';
-import {
-  Sparkles,
-  Trophy,
-  Clock,
-  CheckCircle2,
-  Code2,
-  ArrowRight,
-  RotateCw,
-  Flame,
-  Award,
-} from 'lucide-react';
 import GlassAiButton from './GlassAiButton';
 import ThreeDFlipCard from './ThreeDFlipCard';
 
@@ -35,7 +24,7 @@ export const ChallengeCard = ({
     DIFFICULTY_STYLES[challenge.difficulty] ||
     'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]';
 
-  // ================= 3D FRONT CONTENT =================
+  // ================= 3D FRONT CONTENT (Text Only) =================
   const frontContent = (
     <>
       <div>
@@ -50,12 +39,8 @@ export const ChallengeCard = ({
             </span>
           </div>
 
-          <span
-            className="uiverse-3d-flip-hint"
-            title="Flip card for challenge roadmap"
-          >
-            <RotateCw className="w-2.5 h-2.5" />
-            <span>3D</span>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+            3D
           </span>
         </div>
 
@@ -71,23 +56,16 @@ export const ChallengeCard = ({
 
         {/* Challenge Specs */}
         <div className="py-2 flex items-center justify-between text-xs font-semibold text-slate-400 border-t border-white/10 mb-3">
-          <span className="flex items-center gap-1.5">
-            <Code2 className="w-3.5 h-3.5 text-slate-400" />
-            <span>{challenge.problemsCount} Problems</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-500" />
-            <span>{challenge.duration}</span>
-          </span>
+          <span>{challenge.problemsCount} Problems</span>
+          <span>{challenge.duration}</span>
         </div>
 
         {/* Real User Progress Bar (When Started) */}
         {stats.status !== 'Not Started' ? (
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-300 flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                <span>{stats.status}</span>
+              <span className="font-bold text-slate-300">
+                {stats.status}
               </span>
               <span className="font-extrabold text-white">
                 {stats.completedCount} / {stats.total} ({stats.percent}%)
@@ -101,18 +79,16 @@ export const ChallengeCard = ({
             </div>
           </div>
         ) : (
-          <div className="pt-1 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-            <span className="w-2 h-2 rounded-full bg-slate-600" />
-            <span>Status: Ready to Start</span>
+          <div className="pt-1 text-xs text-slate-500 font-medium">
+            Status: Ready to Start
           </div>
         )}
       </div>
 
       {/* Card Action Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
-        <span className="text-xs font-bold text-slate-300 flex items-center gap-1">
-          <Sparkles className="w-3.5 h-3.5 text-slate-400" />
-          <span>+{challenge.rewardPoints} Rep</span>
+        <span className="text-xs font-bold text-slate-300">
+          +{challenge.rewardPoints} Rep
         </span>
 
         <div data-no-flip="true">
@@ -121,8 +97,6 @@ export const ChallengeCard = ({
             onClick={() => onOpenDetails(challenge)}
             size="xs"
             variant={stats.status === 'Completed' ? "success" : "primary"}
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            iconPosition="right"
           >
             {stats.status === 'Completed'
               ? 'Review'
@@ -135,31 +109,23 @@ export const ChallengeCard = ({
     </>
   );
 
-  // ================= 3D BACK CONTENT =================
+  // ================= 3D BACK CONTENT (Text Only) =================
   const backContent = (
     <>
       <div className="space-y-4">
         {/* Top Header of Back */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
-            <Trophy className="w-3 h-3 text-slate-300" />
-            <span>+{challenge.rewardPoints} Points</span>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+            +{challenge.rewardPoints} Points
           </span>
 
-          <span
-            className="uiverse-3d-flip-hint"
-            title="Flip back to front view"
-          >
-            <RotateCw className="w-2.5 h-2.5" />
-            <span>Flip Back</span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+            Flip Back
           </span>
         </div>
 
-        {/* Center Visual Badge */}
+        {/* Center Title */}
         <div className="text-center py-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#1c1c1c] border border-white/15 text-white flex items-center justify-center mx-auto mb-2 shadow-lg">
-            <Award className="w-6 h-6 text-slate-300" />
-          </div>
           <h4 className="text-sm font-bold text-white line-clamp-1">
             {challenge.title}
           </h4>
@@ -172,28 +138,27 @@ export const ChallengeCard = ({
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{challenge.problemsCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">🧩 Problems</div>
+            <div className="text-[10px] text-slate-400 font-medium">Problems</div>
           </div>
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{challenge.duration}</div>
-            <div className="text-[10px] text-slate-400 font-medium">⏱ Timeframe</div>
+            <div className="text-[10px] text-slate-400 font-medium">Timeframe</div>
           </div>
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{stats.completedCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">✓ Solved</div>
+            <div className="text-[10px] text-slate-400 font-medium">Solved</div>
           </div>
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-slate-200">{stats.percent}%</div>
-            <div className="text-[10px] text-slate-400 font-medium">📊 Progress</div>
+            <div className="text-[10px] text-slate-400 font-medium">Progress</div>
           </div>
         </div>
 
         {/* Challenge Milestone Overview */}
         <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium">Habit Track</span>
-          <span className="font-bold text-white flex items-center gap-1">
-            <Flame className="w-3.5 h-3.5 text-slate-300" />
-            <span>Daily Problem Series</span>
+          <span className="font-bold text-white">
+            Daily Problem Series
           </span>
         </div>
       </div>
@@ -210,8 +175,6 @@ export const ChallengeCard = ({
             onClick={() => onOpenDetails(challenge)}
             size="xs"
             variant="primary"
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            iconPosition="right"
           >
             Open Roadmap
           </GlassAiButton>
