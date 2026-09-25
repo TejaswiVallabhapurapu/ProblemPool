@@ -5,6 +5,16 @@ const {
   getMySavedProblemIds,
 } = require('../controllers/savedProblemController');
 const {
+  getMyCollections,
+  getCollectionById,
+  createCollection,
+  updateCollection,
+  deleteCollection,
+  addProblemToCollection,
+  removeProblemFromCollection,
+  getProblemCollections,
+} = require('../controllers/collectionController');
+const {
   getMyProfileStats,
   getPublicUserProfile,
   updateMyProfile,
@@ -27,6 +37,16 @@ router.get('/me/activity', protect, getMyActivityTimeline);
 router.get('/me/reputation-history', protect, getMyReputationHistory);
 router.get('/me/problems', protect, getMyProblems);
 router.get('/me/answers', protect, getMyAnswers);
+
+// Saved problem collections (Section 7)
+router.get('/me/collections', protect, getMyCollections);
+router.post('/me/collections', protect, createCollection);
+router.get('/me/collections/:id', protect, getCollectionById);
+router.put('/me/collections/:id', protect, updateCollection);
+router.delete('/me/collections/:id', protect, deleteCollection);
+router.post('/me/collections/:id/problems/:problemId', protect, addProblemToCollection);
+router.delete('/me/collections/:id/problems/:problemId', protect, removeProblemFromCollection);
+router.get('/me/problems/:problemId/collections', protect, getProblemCollections);
 
 // Saved problems for current logged-in user
 router.get('/me/saved-problems', protect, getMySavedProblems);

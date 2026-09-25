@@ -998,4 +998,150 @@ export const clearAllNotifications = async (token) => {
   });
 };
 
+/* ==========================================================================
+   SAVED PROBLEM COLLECTIONS (SECTION 7)
+   ========================================================================== */
+
+/**
+ * Get all collections for current logged-in user
+ * @param {string} token
+ */
+export const getMyCollections = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/collections', {
+    headers,
+  });
+};
+
+/**
+ * Get single collection with its problems
+ * @param {string} collectionId
+ * @param {string} token
+ */
+export const getCollectionById = async (collectionId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/me/collections/${collectionId}`, {
+    headers,
+  });
+};
+
+/**
+ * Create a new collection
+ * @param {Object} data - { name, description, color }
+ * @param {string} token
+ */
+export const createCollection = async (data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/collections', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Update collection details (name, description, color)
+ * @param {string} collectionId
+ * @param {Object} data
+ * @param {string} token
+ */
+export const updateCollection = async (collectionId, data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/me/collections/${collectionId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Delete a collection
+ * @param {string} collectionId
+ * @param {string} token
+ */
+export const deleteCollection = async (collectionId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/me/collections/${collectionId}`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Add a saved problem to a collection
+ * @param {string} collectionId
+ * @param {string} problemId
+ * @param {string} token
+ */
+export const addProblemToCollection = async (collectionId, problemId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/me/collections/${collectionId}/problems/${problemId}`, {
+    method: 'POST',
+    headers,
+  });
+};
+
+/**
+ * Remove a problem from a collection
+ * @param {string} collectionId
+ * @param {string} problemId
+ * @param {string} token
+ */
+export const removeProblemFromCollection = async (collectionId, problemId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/me/collections/${collectionId}/problems/${problemId}`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Get list of user collections and their inclusion status for a given problem
+ * @param {string} problemId
+ * @param {string} token
+ */
+export const getProblemCollections = async (problemId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/me/problems/${problemId}/collections`, {
+    headers,
+  });
+};
+
+
 

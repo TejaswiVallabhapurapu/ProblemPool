@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2 } from 'lucide-react';
+import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2, FolderPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { saveProblem, unsaveProblem } from '../services/api';
 
@@ -38,6 +38,7 @@ const ProblemCard = ({
   isSaved: initialIsSaved = null,
   onToggleSave = null,
   onTagClick = null,
+  onManageCollections = null,
 }) => {
   const { token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -252,30 +253,47 @@ const ProblemCard = ({
         </div>
       </div>
 
-      {/* Footer Info: Save Button & View Action */}
+      {/* Footer Info: Save Button, Collection Button & View Action */}
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
-        <button
-          type="button"
-          onClick={handleSaveToggle}
-          disabled={saving}
-          title={saved ? 'Remove from saved problems' : 'Save for later'}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
-            saved
-              ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
-              : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-          }`}
-        >
-          {saving ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />
-          ) : (
-            <Bookmark
-              className={`w-3.5 h-3.5 ${
-                saved ? 'fill-indigo-600 text-indigo-600' : 'text-slate-400'
-              }`}
-            />
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={handleSaveToggle}
+            disabled={saving}
+            title={saved ? 'Remove from saved problems' : 'Save for later'}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
+              saved
+                ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+            }`}
+          >
+            {saving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />
+            ) : (
+              <Bookmark
+                className={`w-3.5 h-3.5 ${
+                  saved ? 'fill-indigo-600 text-indigo-600' : 'text-slate-400'
+                }`}
+              />
+            )}
+            <span>{saved ? '🔖 Saved' : '🔖 Save'}</span>
+          </button>
+
+          {saved && onManageCollections && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onManageCollections(problem);
+              }}
+              title="Add or remove from custom collections"
+              className="p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:text-indigo-600 text-slate-500 hover:border-indigo-200 transition shadow-2xs cursor-pointer"
+            >
+              <FolderPlus className="w-3.5 h-3.5" />
+            </button>
           )}
-          <span>{saved ? '🔖 Saved' : '🔖 Save'}</span>
-        </button>
+        </div>
 
         <Link
           to={`/problems/${problem._id}`}

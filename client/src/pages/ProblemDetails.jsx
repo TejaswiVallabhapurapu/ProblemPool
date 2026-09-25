@@ -15,7 +15,8 @@ import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
-import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles } from 'lucide-react';
+import AddToCollectionModal from '../components/AddToCollectionModal';
+import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -67,6 +68,7 @@ const ProblemDetails = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [savingState, setSavingState] = useState(false);
   const [saveNotice, setSaveNotice] = useState(null);
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
 
   // Answer form states
   const [answerContent, setAnswerContent] = useState('');
@@ -349,8 +351,8 @@ const ProblemDetails = () => {
                 </span>
               </div>
 
-              {/* Right Side Actions: Save Problem & Creator Delete */}
-              <div className="flex items-center gap-3">
+              {/* Right Side Actions: Save Problem, Collection Button & Creator Delete */}
+              <div className="flex items-center gap-2.5">
                 <button
                   type="button"
                   onClick={handleSaveToggle}
@@ -373,6 +375,18 @@ const ProblemDetails = () => {
                   )}
                   <span>{isSaved ? '🔖 Saved' : '🔖 Save'}</span>
                 </button>
+
+                {isSaved && (
+                  <button
+                    type="button"
+                    onClick={() => setShowCollectionModal(true)}
+                    title="Organize into collections"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 transition shadow-2xs cursor-pointer"
+                  >
+                    <FolderPlus className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>Collections</span>
+                  </button>
+                )}
 
                 {isProblemOwner && (
                   <button
@@ -787,6 +801,15 @@ const ProblemDetails = () => {
               Post another problem →
             </Link>
           </div>
+
+          {/* Add to Collection Modal */}
+          {showCollectionModal && problem && (
+            <AddToCollectionModal
+              problem={problem}
+              isOpen={showCollectionModal}
+              onClose={() => setShowCollectionModal(false)}
+            />
+          )}
         </div>
       )}
     </div>
