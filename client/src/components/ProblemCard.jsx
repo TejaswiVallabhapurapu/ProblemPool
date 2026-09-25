@@ -229,7 +229,6 @@ const ProblemCard = ({
             <span
               className="uiverse-3d-flip-hint"
               title="Flip card for full 3D analytics"
-              data-no-flip="true"
             >
               <RotateCw className="w-2.5 h-2.5" />
               <span>3D</span>
