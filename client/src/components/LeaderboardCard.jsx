@@ -1,21 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Trophy,
-  Medal,
-  Award,
-  Crown,
-  ThumbsUp,
-  Star,
-  CheckCircle2,
-  Sparkles,
-  RotateCw,
-  ArrowRight,
-  MapPin,
-  User,
-  MessageSquare,
-  HelpCircle,
-} from 'lucide-react';
 import GlassAiButton from './GlassAiButton';
 import ThreeDFlipCard from './ThreeDFlipCard';
 
@@ -52,14 +36,14 @@ export const LeaderboardCard = ({
         circleColor3: 'rgba(70, 70, 70, 0.2)',
       };
 
-  // ================= 3D FRONT CONTENT =================
+  // ================= 3D FRONT CONTENT (Text Only) =================
   const frontContent = (
     <>
       <div className="text-center">
         {/* Top Rank Badge & 3D Hint */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div
-            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black shadow-xs ${
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black shadow-xs ${
               isGold
                 ? 'bg-[#2a2a2a] text-white border border-white/30 shadow-md'
                 : isSilver
@@ -69,15 +53,11 @@ export const LeaderboardCard = ({
                 : 'bg-[#181818] text-slate-400 border border-white/10'
             }`}
           >
-            {isGold ? '👑 #1 Champion' : isSilver ? '🥈 #2 Runner Up' : isBronze ? '🥉 #3 Contributor' : `#${rank}`}
+            {isGold ? '#1 Champion' : isSilver ? '#2 Runner Up' : isBronze ? '#3 Contributor' : `#${rank}`}
           </div>
 
-          <span
-            className="uiverse-3d-flip-hint"
-            title="Flip card for user metrics"
-          >
-            <RotateCw className="w-2.5 h-2.5" />
-            <span>3D</span>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+            3D
           </span>
         </div>
 
@@ -128,7 +108,7 @@ export const LeaderboardCard = ({
       {/* Front Action Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
         <span className="text-[11px] text-slate-500 font-medium truncate">
-          {leader.location ? `📍 ${leader.location}` : 'ProblemPool Member'}
+          {leader.location || 'ProblemPool Member'}
         </span>
 
         <div data-no-flip="true">
@@ -136,8 +116,6 @@ export const LeaderboardCard = ({
             to={`/profile/${leader.username || leader._id}`}
             size="xs"
             variant={isGold ? "primary" : "secondary"}
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            iconPosition="right"
           >
             Profile
           </GlassAiButton>
@@ -146,27 +124,22 @@ export const LeaderboardCard = ({
     </>
   );
 
-  // ================= 3D BACK CONTENT =================
+  // ================= 3D BACK CONTENT (Text Only) =================
   const backContent = (
     <>
       <div className="space-y-4">
         {/* Top Header */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
-            <Trophy className="w-3 h-3 text-slate-300" />
-            <span>Rank #{rank}</span>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+            Rank #{rank}
           </span>
 
-          <span
-            className="uiverse-3d-flip-hint"
-            title="Flip back to front view"
-          >
-            <RotateCw className="w-2.5 h-2.5" />
-            <span>Flip Back</span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+            Flip Back
           </span>
         </div>
 
-        {/* Center Visual Badge */}
+        {/* Center Name */}
         <div className="text-center py-1">
           <h4 className="text-base font-bold text-white line-clamp-1">
             {leader.name}
@@ -180,28 +153,27 @@ export const LeaderboardCard = ({
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-sm font-black text-white">{leader.reputation || leader.primaryMetric || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">🏆 Reputation</div>
+            <div className="text-[10px] text-slate-400 font-medium">Reputation</div>
           </div>
           <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-sm font-black text-slate-200">{leader.helpfulVotes || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">👍 Helpful Votes</div>
+            <div className="text-[10px] text-slate-400 font-medium">Helpful Votes</div>
           </div>
           <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-sm font-black text-slate-200">{leader.problemsSolved || leader.solvedCount || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">✓ Solved</div>
+            <div className="text-[10px] text-slate-400 font-medium">Solved</div>
           </div>
           <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-sm font-black text-slate-200">{leader.bestAnswersCount || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">⭐ Best Answers</div>
+            <div className="text-[10px] text-slate-400 font-medium">Best Answers</div>
           </div>
         </div>
 
         {/* Community Standing Indicator */}
         <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium">Community Status</span>
-          <span className="font-bold text-white flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-slate-300" />
-            <span>Top Tier Solver</span>
+          <span className="font-bold text-white">
+            Top Tier Solver
           </span>
         </div>
       </div>
@@ -209,7 +181,7 @@ export const LeaderboardCard = ({
       {/* Back Actions Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
         <span className="text-[11px] text-slate-500 font-medium truncate">
-          {leader.location ? `📍 ${leader.location}` : 'Active Member'}
+          {leader.location || 'Active Member'}
         </span>
 
         <div data-no-flip="true">
@@ -217,8 +189,6 @@ export const LeaderboardCard = ({
             to={`/profile/${leader.username || leader._id}`}
             size="xs"
             variant="primary"
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            iconPosition="right"
           >
             View Full Profile
           </GlassAiButton>
