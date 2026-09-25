@@ -10,7 +10,6 @@ import {
   MessageSquare,
   Star,
   Plus,
-  Loader2,
   AlertCircle,
   Tag,
   ArrowRight,
