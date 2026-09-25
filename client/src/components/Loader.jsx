@@ -6,7 +6,9 @@ import './Loader.css';
  * Exact implementation of Uiverse.io Shoh2008 two-ball push animation.
  */
 export const Loader = ({ size = 'lg', className = '', style = {} }) => {
-  const sizeClass = size === 'sm' || size === 'small'
+  const sizeClass = size === 'xs' || size === 'tiny'
+    ? 'loader--xs'
+    : size === 'sm' || size === 'small'
     ? 'loader--sm'
     : size === 'md' || size === 'medium'
     ? 'loader--md'

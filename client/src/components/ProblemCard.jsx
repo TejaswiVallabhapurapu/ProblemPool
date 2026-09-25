@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2, FolderPlus, Trash2, AlertTriangle, X } from 'lucide-react';
+import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, FolderPlus, Trash2, AlertTriangle, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { saveProblem, unsaveProblem, deleteProblem } from '../services/api';
 import GlassAiButton from './GlassAiButton';
