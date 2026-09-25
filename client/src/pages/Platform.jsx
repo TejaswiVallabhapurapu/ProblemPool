@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import GlassAiButton from '../components/GlassAiButton';
 import AnimatedButton from '../components/AnimatedButton';
 import AeroShards from '../components/AeroShards';
+import KnowledgeCore3D from '../components/KnowledgeCore3D';
 import ChallengeCard from '../components/ChallengeCard';
 import LeaderboardCard from '../components/LeaderboardCard';
 
@@ -220,7 +221,7 @@ const Platform = () => {
         <div className="absolute inset-0 z-1 bg-gradient-to-b from-[#080808]/40 via-[#080808]/70 to-[#080808] pointer-events-none" />
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center flex flex-col items-center">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center flex flex-col items-center">
           {/* Public Platform Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-lg">
             <Sparkles className="w-4 h-4 text-slate-400" />
@@ -228,7 +229,7 @@ const Platform = () => {
           </div>
 
           {/* Large Hero Heading */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight mb-6 max-w-4xl text-balance">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight mb-4 max-w-4xl text-balance">
             Turn Problems Into{' '}
             <span className="shimmer-text">
               Solutions.
@@ -236,41 +237,17 @@ const Platform = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
             Ask questions, share knowledge, collaborate with others, and solve real problems together.
           </p>
 
-          {/* Primary Action Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-14">
-            <AnimatedButton
-              onClick={handleGetStarted}
-              variant="signup"
-              size="lg"
-            >
-              Get Started Free →
-            </AnimatedButton>
-
-            <GlassAiButton
-              onClick={scrollToHowItWorks}
-              size="lg"
-              variant="glass"
-              icon={<ArrowRight className="w-4 h-4" />}
-              iconPosition="right"
-            >
-              Explore Platform
-            </GlassAiButton>
-
-            <AnimatedButton
-              onClick={handleSignIn}
-              variant="login"
-              size="lg"
-            >
-              Sign In
-            </AnimatedButton>
+          {/* 3D Knowledge Core Globe Visualization */}
+          <div className="w-full flex items-center justify-center my-4">
+            <KnowledgeCore3D />
           </div>
 
           {/* Static Interactive Concept Banner */}
-          <div className="w-full max-w-4xl p-4 sm:p-5 rounded-3xl bg-[#111111]/90 border border-white/10 backdrop-blur-md shadow-2xl">
+          <div className="w-full max-w-4xl p-4 sm:p-5 rounded-3xl bg-[#111111]/90 border border-white/10 backdrop-blur-md shadow-2xl mt-4">
             <div className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3 text-center">
               The Problem-Solving Lifecycle
             </div>
