@@ -615,17 +615,13 @@ const AdminDashboard = () => {
                                       ? 'Unsuspend author'
                                       : 'Suspend author'
                                   }
-                                  className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                  className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition cursor-pointer ${
                                     targetAuthor.isSuspended
-                                      ? 'border-emerald-500/20 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-100'
-                                      : 'border-rose-500/20 bg-rose-950/40 text-rose-300 hover:bg-rose-100'
+                                      ? 'border-emerald-500/20 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/40'
+                                      : 'border-rose-500/20 bg-rose-950/40 text-rose-300 hover:bg-rose-900/40'
                                   }`}
                                 >
-                                  {targetAuthor.isSuspended ? (
-                                    
-                                  ) : (
-                                    
-                                  )}
+                                  {targetAuthor.isSuspended ? 'Unsuspend' : 'Suspend'}
                                 </button>
                               )}
                             </div>
