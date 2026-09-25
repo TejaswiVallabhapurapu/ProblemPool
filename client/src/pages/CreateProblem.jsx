@@ -294,9 +294,11 @@ const CreateProblem = () => {
   const availableCategories = POPULAR_CATEGORIES.filter((c) => c !== 'All');
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-      {/* Header */}
-      <div className="mb-8">
+    <div className="relative min-h-screen">
+      <ParticlesBackground />
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+        {/* Header */}
+        <div className="mb-8">
         <Link
           to="/problems"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-4"
@@ -867,6 +869,7 @@ const CreateProblem = () => {
         </form>
       </div>
     </div>
+  </div>
   );
 };
 

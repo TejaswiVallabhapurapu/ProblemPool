@@ -33,7 +33,7 @@ import {
 import ProblemCard from '../components/ProblemCard';
 import AddToCollectionModal from '../components/AddToCollectionModal';
 import GlassAiButton from '../components/GlassAiButton';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 
 // Helper to safely extract the problem entity from various API response shapes
@@ -392,7 +392,7 @@ const SavedProblems = () => {
 
   return (
     <div className="relative min-h-screen">
-      <KnowledgeNetworkBackground variant="constellation" />
+      <ParticlesBackground />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Toast Notice */}
       {toastNotice && (
