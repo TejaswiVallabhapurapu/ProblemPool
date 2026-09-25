@@ -16,7 +16,8 @@ import AnswerCard from '../components/AnswerCard';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import AddToCollectionModal from '../components/AddToCollectionModal';
-import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus } from 'lucide-react';
+import ReportModal from '../components/ReportModal';
+import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -69,6 +70,7 @@ const ProblemDetails = () => {
   const [savingState, setSavingState] = useState(false);
   const [saveNotice, setSaveNotice] = useState(null);
   const [showCollectionModal, setShowCollectionModal] = useState(false);
+  const [showReportProblemModal, setShowReportProblemModal] = useState(false);
 
   // Answer form states
   const [answerContent, setAnswerContent] = useState('');
@@ -388,7 +390,7 @@ const ProblemDetails = () => {
                   </button>
                 )}
 
-                {isProblemOwner && (
+                {isProblemOwner ? (
                   <button
                     onClick={handleDeleteProblem}
                     disabled={isDeletingProblem}
@@ -396,6 +398,15 @@ const ProblemDetails = () => {
                     title="Delete this problem"
                   >
                     {isDeletingProblem ? 'Deleting...' : 'Delete problem'}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowReportProblemModal(true)}
+                    title="Report inappropriate problem"
+                    className="inline-flex items-center gap-1 text-slate-400 hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer ml-1"
+                  >
+                    <Flag className="w-3.5 h-3.5" />
                   </button>
                 )}
               </div>
@@ -808,6 +819,17 @@ const ProblemDetails = () => {
               problem={problem}
               isOpen={showCollectionModal}
               onClose={() => setShowCollectionModal(false)}
+            />
+          )}
+
+          {/* Report Problem Modal */}
+          {showReportProblemModal && problem && (
+            <ReportModal
+              isOpen={showReportProblemModal}
+              onClose={() => setShowReportProblemModal(false)}
+              contentType="problem"
+              contentId={problem._id}
+              contentTitle={problem.title}
             />
           )}
         </div>

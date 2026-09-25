@@ -72,4 +72,36 @@ const optionalProtect = async (req, res, next) => {
   return next();
 };
 
-module.exports = { protect, optionalProtect };
+/**
+ * Admin authorization check: requires user.role === 'admin'
+ */
+const requireAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied: Administrator privileges required.',
+    });
+  }
+  return next();
+};
+
+/**
+ * Check if user is suspended before allowing mutating actions
+ */
+const checkSuspended = (req, res, next) => {
+  if (req.user && req.user.isSuspended) {
+    return res.status(403).json({
+      success: false,
+      message: 'Your account is currently suspended. You cannot perform this action. Please contact support.',
+      isSuspended: true,
+    });
+  }
+  return next();
+};
+
+module.exports = {
+  protect,
+  optionalProtect,
+  requireAdmin,
+  checkSuspended,
+};

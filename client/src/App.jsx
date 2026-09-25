@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -55,6 +56,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Notifications />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />

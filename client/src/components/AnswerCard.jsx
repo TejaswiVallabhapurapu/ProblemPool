@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { voteAnswer, removeAnswerVote, setBestAnswer, removeBestAnswer } from '../services/api';
 import ReviewSection from './ReviewSection';
 import MarkdownRenderer from './MarkdownRenderer';
+import ReportModal from './ReportModal';
+import { Flag } from 'lucide-react';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -34,6 +36,7 @@ const AnswerCard = ({
   const [togglingBestAnswer, setTogglingBestAnswer] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [reviewCount, setReviewCount] = useState(answer.reviewCount || 0);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   // Sync state if props change (e.g. from parent sorting or best answer shift)
   React.useEffect(() => {
@@ -182,16 +185,27 @@ const AnswerCard = ({
           </div>
         </div>
 
-        {/* Delete option for Author */}
-        {isAnswerAuthor && (
-          <button
-            onClick={() => onDeleteAnswer(answer._id)}
-            className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
-            title="Delete your answer"
-          >
-            Delete
-          </button>
-        )}
+        {/* Actions for Author vs Other Users */}
+        <div className="flex items-center gap-2">
+          {isAnswerAuthor ? (
+            <button
+              onClick={() => onDeleteAnswer(answer._id)}
+              className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
+              title="Delete your answer"
+            >
+              Delete
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowReportModal(true)}
+              className="text-slate-400 hover:text-rose-600 transition-colors p-1 rounded-lg hover:bg-slate-50 cursor-pointer"
+              title="Report inappropriate answer"
+            >
+              <Flag className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Markdown Rich Content */}
@@ -289,6 +303,17 @@ const AnswerCard = ({
           currentUser={currentUser}
           token={token}
           isAuthenticated={isAuthenticated}
+        />
+      )}
+
+      {/* Report Answer Modal */}
+      {showReportModal && (
+        <ReportModal
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          contentType="answer"
+          contentId={answer._id}
+          contentTitle={`Answer by ${answerAuthorName}`}
         />
       )}
     </div>

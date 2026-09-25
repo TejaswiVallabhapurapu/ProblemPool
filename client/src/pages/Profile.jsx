@@ -31,7 +31,9 @@ import {
   Heart,
   Tag,
   BookOpen,
+  Flag,
 } from 'lucide-react';
+import ReportModal from '../components/ReportModal';
 import { useAuth } from '../context/AuthContext';
 import {
   getMyProfileStats,
@@ -124,6 +126,7 @@ const Profile = () => {
 
   // Selected Achievement modal
   const [selectedBadge, setSelectedBadge] = useState(null);
+  const [showReportUserModal, setShowReportUserModal] = useState(false);
 
   // Fetch Profile Overview (Self vs Public)
   const fetchProfileOverview = async () => {
@@ -517,33 +520,44 @@ const Profile = () => {
                   </button>
                 </>
               ) : (
-                /* Public Follow / Following Button */
-                <button
-                  type="button"
-                  onClick={() => handleFollowToggle(user._id)}
-                  disabled={followLoading}
-                  className={`inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
-                    isFollowing
-                      ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 group'
-                      : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200'
-                  }`}
-                >
-                  {followLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : isFollowing ? (
-                    <>
-                      <UserCheck className="w-4 h-4 text-indigo-600 group-hover:hidden" />
-                      <X className="w-4 h-4 text-rose-600 hidden group-hover:inline" />
-                      <span className="group-hover:hidden">Following</span>
-                      <span className="hidden group-hover:inline">Unfollow</span>
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="w-4 h-4" />
-                      <span>Follow</span>
-                    </>
-                  )}
-                </button>
+                /* Public Follow / Following Button & Report User */
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleFollowToggle(user._id)}
+                    disabled={followLoading}
+                    className={`inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
+                      isFollowing
+                        ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 group'
+                        : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200'
+                    }`}
+                  >
+                    {followLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : isFollowing ? (
+                      <>
+                        <UserCheck className="w-4 h-4 text-indigo-600 group-hover:hidden" />
+                        <X className="w-4 h-4 text-rose-600 hidden group-hover:inline" />
+                        <span className="group-hover:hidden">Following</span>
+                        <span className="hidden group-hover:inline">Unfollow</span>
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus className="w-4 h-4" />
+                        <span>Follow</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowReportUserModal(true)}
+                    title="Report user profile"
+                    className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50/50 transition cursor-pointer"
+                  >
+                    <Flag className="w-4 h-4" />
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -1469,6 +1483,17 @@ const Profile = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Report User Modal */}
+      {showReportUserModal && user && (
+        <ReportModal
+          isOpen={showReportUserModal}
+          onClose={() => setShowReportUserModal(false)}
+          contentType="user"
+          contentId={user._id}
+          contentTitle={`User Profile: ${user.name}`}
+        />
       )}
     </div>
   );

@@ -93,6 +93,16 @@ const Navbar = () => {
                   <span>Post Problem</span>
                 </Link>
 
+                {/* Admin Dashboard link if user is admin */}
+                {user?.role === 'admin' && (
+                  <NavLink
+                    to="/admin"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-xs font-bold transition-all"
+                  >
+                    <span>🛡️ Admin</span>
+                  </NavLink>
+                )}
+
                 {/* Profile Link & User badge */}
                 <Link
                   to="/profile"
@@ -222,6 +232,15 @@ const Navbar = () => {
               >
                 🔖 Saved Problems
               </NavLink>
+              {user?.role === 'admin' && (
+                <NavLink
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-3 py-2 rounded-md text-base font-bold text-rose-700 hover:bg-rose-50"
+                >
+                  🛡️ Admin Dashboard
+                </NavLink>
+              )}
               <Link
                 to="/create-problem"
                 onClick={() => setMobileMenuOpen(false)}

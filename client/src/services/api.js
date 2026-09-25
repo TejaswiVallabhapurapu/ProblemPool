@@ -1143,5 +1143,152 @@ export const getProblemCollections = async (problemId, token) => {
   });
 };
 
+/* ==========================================================================
+   REPORT & ADMIN MODERATION (SECTION 8)
+   ========================================================================== */
+
+/**
+ * Submit a report for a problem, answer, review, or user
+ * @param {Object} reportData - { contentType, contentId, reason, description }
+ * @param {string} token
+ */
+export const submitReport = async (reportData, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/reports', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(reportData),
+  });
+};
+
+/**
+ * Get system metrics for admin dashboard
+ * @param {string} token
+ */
+export const getAdminStats = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/admin/stats', {
+    headers,
+  });
+};
+
+/**
+ * Get moderation reports with filters
+ * @param {Object} params - { status, contentType, reason, page, limit }
+ * @param {string} token
+ */
+export const getAdminReports = async (params = {}, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  const queryParams = new URLSearchParams();
+  if (params.status) queryParams.set('status', params.status);
+  if (params.contentType) queryParams.set('contentType', params.contentType);
+  if (params.reason) queryParams.set('reason', params.reason);
+  if (params.page) queryParams.set('page', params.page);
+  if (params.limit) queryParams.set('limit', params.limit);
+
+  const qs = queryParams.toString();
+  return await safeFetch(`/admin/reports${qs ? `?${qs}` : ''}`, {
+    headers,
+  });
+};
+
+/**
+ * Update report status (Reviewed, Dismissed, Resolved)
+ * @param {string} reportId
+ * @param {Object} data - { status, actionTaken }
+ * @param {string} token
+ */
+export const updateReportStatus = async (reportId, data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/admin/reports/${reportId}/status`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Remove reported content (Problem, Answer, Review)
+ * @param {string} reportId
+ * @param {string} token
+ */
+export const removeReportedContent = async (reportId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/admin/reports/${reportId}/content`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Get users list for admin management
+ * @param {Object} params - { search, role, status, page, limit }
+ * @param {string} token
+ */
+export const getAdminUsers = async (params = {}, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  const queryParams = new URLSearchParams();
+  if (params.search) queryParams.set('search', params.search);
+  if (params.role) queryParams.set('role', params.role);
+  if (params.status) queryParams.set('status', params.status);
+  if (params.page) queryParams.set('page', params.page);
+  if (params.limit) queryParams.set('limit', params.limit);
+
+  const qs = queryParams.toString();
+  return await safeFetch(`/admin/users${qs ? `?${qs}` : ''}`, {
+    headers,
+  });
+};
+
+/**
+ * Toggle user suspension
+ * @param {string} userId
+ * @param {Object} data - { isSuspended, reason }
+ * @param {string} token
+ */
+export const toggleUserSuspension = async (userId, data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/admin/users/${userId}/suspend`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+
 
 

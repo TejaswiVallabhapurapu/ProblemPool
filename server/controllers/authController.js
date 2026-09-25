@@ -109,7 +109,11 @@ const login = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
+        username: user.username,
         email: user.email,
+        avatar: user.avatar,
+        role: user.role || 'user',
+        isSuspended: Boolean(user.isSuspended),
       },
     });
   } catch (error) {
@@ -129,7 +133,11 @@ const getMe = async (req, res) => {
       user: {
         _id: req.user._id,
         name: req.user.name,
+        username: req.user.username,
         email: req.user.email,
+        avatar: req.user.avatar,
+        role: req.user.role || 'user',
+        isSuspended: Boolean(req.user.isSuspended),
       },
     });
   } catch (error) {
