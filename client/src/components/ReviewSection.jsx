@@ -559,7 +559,7 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
 
                 {/* 1-Level Replies List */}
                 {review.replies && review.replies.length > 0 && (
-                  <div className="ml-8 mt-2 space-y-2 border-l-2 border-indigo-100 pl-3.5 pt-1">
+                  <div className="ml-8 mt-2 space-y-2 border-l border-white/10 pl-3.5 pt-1">
                     {review.replies.map((reply) => {
                       const replyAuthorName = reply.user?.name || 'Community Member';
                       const replyAuthorInitial = replyAuthorName.charAt(0).toUpperCase() || 'U';
@@ -572,15 +572,15 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                       return (
                         <div
                           key={reply._id}
-                          className="bg-slate-50/80 p-2.5 rounded-lg border border-slate-200/70 text-xs space-y-1.5"
+                          className="bg-white/5 p-2.5 rounded-lg border border-white/10 text-xs space-y-1.5"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
-                              <div className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-[9px]">
+                              <div className="w-5 h-5 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-[9px] border border-white/10">
                                 {replyAuthorInitial}
                               </div>
-                              <span className="font-bold text-slate-900">{replyAuthorName}</span>
-                              <span className="text-[10px] text-slate-400">
+                              <span className="font-semibold text-white">{replyAuthorName}</span>
+                              <span className="text-[10px] text-neutral-400 font-mono">
                                 {formatDate(reply.createdAt)}
                               </span>
                             </div>
@@ -593,13 +593,13 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                                     setEditingReplyId(reply._id);
                                     setEditingReplyContent(reply.content);
                                   }}
-                                  className="text-slate-400 hover:text-indigo-600 font-medium"
+                                  className="text-neutral-400 hover:text-white font-medium"
                                 >
                                   Edit
                                 </button>
                                 <button
                                   onClick={() => handleDeleteReply(review._id, reply._id)}
-                                  className="text-slate-400 hover:text-rose-600 font-medium"
+                                  className="text-neutral-400 hover:text-red-400 font-medium"
                                 >
                                   Delete
                                 </button>
@@ -614,26 +614,26 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                                 value={editingReplyContent}
                                 onChange={(e) => setEditingReplyContent(e.target.value)}
                                 maxLength={500}
-                                className="w-full px-2 py-1 text-xs rounded border border-slate-300"
+                                className="w-full px-2 py-1 text-xs rounded border border-white/10 bg-black/40 text-white focus:outline-none"
                               />
                               <div className="flex justify-end gap-2">
                                 <button
                                   onClick={() => setEditingReplyId(null)}
-                                  className="text-slate-500 hover:text-slate-700"
+                                  className="text-neutral-400 hover:text-white"
                                 >
                                   Cancel
                                 </button>
                                 <button
                                   onClick={() => handleSaveEditReply(review._id, reply._id)}
                                   disabled={savingReplyId === reply._id || !editingReplyContent.trim()}
-                                  className="px-2 py-0.5 bg-indigo-600 text-white rounded font-medium"
+                                  className="px-2 py-0.5 bg-white text-black rounded font-medium text-xs"
                                 >
                                   Save
                                 </button>
                               </div>
                             </div>
                           ) : (
-                            <p className="text-slate-700 pl-6 leading-relaxed">
+                            <p className="text-neutral-200 pl-6 leading-relaxed">
                               {reply.content}
                             </p>
                           )}

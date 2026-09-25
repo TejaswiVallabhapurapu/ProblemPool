@@ -30,10 +30,10 @@ const CategoryFilter = ({ selectedCategory, onSelectCategory }) => {
             key={category}
             type="button"
             onClick={() => onSelectCategory(category)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 border cursor-pointer ${
               isSelected
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-500/20'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                ? 'bg-white text-black border-white font-semibold shadow-xs'
+                : 'bg-[#141414]/80 text-neutral-300 border-white/10 hover:border-white/20 hover:text-white hover:bg-white/5'
             }`}
           >
             {category}
