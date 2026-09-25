@@ -563,6 +563,7 @@ const Problems = () => {
               isSaved={savedIds.has(problem._id)}
               onToggleSave={handleToggleSave}
               onTagClick={handleTagClick}
+              onDelete={(deletedId) => setProblems((prev) => prev.filter((p) => p._id !== deletedId))}
             />
           ))}
         </div>

@@ -215,17 +215,23 @@ const ProblemDetails = () => {
     }
   };
 
-  const handleDeleteProblem = async () => {
-    if (!window.confirm('Are you sure you want to delete this problem and all its answers/reviews?')) {
-      return;
-    }
+  const handleDeleteProblem = () => {
+    setDeleteProblemError(null);
+    setShowDeleteProblemModal(true);
+  };
+
+  const handleConfirmDeleteProblem = async () => {
+    if (isDeletingProblem || !token) return;
 
     try {
       setIsDeletingProblem(true);
+      setDeleteProblemError(null);
       await deleteProblem(id, token);
-      navigate('/problems');
+      setShowDeleteProblemModal(false);
+      navigate('/problems', { state: { message: 'Problem deleted successfully' } });
     } catch (err) {
-      alert('Failed to delete problem: ' + err.message);
+      console.error('Failed to delete problem:', err);
+      setDeleteProblemError(err.message || 'Failed to delete problem. Please try again.');
       setIsDeletingProblem(false);
     }
   };
@@ -976,6 +982,77 @@ const ProblemDetails = () => {
               contentId={problem._id}
               contentTitle={problem.title}
             />
+          )}
+
+          {/* Delete Problem Confirmation Modal */}
+          {showDeleteProblemModal && problem && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+              onClick={() => !isDeletingProblem && setShowDeleteProblemModal(false)}
+            >
+              <div
+                className="bg-white rounded-3xl border border-slate-200/90 shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => !isDeletingProblem && setShowDeleteProblemModal(false)}
+                  className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                <div className="flex items-center gap-3.5 mb-4">
+                  <div className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 shadow-xs">
+                    <Trash2 className="w-5 h-5 text-rose-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900">Delete Problem Post?</h3>
+                    <p className="text-xs text-slate-500">This action is permanent and cannot be undone.</p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 rounded-2xl p-3.5 mb-4 border border-slate-100">
+                  <p className="text-xs font-semibold text-slate-800 line-clamp-2">
+                    "{problem.title}"
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    All answers, reviews, helpful votes, and saved bookmarks will be permanently removed.
+                  </p>
+                </div>
+
+                {deleteProblemError && (
+                  <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
+                    {deleteProblemError}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2.5">
+                  <GlassAiButton
+                    type="button"
+                    onClick={() => setShowDeleteProblemModal(false)}
+                    disabled={isDeletingProblem}
+                    size="sm"
+                    variant="glass"
+                  >
+                    Cancel
+                  </GlassAiButton>
+
+                  <GlassAiButton
+                    type="button"
+                    onClick={handleConfirmDeleteProblem}
+                    disabled={isDeletingProblem}
+                    loading={isDeletingProblem}
+                    size="sm"
+                    variant="danger"
+                    icon={<Trash2 className="w-4 h-4" />}
+                  >
+                    {isDeletingProblem ? 'Deleting...' : 'Delete Permanently'}
+                  </GlassAiButton>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       )}
