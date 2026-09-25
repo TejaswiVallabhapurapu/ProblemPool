@@ -607,8 +607,8 @@ const deleteProblem = async (req, res) => {
       });
     }
 
-    // Authorization check
-    if (problem.createdBy.toString() !== req.user._id.toString()) {
+    // Authorization check - only owner or admin can delete
+    if (problem.createdBy.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this problem',
@@ -624,11 +624,24 @@ const deleteProblem = async (req, res) => {
     await Promise.all([
       Problem.findByIdAndDelete(id),
       SavedProblem.deleteMany({ problem: id }),
+      Collection.updateMany({ problems: id }, { $pull: { problems: id } }),
       Answer.deleteMany({ problem: id }),
       AnswerVote.deleteMany({ answer: { $in: answerIds } }),
       Review.deleteMany({ answer: { $in: answerIds } }),
       ReviewVote.deleteMany({ review: { $in: reviewIds } }),
       Reply.deleteMany({ review: { $in: reviewIds } }),
+      Report.deleteMany({
+        $or: [
+          { contentType: 'problem', contentId: id },
+          { contentType: 'answer', contentId: { $in: answerIds } },
+        ],
+      }),
+      Notification.deleteMany({
+        $or: [
+          { referenceType: 'problem', referenceId: id },
+          { referenceType: 'answer', referenceId: { $in: answerIds } },
+        ],
+      }),
     ]);
 
     return res.status(200).json({

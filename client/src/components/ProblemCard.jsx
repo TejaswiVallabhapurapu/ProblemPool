@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2, FolderPlus } from 'lucide-react';
+import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2, FolderPlus, Trash2, AlertTriangle, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { saveProblem, unsaveProblem } from '../services/api';
+import { saveProblem, unsaveProblem, deleteProblem } from '../services/api';
 import GlassAiButton from './GlassAiButton';
 
 const CATEGORY_COLORS = {
@@ -40,13 +40,16 @@ const ProblemCard = ({
   onToggleSave = null,
   onTagClick = null,
   onManageCollections = null,
+  onDelete = null,
 }) => {
-  const { token, isAuthenticated } = useAuth();
+  const { user, token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [saved, setSaved] = useState(Boolean(initialIsSaved));
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (initialIsSaved !== null) {
