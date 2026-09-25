@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { RotateCw } from 'lucide-react';
 import './ThreeDFlipCard.css';
 
 /**
  * ThreeDFlipCard - Uiverse.io ElSombrero2 Inspired 3D Flip Card Component
  *
- * Implements smooth 3D perspective rotation, floating animated blurred circles,
- * and responsive dual-sided interaction with accessible touch & keyboard support.
+ * Implements smooth two-way 3D perspective rotation:
+ * - Desktop: Hover over card flips FRONT → BACK, Mouse leave flips BACK → FRONT
+ * - Mobile / Click: Tapping the card or flip hint toggles FRONT ↔ BACK
+ * - Interactive elements (buttons, links, inputs) remain fully functional without unintended flipping.
  */
 export const ThreeDFlipCard = ({
   frontContent,
@@ -14,7 +15,6 @@ export const ThreeDFlipCard = ({
   className = '',
   style = {},
   hoverFlip = true,
-  showFlipHint = true,
   frontBadge = null,
   backBadge = null,
   circleColor1 = 'rgba(255, 255, 255, 0.05)',
@@ -24,19 +24,25 @@ export const ThreeDFlipCard = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Toggle flip on card click / tap
   const handleCardClick = (e) => {
     // If the click originated from an interactive element (button, link, input, etc.), don't flip
     if (e.target.closest('button, a, input, select, textarea, [data-no-flip="true"]')) {
       return;
     }
-    // On touch / click, toggle flip
     setIsFlipped((prev) => !prev);
   };
 
-  const handleFlipHintClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFlipped((prev) => !prev);
+  const handleMouseEnter = () => {
+    if (hoverFlip) {
+      setIsFlipped(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverFlip) {
+      setIsFlipped(false);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -50,9 +56,11 @@ export const ThreeDFlipCard = ({
 
   return (
     <div
-      className={`uiverse-3d-card ${hoverFlip ? 'hover-flip' : ''} ${isFlipped ? 'is-flipped' : ''} ${className}`}
+      className={`uiverse-3d-card ${isFlipped ? 'is-flipped' : ''} ${className}`}
       style={style}
       onClick={handleCardClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="region"
@@ -116,3 +124,4 @@ export const ThreeDFlipCard = ({
 };
 
 export default ThreeDFlipCard;
+
