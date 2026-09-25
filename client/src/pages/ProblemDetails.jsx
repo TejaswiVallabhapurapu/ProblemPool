@@ -337,10 +337,7 @@ const ProblemDetails = () => {
 
       {/* 1. Loading State */}
       {loading && (
-        <div className="py-24 flex flex-col items-center justify-center">
-          <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4" />
-          <p className="text-sm font-medium text-slate-500">Loading problem details...</p>
-        </div>
+        <LoaderContainer minHeight="50vh" message="Loading problem details..." />
       )}
 
       {/* 2. Error / Not Found State */}
@@ -665,7 +662,7 @@ const ProblemDetails = () => {
 
                 {summarizingAi ? (
                   <div className="py-6 flex flex-col items-center justify-center gap-2 text-center text-xs text-indigo-700 font-medium">
-                    <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
+                    <Loader size="sm" />
                     <span>Analyzing community solutions and generating summary...</span>
                   </div>
                 ) : aiSummaryError ? (

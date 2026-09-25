@@ -20,6 +20,7 @@ import {
 import { getLeaderboard } from '../services/api';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
+import { LoaderContainer } from '../components/Loader';
 
 const CATEGORIES = [
   { id: 'reputation', label: 'Reputation', icon: Trophy, desc: 'Overall community points' },
