@@ -188,7 +188,7 @@ const ProblemDetails = () => {
 
   const handleSaveToggle = async () => {
     if (!isAuthenticated || !token) {
-      setSaveNotice('Please login to save problems.');
+      setSaveNotice('Please sign in to save problems.');
       setTimeout(() => setSaveNotice(null), 3500);
       return;
     }
