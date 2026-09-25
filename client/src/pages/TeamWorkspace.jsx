@@ -465,9 +465,9 @@ const TeamWorkspace = () => {
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1c1c1c] border border-white/10 text-xs font-semibold text-slate-200 shadow-xs"
                   >
                     <div className="w-5 h-5 rounded-full bg-[#2a2a2a] text-white flex items-center justify-center text-[10px] font-bold">
-                      {member.name?.charAt(0).toUpperCase() || 'U'}
+                      {member?.name?.charAt(0)?.toUpperCase() || member?.username?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
-                    <span>{member.name} {isSelf && '(You)'}</span>
+                    <span>{member?.name || member?.username || 'Member'} {isSelf && '(You)'}</span>
                     {isMemberLeader && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-[#2c2c2c] text-slate-200 border border-white/15">
                         
@@ -480,9 +480,9 @@ const TeamWorkspace = () => {
                       <div className="flex items-center gap-1 ml-1 pl-1 border-l border-white/10">
                         <button
                           type="button"
-                          onClick={() => handleRemoveMember(member._id, member.name)}
+                          onClick={() => handleRemoveMember(member._id, member?.name || 'Member')}
                           className="text-neutral-400 hover:text-rose-400 p-0.5 transition cursor-pointer"
-                          title={`Remove ${member.name}`}
+                          title={`Remove ${member?.name || member?.username || 'Member'}`}
                         >
                           
                         </button>
@@ -704,7 +704,7 @@ const TeamWorkspace = () => {
                           <option value="">Unassigned</option>
                           {team.members?.map((m) => (
                             <option key={m._id} value={m._id}>
-                              Assign to: {m.name}
+                              Assign to: {m?.name || m?.username || 'Member'}
                             </option>
                           ))}
                         </select>
@@ -790,7 +790,7 @@ const TeamWorkspace = () => {
                                 <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-semibold ${
                                   isAssignedToMe ? 'bg-[#252525] text-white border border-white/15' : 'bg-[#1c1c1c] text-slate-300'
                                 }`}>
-                                   {task.assignedTo.name} {isAssignedToMe && '(You)'}
+                                   {(typeof task.assignedTo === 'object' ? task.assignedTo?.name : null) || task.assignedTo?.username || 'Assigned'} {isAssignedToMe && '(You)'}
                                 </span>
                               ) : (
                                 <span className="text-neutral-400 italic">Unassigned</span>
@@ -1055,7 +1055,7 @@ const TeamWorkspace = () => {
                         onChange={() => setSelectedNewLeader(m._id)}
                         className="accent-white"
                       />
-                      <span className="font-bold text-xs">{m.name} (@{m.username || 'user'})</span>
+                      <span className="font-bold text-xs">{m?.name || 'User'} (@{m?.username || 'user'})</span>
                     </label>
                   ))}
               </div>

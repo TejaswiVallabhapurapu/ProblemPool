@@ -688,22 +688,22 @@ const Profile = () => {
                     Community Rank & Progression
                   </div>
                   <h3 className="text-2xl font-extrabold">
-                    {level.name}
+                    {level?.name || 'Initiate'}
                   </h3>
                 </div>
-                {level.next && (
+                {level?.next && (
                   <div className="text-xs text-slate-300 bg-white/10 border border-white/10 px-3 py-1.5 rounded-xl backdrop-blur-md self-start sm:self-auto font-medium">
-                    Next Level at <strong className="text-white">{level.next} pts</strong> ({level.next - stats.reputation} pts remaining)
+                    Next Level at <strong className="text-white">{level.next} pts</strong> ({level.next - (stats.reputation || 0)} pts remaining)
                   </div>
                 )}
               </div>
 
               {/* Progress Bar */}
-              {level.next && (
+              {level?.next && (
                 <div className="w-full bg-[#0e0e0e] rounded-full h-3 p-0.5 overflow-hidden border border-white/10">
                   <div
                     className="bg-white h-full rounded-full transition-all duration-500"
-                    style={{ width: `${level.progress}%` }}
+                    style={{ width: `${level.progress || 0}%` }}
                   />
                 </div>
               )}
@@ -764,7 +764,7 @@ const Profile = () => {
                   Followers ({followersList.length})
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Community members following {isViewingSelf ? 'your' : `${user.name}'s`} problem-solving journey.
+                  Community members following {isViewingSelf ? 'your' : `${user?.name || user?.username || 'this user'}'s`} problem-solving journey.
                 </p>
               </div>
             </div>
@@ -789,12 +789,12 @@ const Profile = () => {
                         {f.avatar ? (
                           <img
                             src={f.avatar}
-                            alt={f.name}
+                            alt={f.name || f.username || 'Follower'}
                             className="w-12 h-12 rounded-xl object-cover border border-white/10 ring-1 ring-white/10"
                           />
                         ) : (
                           <div className="w-12 h-12 rounded-xl bg-[#202020] border border-white/15 text-white flex items-center justify-center font-bold text-lg">
-                            {f.name.charAt(0).toUpperCase()}
+                            {f.name?.charAt(0)?.toUpperCase() || f.username?.charAt(0)?.toUpperCase() || 'U'}
                           </div>
                         )}
                       </Link>
@@ -803,12 +803,12 @@ const Profile = () => {
                           to={`/profile/${f.username || f._id}`}
                           className="font-bold text-sm text-white hover:text-slate-300 transition truncate block"
                         >
-                          {f.name}
+                          {f.name || f.username || 'Community Solver'}
                         </Link>
                         <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                          <span>@{f.username}</span>
+                          <span>@{f.username || 'solver'}</span>
                           <span>•</span>
-                          <span className="text-amber-400 font-semibold">{f.reputation} pts</span>
+                          <span className="text-amber-400 font-semibold">{f.reputation || 0} pts</span>
                         </div>
                         {f.title && (
                           <div className="text-[11px] text-slate-400 truncate mt-0.5">{f.title}</div>
@@ -842,7 +842,7 @@ const Profile = () => {
                   Following ({followingList.length})
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Community members and problem solvers {isViewingSelf ? 'you follow' : `${user.name} follows`}.
+                  Community members and problem solvers {isViewingSelf ? 'you follow' : `${user?.name || user?.username || 'this user'} follows`}.
                 </p>
               </div>
             </div>
@@ -867,12 +867,12 @@ const Profile = () => {
                         {f.avatar ? (
                           <img
                             src={f.avatar}
-                            alt={f.name}
+                            alt={f.name || f.username || 'User'}
                             className="w-12 h-12 rounded-xl object-cover border border-white/10 ring-1 ring-white/10"
                           />
                         ) : (
                           <div className="w-12 h-12 rounded-xl bg-[#202020] border border-white/15 text-white flex items-center justify-center font-bold text-lg">
-                            {f.name.charAt(0).toUpperCase()}
+                            {f.name?.charAt(0)?.toUpperCase() || f.username?.charAt(0)?.toUpperCase() || 'U'}
                           </div>
                         )}
                       </Link>
@@ -881,12 +881,12 @@ const Profile = () => {
                           to={`/profile/${f.username || f._id}`}
                           className="font-bold text-sm text-white hover:text-slate-300 transition truncate block"
                         >
-                          {f.name}
+                          {f.name || f.username || 'Community Solver'}
                         </Link>
                         <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                          <span>@{f.username}</span>
+                          <span>@{f.username || 'solver'}</span>
                           <span>•</span>
-                          <span className="text-amber-400 font-semibold">{f.reputation} pts</span>
+                          <span className="text-amber-400 font-semibold">{f.reputation || 0} pts</span>
                         </div>
                         {f.title && (
                           <div className="text-[11px] text-slate-400 truncate mt-0.5">{f.title}</div>
