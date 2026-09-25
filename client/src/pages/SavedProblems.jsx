@@ -499,20 +499,6 @@ const SavedProblems = () => {
               </button>
             );
           })}
-
-          {/* Quick Create Button in Tabs */}
-          <button
-            type="button"
-            onClick={() => {
-              setCollectionForm({ name: '', description: '', color: 'indigo' });
-              setColError(null);
-              setShowCreateModal(true);
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-semibold text-indigo-600 hover:text-indigo-700 border border-dashed border-indigo-200 hover:border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50 transition cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Collection</span>
-          </button>
         </div>
       </div>
 

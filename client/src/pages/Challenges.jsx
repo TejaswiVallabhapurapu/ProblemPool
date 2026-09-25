@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Sparkles,
@@ -20,6 +20,16 @@ import {
   ChevronRight,
   Send,
   X,
+  Search,
+  BookOpen,
+  Check,
+  Filter,
+  Play,
+  Layers,
+  HelpCircle,
+  CheckSquare,
+  Square,
+  RotateCcw,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -32,7 +42,229 @@ import {
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 
-const DIFFICULTY_BADGES = {
+// 6 Core Standard Challenges
+const CORE_CHALLENGES = [
+  {
+    id: 'java-fundamentals',
+    title: 'Java Fundamentals Challenge',
+    description:
+      'Test your understanding of Java basics, variables, conditions, loops, arrays, and functions.',
+    category: 'Java',
+    difficulty: 'Beginner',
+    duration: '7 Days',
+    durationDays: 7,
+    problemsCount: 10,
+    rewardPoints: 50,
+    rules: [
+      'Solve problems in order or at your own pace within the 7-day period.',
+      'Write clean, idiomatic Java code with proper variable naming and comments.',
+      'Focus on algorithm efficiency and standard Java collections.',
+    ],
+    problems: [
+      { id: 1, title: 'Check whether a number is even or odd', description: 'Write a program to check if an integer is even or odd without using modulo operator if possible.' },
+      { id: 2, title: 'Find the factorial of a number', description: 'Compute N! for a given positive integer using iterative and recursive approaches.' },
+      { id: 3, title: 'Check whether a number is prime', description: 'Determine if a number N is prime with an O(sqrt(N)) primality test.' },
+      { id: 4, title: 'Reverse a string', description: 'Reverse a given string without using built-in StringBuilder reverse method.' },
+      { id: 5, title: 'Find the largest element in an array', description: 'Find the maximum value and its index in an unsorted integer array in linear time.' },
+      { id: 6, title: 'Check whether a string is a palindrome', description: 'Verify if a string reads the same backwards, ignoring punctuation and casing.' },
+      { id: 7, title: 'Count vowels and consonants in a string', description: 'Count the total number of vowels and consonants in an input sentence.' },
+      { id: 8, title: 'Calculate Fibonacci series up to N terms', description: 'Print the first N terms of the Fibonacci sequence and handle large integer overflows.' },
+      { id: 9, title: 'Find duplicate elements in an array', description: 'Identify all repeating elements in an integer array using a HashSet.' },
+      { id: 10, title: 'Sort an array', description: 'Implement Bubble Sort or Insertion Sort to arrange numbers in ascending order.' },
+    ],
+  },
+  {
+    id: 'python-problem-solving',
+    title: 'Python Problem Solving Challenge',
+    description:
+      'Solve Python programming problems involving loops, functions, strings, lists, and basic algorithms.',
+    category: 'Python',
+    difficulty: 'Beginner',
+    duration: '7 Days',
+    durationDays: 7,
+    problemsCount: 10,
+    rewardPoints: 50,
+    rules: [
+      'Use clean Pythonic conventions (PEP 8) and list comprehensions where applicable.',
+      'Optimize dictionary and set operations for fast O(1) lookups.',
+    ],
+    problems: [
+      { id: 1, title: 'Sum and average of elements in a list', description: 'Compute sum and arithmetic mean of a numbers list without using sum() built-in.' },
+      { id: 2, title: 'Find maximum and minimum in a list', description: 'Find both smallest and largest numbers in a single pass through the list.' },
+      { id: 3, title: 'Count frequency of words in a text', description: 'Count word occurrences in a text paragraph using Python dictionaries or Counter.' },
+      { id: 4, title: 'Check if a list is sorted', description: 'Determine if an array of numbers is strictly in non-decreasing order.' },
+      { id: 5, title: 'Matrix transposition', description: 'Transpose an N x M matrix into M x N using nested list comprehensions.' },
+      { id: 6, title: 'String anagram checker', description: 'Check whether two strings are anagrams of each other in O(N) time.' },
+      { id: 7, title: 'Remove duplicates while preserving order', description: 'Eliminate duplicate items from a list while maintaining the original sequence.' },
+      { id: 8, title: 'Generate prime numbers up to N', description: 'Implement the Sieve of Eratosthenes to produce all primes up to N.' },
+      { id: 9, title: 'Dictionary key-value inverter', description: 'Swap keys and values of a dictionary, grouping duplicate values into lists.' },
+      { id: 10, title: 'Binary search algorithm', description: 'Implement recursive and iterative binary search on a sorted list.' },
+    ],
+  },
+  {
+    id: 'sql-mastery',
+    title: 'SQL Mastery Challenge',
+    description:
+      'Practice SQL queries including SELECT, WHERE, JOIN, GROUP BY, subqueries, and aggregate functions.',
+    category: 'SQL',
+    difficulty: 'Intermediate',
+    duration: '7 Days',
+    durationDays: 7,
+    problemsCount: 10,
+    rewardPoints: 60,
+    rules: [
+      'Write ANSI SQL compliant queries.',
+      'Avoid N+1 subqueries when JOINs or Window functions are more efficient.',
+    ],
+    problems: [
+      { id: 1, title: 'Second highest salary in Employee table', description: 'Find the second highest distinct salary using subquery or LIMIT OFFSET.' },
+      { id: 2, title: 'Employees earning more than their managers', description: 'Join Employee table to itself to compare employee and manager salaries.' },
+      { id: 3, title: 'Customers who never placed an order', description: 'Find all customer IDs with zero matching records in Orders table using LEFT JOIN.' },
+      { id: 4, title: 'Cumulative monthly revenue using Window functions', description: 'Calculate rolling total revenue over time using SUM() OVER (ORDER BY date).' },
+      { id: 5, title: 'Delete duplicate email rows', description: 'Write a DELETE statement to remove duplicate emails keeping only the lowest ID.' },
+      { id: 6, title: 'Department sales with HAVING clause', description: 'Group transactions by department and filter groups with total sales > $50,000.' },
+      { id: 7, title: 'Rank top 3 products in each category', description: 'Use DENSE_RANK() OVER (PARTITION BY category_id ORDER BY sales DESC).' },
+      { id: 8, title: 'Correlated subquery with EXISTS', description: 'Find all suppliers who supply at least one product with price > $100.' },
+      { id: 9, title: 'Multi-table join report', description: 'Join Users, Orders, and OrderItems to compute user lifetime value (LTV).' },
+      { id: 10, title: 'Pivot quarterly revenue with CASE WHEN', description: 'Aggregate quarterly sales Q1, Q2, Q3, Q4 from row records into separate columns.' },
+    ],
+  },
+  {
+    id: 'data-structures',
+    title: 'Data Structures Challenge',
+    description:
+      'Test your knowledge of arrays, strings, stacks, queues, linked lists, and searching algorithms.',
+    category: 'Data Structures',
+    difficulty: 'Intermediate',
+    duration: '14 Days',
+    durationDays: 14,
+    problemsCount: 15,
+    rewardPoints: 100,
+    rules: [
+      'Focus on optimal time and space complexity.',
+      'Always consider edge cases: empty structures, single elements, and cycles.',
+    ],
+    problems: [
+      { id: 1, title: 'Two Sum with Hash Map', description: 'Find indices of two numbers that add up to target in O(N) time.' },
+      { id: 2, title: 'Valid Parentheses using Stack', description: 'Verify that parentheses, brackets, and braces close in correct order.' },
+      { id: 3, title: 'Reverse a Singly Linked List', description: 'Reverse a linked list iteratively in O(1) space and recursively.' },
+      { id: 4, title: 'Detect cycle in Linked List', description: "Use Floyd's fast and slow pointer cycle detection algorithm." },
+      { id: 5, title: 'Implement Queue using Two Stacks', description: 'Support push, pop, peek operations in amortized O(1) time.' },
+      { id: 6, title: 'Merge Two Sorted Linked Lists', description: 'Splice together nodes of two sorted lists in sorted order.' },
+      { id: 7, title: 'Binary Tree Inorder Traversal', description: 'Return inorder traversal of binary tree nodes iteratively and recursively.' },
+      { id: 8, title: 'Maximum Depth of Binary Tree', description: 'Find height of binary tree using depth-first recursion and BFS queue.' },
+      { id: 9, title: 'Lowest Common Ancestor in BST', description: 'Find LCA of two nodes utilizing Binary Search Tree properties.' },
+      { id: 10, title: 'Breadth-First Search on Graphs', description: 'Traverse an undirected graph level-by-level using an adjacency list.' },
+      { id: 11, title: 'Depth-First Search on Graphs', description: 'Explore graph paths recursively with visited node tracking.' },
+      { id: 12, title: 'Kth Largest Element with Min-Heap', description: 'Find Kth largest element in array in O(N log K) time using heap.' },
+      { id: 13, title: 'Longest Substring Without Repeating Characters', description: 'Use sliding window and hash map for O(N) substring search.' },
+      { id: 14, title: 'LRU (Least Recently Used) Cache', description: 'Implement LRU Cache with O(1) get and put using Hash Map + Doubly Linked List.' },
+      { id: 15, title: 'Trapping Rain Water', description: 'Compute total water trapped between elevation bars using two pointers.' },
+    ],
+  },
+  {
+    id: 'web-development',
+    title: 'Web Development Challenge',
+    description:
+      'Solve practical problems related to HTML, CSS, JavaScript, HTTP, APIs, and React.',
+    category: 'Web Development',
+    difficulty: 'Intermediate',
+    duration: '10 Days',
+    durationDays: 10,
+    problemsCount: 12,
+    rewardPoints: 80,
+    rules: [
+      'Write clean, accessible, and responsive components.',
+      'Follow modern React hooks and asynchronous error-handling patterns.',
+    ],
+    problems: [
+      { id: 1, title: 'Debounce and Throttle Utilities', description: 'Implement custom debounce and throttle functions in JavaScript.' },
+      { id: 2, title: 'Deep Clone Object Function', description: 'Deep clone nested JavaScript objects handling arrays, dates, and circular refs.' },
+      { id: 3, title: 'Resilient Fetch with Abort & Retry', description: 'Build a wrapper around fetch supporting automatic retry with exponential backoff.' },
+      { id: 4, title: 'Custom Hook useLocalStorage', description: 'Create a React hook syncing component state with localStorage across browser tabs.' },
+      { id: 5, title: 'Infinite Scroll with IntersectionObserver', description: 'Load pagination items smoothly when sentinel element scrolls into view.' },
+      { id: 6, title: 'Accessible Modal with Focus Trap', description: 'Trap keyboard Tab focus inside modal and close on ESC key.' },
+      { id: 7, title: 'Custom Form Validation Hook', description: 'Manage form field state, touched flags, and async error messages.' },
+      { id: 8, title: 'Event Emitter / Pub-Sub Pattern', description: 'Implement subscribe, unsubscribe, and emit methods in a custom EventEmitter.' },
+      { id: 9, title: 'Glassmorphism Interactive Card', description: 'Build a responsive CSS 3D tilt card with backdrop-filter blur effects.' },
+      { id: 10, title: 'JWT Refresh Token Interceptor', description: 'Catch 401 HTTP errors, refresh the access token, and replay pending requests.' },
+      { id: 11, title: 'Responsive Masonry Card Layout', description: 'Design an adaptive masonry card layout using CSS Grid with zero layout shifts.' },
+      { id: 12, title: 'Global State with Context & useReducer', description: 'Architect lightweight predictable application state management.' },
+    ],
+  },
+  {
+    id: '30-day-coding',
+    title: '30-Day Coding Challenge',
+    description:
+      'Solve one programming problem every day and build a consistent problem-solving habit.',
+    category: 'Programming',
+    difficulty: 'Mixed',
+    duration: '30 Days',
+    durationDays: 30,
+    problemsCount: 30,
+    rewardPoints: 200,
+    rules: [
+      'Solve at least 1 problem each day for 30 days to build your coding habit.',
+      'Document your reasoning and solution approach.',
+    ],
+    problems: Array.from({ length: 30 }, (_, i) => ({
+      id: i + 1,
+      title: `Day ${i + 1}: ${
+        [
+          'Basic Syntax & Hello World',
+          'FizzBuzz with Clean Branching',
+          'Array Rotation by K Steps',
+          'Roman Numeral to Integer',
+          'Integer to Roman Numeral',
+          'Longest Common Prefix',
+          'Merge Overlapping Intervals',
+          'Group Anagrams with Hash Maps',
+          'Rotate 2D Matrix 90 Degrees',
+          'Spiral Matrix Traversal',
+          'Jump Game Greedy Solution',
+          'Gas Station Circular Tour',
+          'Search in Rotated Sorted Array',
+          'First & Last Position in Sorted Array',
+          'Generate Parentheses Backtracking',
+          'Phone Number Letter Combinations',
+          'Combination Sum DFS',
+          'Word Search on 2D Board',
+          'House Robber Dynamic Programming',
+          'Coin Change Minimum Coins',
+          'Longest Increasing Subsequence',
+          'Edit Distance Levenshtein Matrix',
+          'Maximum Subarray Kadane Algorithm',
+          'Product of Array Except Self',
+          'Minimum Window Substring',
+          'Course Schedule Topological Sort',
+          'Word Ladder Shortest BFS Sequence',
+          'Number of Islands Grid Traversal',
+          'Clone Graph with Deep Nodes',
+          'Design URL Shortener System',
+        ][i]
+      }`,
+      description: `Daily problem challenge for day ${i + 1}. Focus on building consistent problem-solving intuition.`,
+    })),
+  },
+];
+
+const CATEGORIES = [
+  'All',
+  'Java',
+  'Python',
+  'SQL',
+  'Data Structures',
+  'Web Development',
+  'Programming',
+];
+
+const DIFFICULTIES = ['All', 'Beginner', 'Intermediate', 'Advanced', 'Mixed'];
+
+const DIFFICULTY_STYLES = {
+  Beginner: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  Intermediate: 'bg-amber-50 text-amber-700 border-amber-200',
+  Advanced: 'bg-rose-50 text-rose-700 border-rose-200',
+  Mixed: 'bg-purple-50 text-purple-700 border-purple-200',
   Easy: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   Medium: 'bg-amber-50 text-amber-700 border-amber-200',
   Hard: 'bg-rose-50 text-rose-700 border-rose-200',
@@ -43,790 +275,634 @@ const Challenges = () => {
   const { user, token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const [challenges, setChallenges] = useState([]);
-  const [activeTab, setActiveTab] = useState('active'); // 'active' | 'upcoming' | 'completed'
-  const [selectedChallenge, setSelectedChallenge] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [challengeDetailsLoading, setChallengeDetailsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // Search and Filter States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('All');
 
-  // Submit solution modal/state
-  const [showSubmitModal, setShowSubmitModal] = useState(false);
-  const [solutionContent, setSolutionContent] = useState('');
-  const [solutionTab, setSolutionTab] = useState('write');
-  const [submittingSolution, setSubmittingSolution] = useState(false);
-  const [solutionError, setSolutionError] = useState(null);
-  const solutionTextareaRef = useRef(null);
+  // Active Challenge Modal / Details Drawer
+  const [activeModalChallenge, setActiveModalChallenge] = useState(null);
 
-  // Admin create challenge modal
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [createForm, setCreateForm] = useState({
-    title: '',
-    description: '',
-    category: 'Programming',
-    tags: '',
-    difficulty: 'Medium',
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    pointsReward: 50,
+  // Dynamic MongoDB Challenges (if created by Admin)
+  const [dbChallenges, setDbChallenges] = useState([]);
+  const [loadingDb, setLoadingDb] = useState(false);
+
+  // User Challenge Progress State (Persisted in localStorage per user ID)
+  const progressStorageKey = `problempool_challenge_progress_${user?._id || user?.id || 'guest'}`;
+
+  const [userProgress, setUserProgress] = useState(() => {
+    try {
+      const saved = localStorage.getItem(progressStorageKey);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
   });
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState(null);
 
-  const [toastMsg, setToastMsg] = useState(null);
-  const showToast = (msg) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
-  };
-
-  const isAdmin = Boolean(user && user.role === 'admin');
-
-  // Fetch all challenges
-  const fetchChallengesList = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await getChallenges({}, token);
-      if (res && res.success) {
-        setChallenges(res.challenges || []);
-        // Automatically select the first active challenge or first challenge
-        const active = res.challenges.find((c) => c.status === 'active') || res.challenges[0];
-        if (active) {
-          loadChallengeDetails(active._id);
-        }
-      } else {
-        setError(res?.message || 'Failed to load challenges');
-      }
-    } catch (err) {
-      setError(err.message || 'Unable to connect to server');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Load single challenge with submissions
-  const loadChallengeDetails = async (id) => {
-    setChallengeDetailsLoading(true);
-    try {
-      const res = await getChallengeById(id, token);
-      if (res && res.success) {
-        setSelectedChallenge(res.challenge);
-      }
-    } catch (err) {
-      console.warn('Failed to load challenge details:', err);
-    } finally {
-      setChallengeDetailsLoading(false);
-    }
-  };
-
+  // Save progress changes
   useEffect(() => {
-    fetchChallengesList();
+    try {
+      localStorage.setItem(progressStorageKey, JSON.stringify(userProgress));
+    } catch (e) {
+      console.warn('Failed to save progress to localStorage:', e);
+    }
+  }, [userProgress, progressStorageKey]);
+
+  // Load any dynamic MongoDB challenges from server
+  useEffect(() => {
+    const fetchDbChallenges = async () => {
+      setLoadingDb(true);
+      try {
+        const res = await getChallenges({}, token);
+        if (res?.success && Array.isArray(res.challenges)) {
+          setDbChallenges(res.challenges);
+        }
+      } catch (err) {
+        console.warn('Challenges fetch from DB:', err.message);
+      } finally {
+        setLoadingDb(false);
+      }
+    };
+
+    fetchDbChallenges();
   }, [token]);
 
-  // Submit solution
-  const handleSolutionSubmit = async (e) => {
-    e.preventDefault();
-    if (!solutionContent.trim() || submittingSolution || !selectedChallenge) return;
-
-    if (!isAuthenticated || !token) {
-      navigate('/login');
-      return;
-    }
-
-    setSubmittingSolution(true);
-    setSolutionError(null);
-
-    try {
-      const res = await submitChallengeSolution(
-        selectedChallenge._id,
-        { content: solutionContent.trim() },
-        token
-      );
-
-      if (res && res.success) {
-        showToast('Solution submitted! +5 reputation points earned.');
-        setSolutionContent('');
-        setShowSubmitModal(false);
-        loadChallengeDetails(selectedChallenge._id);
-      } else {
-        setSolutionError(res?.message || 'Failed to submit solution');
-      }
-    } catch (err) {
-      setSolutionError(err.message || 'Submission failed');
-    } finally {
-      setSubmittingSolution(false);
-    }
-  };
-
-  // Admin: Select Best Answer
-  const handleSelectBestAnswer = async (answerId) => {
-    if (!isAdmin || !selectedChallenge || !token) return;
-    try {
-      const res = await selectChallengeBestAnswer(selectedChallenge._id, answerId, token);
-      if (res && res.success) {
-        showToast(res.message || 'Best answer awarded!');
-        loadChallengeDetails(selectedChallenge._id);
-      }
-    } catch (err) {
-      showToast(err.message || 'Failed to award best answer');
-    }
-  };
-
-  // Admin: Create Challenge
-  const handleCreateChallenge = async (e) => {
-    e.preventDefault();
-    if (!createForm.title.trim() || !createForm.description.trim() || creating || !token) return;
-
-    setCreating(true);
-    setCreateError(null);
-
-    try {
-      const tagsArray = createForm.tags
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean);
-
-      const res = await createChallenge(
-        {
-          ...createForm,
-          tags: tagsArray,
-        },
-        token
-      );
-
-      if (res && res.success) {
-        showToast('Weekly challenge created successfully!');
-        setShowCreateModal(false);
-        setCreateForm({
-          title: '',
-          description: '',
-          category: 'Programming',
-          tags: '',
-          difficulty: 'Medium',
-          startDate: new Date().toISOString().split('T')[0],
-          endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          pointsReward: 50,
+  // Merge static core challenges with any database challenges
+  const allChallenges = useMemo(() => {
+    const merged = [...CORE_CHALLENGES];
+    dbChallenges.forEach((dbc) => {
+      // Map MongoDB challenge format if not already in core
+      if (!merged.some((c) => c.id === dbc._id || c.title.toLowerCase() === dbc.title.toLowerCase())) {
+        merged.push({
+          id: dbc._id,
+          title: dbc.title,
+          description: dbc.description,
+          category: dbc.category || 'Programming',
+          difficulty: dbc.difficulty || 'Medium',
+          duration: `${Math.max(1, Math.round((new Date(dbc.endDate) - new Date(dbc.startDate)) / (1000 * 60 * 60 * 24)))} Days`,
+          problemsCount: 1,
+          rewardPoints: dbc.pointsReward || 50,
+          rules: ['Submit your best solution using Markdown & code blocks.'],
+          problems: [
+            {
+              id: 1,
+              title: dbc.title,
+              description: dbc.description,
+            },
+          ],
+          isDbChallenge: true,
+          dbData: dbc,
         });
-        fetchChallengesList();
-      } else {
-        setCreateError(res?.message || 'Failed to create challenge');
       }
-    } catch (err) {
-      setCreateError(err.message || 'Failed to create challenge');
-    } finally {
-      setCreating(false);
-    }
+    });
+    return merged;
+  }, [dbChallenges]);
+
+  // Filtered Challenges according to Search, Category, and Difficulty
+  const filteredChallenges = useMemo(() => {
+    return allChallenges.filter((ch) => {
+      // Category Filter
+      if (selectedCategory !== 'All' && ch.category !== selectedCategory) {
+        return false;
+      }
+
+      // Difficulty Filter
+      if (selectedDifficulty !== 'All' && ch.difficulty !== selectedDifficulty) {
+        return false;
+      }
+
+      // Search Query Filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchTitle = ch.title.toLowerCase().includes(q);
+        const matchDesc = ch.description.toLowerCase().includes(q);
+        const matchCat = ch.category.toLowerCase().includes(q);
+        const matchProb = ch.problems?.some((p) => p.title.toLowerCase().includes(q));
+        if (!matchTitle && !matchDesc && !matchCat && !matchProb) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [allChallenges, selectedCategory, selectedDifficulty, searchQuery]);
+
+  // Toggle problem completion for a challenge
+  const handleToggleProblem = (challengeId, problemId) => {
+    setUserProgress((prev) => {
+      const currentList = prev[challengeId] || [];
+      const isCompleted = currentList.includes(problemId);
+      const updatedList = isCompleted
+        ? currentList.filter((id) => id !== problemId)
+        : [...currentList, problemId];
+
+      return {
+        ...prev,
+        [challengeId]: updatedList,
+      };
+    });
   };
 
-  const filteredChallenges = challenges.filter((c) => {
-    if (activeTab === 'active') return c.status === 'active';
-    if (activeTab === 'upcoming') return c.status === 'upcoming';
-    if (activeTab === 'completed') return c.status === 'completed';
-    return true;
-  });
+  // Reset challenge progress
+  const handleResetChallengeProgress = (challengeId) => {
+    setUserProgress((prev) => {
+      const updated = { ...prev };
+      delete updated[challengeId];
+      return updated;
+    });
+  };
+
+  // Calculate stats for a given challenge
+  const getChallengeStats = (challenge) => {
+    const completedList = userProgress[challenge.id] || [];
+    const total = challenge.problemsCount || challenge.problems?.length || 1;
+    const completedCount = completedList.length;
+    const percent = Math.min(100, Math.round((completedCount / total) * 100));
+
+    let status = 'Not Started';
+    if (completedCount === total && total > 0) {
+      status = 'Completed';
+    } else if (completedCount > 0) {
+      status = 'In Progress';
+    }
+
+    return {
+      completedCount,
+      total,
+      percent,
+      status,
+    };
+  };
+
+  const hasActiveFilters =
+    searchQuery.trim() !== '' || selectedCategory !== 'All' || selectedDifficulty !== 'All';
+
+  const clearAllFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('All');
+    setSelectedDifficulty('All');
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-      {/* Toast Notice */}
-      {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white text-xs font-semibold py-2.5 px-4 rounded-2xl shadow-xl border border-slate-700/60 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          <span>{toastMsg}</span>
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      {/* ========================================================= */}
+      {/* 1. HEADER SECTION */}
+      {/* ========================================================= */}
+      <div className="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between gap-6 border-b border-slate-200/80 pb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-2">
-            <Sparkles className="w-3.5 h-3.5 fill-indigo-600 text-indigo-600" />
-            <span>Community Hack & Learn</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-3 shadow-2xs">
+            <Trophy className="w-3.5 h-3.5 text-indigo-600" />
+            <span>ProblemPool Learning Tracks</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-            <span>🧩 Weekly Coding Challenges</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+            Challenges
           </h1>
-          <p className="text-slate-600 mt-1.5 text-sm sm:text-base">
-            Tackle curated community challenges, test your skills, and earn reputation points.
+          <p className="text-slate-600 mt-2 text-base sm:text-lg max-w-2xl">
+            Test your skills, solve problems, and improve your programming knowledge.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 self-start md:self-auto">
-          {isAdmin && (
-            <button
-              type="button"
-              onClick={() => setShowCreateModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-100 transition cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>+ Create Challenge</span>
-            </button>
-          )}
-
-          <Link
-            to="/leaderboard"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition shadow-2xs"
-          >
-            <Trophy className="w-4 h-4 text-amber-500" />
-            <span>Leaderboard</span>
-          </Link>
+        {/* Challenge Summary Badges */}
+        <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-3 shrink-0">
+          <div className="px-4 py-2 rounded-2xl bg-white border border-slate-200 text-center shadow-xs">
+            <span className="block text-xl font-extrabold text-indigo-600">
+              {allChallenges.length}
+            </span>
+            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+              Challenges
+            </span>
+          </div>
+          <div className="px-4 py-2 rounded-2xl bg-white border border-slate-200 text-center shadow-xs">
+            <span className="block text-xl font-extrabold text-emerald-600">
+              {allChallenges.reduce((acc, c) => acc + (c.problemsCount || 0), 0)}
+            </span>
+            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+              Problems
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Main Grid: Challenge Selector & Active Details View */}
-      {loading ? (
-        <div className="py-24 flex flex-col items-center justify-center text-slate-400 gap-3">
-          <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
-          <span className="text-sm font-semibold">Loading weekly challenges...</span>
+      {/* ========================================================= */}
+      {/* 2. SEARCH & FILTER CONTROLS */}
+      {/* ========================================================= */}
+      <div className="space-y-4 mb-10">
+        {/* Search Input */}
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search challenges by title, category, or problem..."
+            className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 text-sm sm:text-base font-medium focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 shadow-xs transition"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      ) : error ? (
-        <div className="bg-white rounded-3xl border border-rose-200 p-8 text-center max-w-md mx-auto">
-          <p className="text-sm text-rose-600 font-semibold mb-4">{error}</p>
-          <button
-            type="button"
-            onClick={fetchChallengesList}
-            className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold"
-          >
-            Try Again
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Challenge Details & Submissions (8 cols) */}
-          <div className="lg:col-span-8 space-y-8">
-            {selectedChallenge ? (
-              <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-9 space-y-6">
-                {/* Challenge Header Meta */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-100">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                        DIFFICULTY_BADGES[selectedChallenge.difficulty] ||
-                        DIFFICULTY_BADGES.Medium
-                      }`}
-                    >
-                      {selectedChallenge.difficulty}
-                    </span>
 
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      {selectedChallenge.category}
-                    </span>
-
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                        selectedChallenge.status === 'active'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          : selectedChallenge.status === 'upcoming'
-                          ? 'bg-sky-50 text-sky-700 border-sky-200'
-                          : 'bg-slate-100 text-slate-700 border-slate-200'
-                      }`}
-                    >
-                      {selectedChallenge.status === 'active'
-                        ? '🔥 Active Challenge'
-                        : selectedChallenge.status === 'upcoming'
-                        ? '⏳ Upcoming'
-                        : '🏆 Completed'}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-900 border border-amber-200 rounded-xl text-xs font-bold">
-                    <Trophy className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                    <span>+{selectedChallenge.pointsReward || 50} Rep Points Reward</span>
-                  </div>
-                </div>
-
-                {/* Challenge Title */}
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-3">
-                    {selectedChallenge.title}
-                  </h2>
-
-                  <div className="flex items-center gap-4 text-xs text-slate-400 font-medium">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>
-                        Ends on{' '}
-                        {new Date(selectedChallenge.endDate).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </span>
-                    </span>
-
-                    <span>•</span>
-
-                    <span className="flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5" />
-                      <span>{selectedChallenge.participantsCount || 0} participants</span>
-                    </span>
-
-                    <span>•</span>
-
-                    <span className="flex items-center gap-1.5">
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>{selectedChallenge.submissionsCount || 0} solutions</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Markdown Description */}
-                <div className="py-2">
-                  <MarkdownRenderer content={selectedChallenge.description} />
-                </div>
-
-                {/* Tags */}
-                {selectedChallenge.tags && selectedChallenge.tags.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 pt-2">
-                    {selectedChallenge.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200"
-                      >
-                        #{t}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Action CTA: Submit Solution Button */}
-                <div className="pt-6 border-t border-slate-100 flex items-center justify-between gap-4">
-                  {selectedChallenge.status === 'active' ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!isAuthenticated) navigate('/login');
-                        else setShowSubmitModal(true);
-                      }}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-200 transition cursor-pointer"
-                    >
-                      <Code2 className="w-4 h-4" />
-                      <span>Submit Solution / Answer</span>
-                    </button>
-                  ) : selectedChallenge.status === 'completed' ? (
-                    <div className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>This challenge has ended. Submissions are closed.</span>
-                    </div>
-                  ) : (
-                    <div className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-sky-600" />
-                      <span>This challenge opens soon.</span>
-                    </div>
-                  )}
-
-                  {selectedChallenge.problem && (
-                    <Link
-                      to={`/problems/${selectedChallenge.problem._id || selectedChallenge.problem}`}
-                      className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
-                    >
-                      <span>View in Problems →</span>
-                    </Link>
-                  )}
-                </div>
-
-                {/* Submissions List */}
-                <div className="pt-8 border-t border-slate-100 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4 text-indigo-600" />
-                      <span>Community Solutions ({selectedChallenge.submissions?.length || 0})</span>
-                    </h3>
-                  </div>
-
-                  {selectedChallenge.submissions && selectedChallenge.submissions.length > 0 ? (
-                    <div className="space-y-4">
-                      {selectedChallenge.submissions.map((sub) => {
-                        const isBest = Boolean(sub.isBestAnswer);
-
-                        return (
-                          <div
-                            key={sub._id}
-                            className={`p-5 rounded-2xl border transition-all ${
-                              isBest
-                                ? 'bg-gradient-to-r from-amber-50/60 to-white border-amber-300 shadow-sm ring-1 ring-amber-200'
-                                : 'bg-slate-50/50 border-slate-200'
-                            }`}
-                          >
-                            {/* Best Answer Badge */}
-                            {isBest && (
-                              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-extrabold mb-3">
-                                <span>⭐</span>
-                                <span>WINNING BEST ANSWER</span>
-                              </div>
-                            )}
-
-                            {/* Author Row */}
-                            <div className="flex items-center justify-between gap-3 mb-3">
-                              <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">
-                                  {sub.author?.name?.charAt(0).toUpperCase() || 'U'}
-                                </div>
-                                <div>
-                                  <Link
-                                    to={`/profile/${sub.author?.username || sub.author?._id}`}
-                                    className="font-bold text-xs text-slate-900 hover:text-indigo-600 block"
-                                  >
-                                    {sub.author?.name}
-                                  </Link>
-                                  <span className="text-[10px] text-slate-400">
-                                    {new Date(sub.createdAt).toLocaleDateString()}
-                                  </span>
-                                </div>
-                              </div>
-
-                              {/* Admin award Best Answer button */}
-                              {isAdmin && !isBest && (
-                                <button
-                                  type="button"
-                                  onClick={() => handleSelectBestAnswer(sub._id)}
-                                  className="text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1 rounded-xl transition cursor-pointer"
-                                >
-                                  Award Best Answer ⭐
-                                </button>
-                              )}
-                            </div>
-
-                            {/* Solution Code & Markdown Content */}
-                            <div className="text-sm">
-                              <MarkdownRenderer content={sub.content} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="p-8 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-slate-400">
-                      <Code2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-xs font-semibold text-slate-600 mb-1">
-                        No solutions submitted yet.
-                      </p>
-                      <p className="text-[11px]">
-                        Be the first to submit an answer and earn reputation!
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="p-12 text-center bg-white rounded-3xl border border-slate-200 text-slate-400">
-                Select a challenge from the right to view its problem statement.
-              </div>
-            )}
-          </div>
-
-          {/* Right Column: Challenge Browser & Tabs (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            {/* Status Tabs */}
-            <div className="bg-white p-2 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center gap-1">
-              {['active', 'upcoming', 'completed'].map((st) => (
+        {/* Category & Difficulty Filters Bar */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+            {CATEGORIES.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
                 <button
-                  key={st}
+                  key={cat}
                   type="button"
-                  onClick={() => setActiveTab(st)}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
-                    activeTab === st
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
+                    isActive
+                      ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-200'
+                      : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  {st}
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Difficulty Dropdown Filter */}
+          <div className="flex items-center gap-2 self-start lg:self-auto shrink-0 text-xs">
+            <span className="font-semibold text-slate-500 flex items-center gap-1">
+              <Filter className="w-3.5 h-3.5 text-slate-400" />
+              <span>Difficulty:</span>
+            </span>
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+              {DIFFICULTIES.map((diff) => (
+                <button
+                  key={diff}
+                  type="button"
+                  onClick={() => setSelectedDifficulty(diff)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    selectedDifficulty === diff
+                      ? 'bg-indigo-50 text-indigo-700'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {diff}
                 </button>
               ))}
             </div>
+          </div>
+        </div>
 
-            {/* Challenges List Cards */}
-            <div className="space-y-3">
-              {filteredChallenges.length === 0 ? (
-                <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 text-xs text-slate-400">
-                  No {activeTab} challenges right now.
-                </div>
-              ) : (
-                filteredChallenges.map((ch) => {
-                  const isSelected = selectedChallenge?._id === ch._id;
-                  const diffBadge =
-                    DIFFICULTY_BADGES[ch.difficulty] || DIFFICULTY_BADGES.Medium;
-
-                  return (
-                    <button
-                      key={ch._id}
-                      type="button"
-                      onClick={() => loadChallengeDetails(ch._id)}
-                      className={`w-full p-4 rounded-2xl border text-left transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-indigo-50/50 border-indigo-300 ring-2 ring-indigo-200 shadow-sm'
-                          : 'bg-white border-slate-200/90 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${diffBadge}`}>
-                          {ch.difficulty}
-                        </span>
-                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                          +{ch.pointsReward || 50} pts
-                        </span>
-                      </div>
-
-                      <h4 className="font-bold text-sm text-slate-900 line-clamp-2 mb-1.5">
-                        {ch.title}
-                      </h4>
-
-                      <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-100">
-                        <span>{ch.category}</span>
-                        <span className="font-semibold text-slate-600">
-                          {ch.submissionsCount || 0} answers
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })
+        {/* Active Filter Notice & Clear Button */}
+        {hasActiveFilters && (
+          <div className="flex items-center justify-between px-4 py-2.5 bg-indigo-50/70 border border-indigo-100 rounded-xl text-xs text-indigo-900">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">Filtered by:</span>
+              {searchQuery && (
+                <span className="px-2 py-0.5 rounded bg-white font-bold border border-indigo-200">
+                  "{searchQuery}"
+                </span>
+              )}
+              {selectedCategory !== 'All' && (
+                <span className="px-2 py-0.5 rounded bg-white font-bold border border-indigo-200">
+                  {selectedCategory}
+                </span>
+              )}
+              {selectedDifficulty !== 'All' && (
+                <span className="px-2 py-0.5 rounded bg-white font-bold border border-indigo-200">
+                  {selectedDifficulty}
+                </span>
               )}
             </div>
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="font-bold text-indigo-700 hover:text-indigo-900 underline cursor-pointer"
+            >
+              Clear Filters
+            </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Submit Solution Modal */}
-      {showSubmitModal && selectedChallenge && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div
-            className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150"
-            onClick={(e) => e.stopPropagation()}
+      {/* ========================================================= */}
+      {/* 3. CHALLENGES GRID */}
+      {/* ========================================================= */}
+      {filteredChallenges.length === 0 ? (
+        /* Empty State */
+        <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-12 text-center max-w-md mx-auto shadow-xs">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4">
+            <Search className="w-6 h-6" />
+          </div>
+          <h3 className="text-lg font-bold text-slate-900 mb-1">No challenges found</h3>
+          <p className="text-xs text-slate-500 mb-6">
+            We couldn't find any challenges matching your current search and filters.
+          </p>
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition cursor-pointer"
           >
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">
-                  Submit Challenge Solution
-                </h3>
-                <p className="text-xs text-slate-500 line-clamp-1">
-                  {selectedChallenge.title}
-                </p>
-              </div>
+            <span>Reset Search & Filters</span>
+          </button>
+        </div>
+      ) : (
+        /* Cards Grid */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {filteredChallenges.map((challenge) => {
+            const stats = getChallengeStats(challenge);
+            const diffStyle =
+              DIFFICULTY_STYLES[challenge.difficulty] ||
+              'bg-slate-50 text-slate-700 border-slate-200';
 
-              <button
-                type="button"
-                onClick={() => setShowSubmitModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl"
+            return (
+              <div
+                key={challenge.id}
+                className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
               >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {solutionError && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
-                {solutionError}
-              </div>
-            )}
-
-            <form onSubmit={handleSolutionSubmit} className="space-y-4">
-              <div className="rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-                <MarkdownToolbar
-                  textareaRef={solutionTextareaRef}
-                  value={solutionContent}
-                  onChange={setSolutionContent}
-                  activeTab={solutionTab}
-                  setActiveTab={setSolutionTab}
-                />
-
-                {solutionTab === 'write' ? (
-                  <textarea
-                    ref={solutionTextareaRef}
-                    rows={8}
-                    value={solutionContent}
-                    onChange={(e) => setSolutionContent(e.target.value)}
-                    placeholder="Write your explanation and code solution here (e.g. ```python ... ```)..."
-                    className="w-full px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent font-mono"
-                  />
-                ) : (
-                  <div className="p-4 min-h-[200px] max-h-[400px] overflow-y-auto bg-slate-50/50">
-                    {solutionContent.trim() ? (
-                      <MarkdownRenderer content={solutionContent} />
-                    ) : (
-                      <p className="text-xs text-slate-400 italic">
-                        Nothing to preview yet. Switch back to Write mode and type your solution.
-                      </p>
-                    )}
+                <div className="p-6 sm:p-7 space-y-4">
+                  {/* Top Metadata: Category & Difficulty */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                      {challenge.category}
+                    </span>
+                    <span
+                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${diffStyle}`}
+                    >
+                      {challenge.difficulty}
+                    </span>
                   </div>
-                )}
-              </div>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowSubmitModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submittingSolution || !solutionContent.trim()}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 rounded-xl shadow-xs transition cursor-pointer"
-                >
-                  {submittingSolution ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  {/* Title & Description */}
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors leading-snug mb-2">
+                      {challenge.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                      {challenge.description}
+                    </p>
+                  </div>
+
+                  {/* Challenge Specs: Problems Count & Duration */}
+                  <div className="pt-2 flex items-center justify-between text-xs font-semibold text-slate-500 border-t border-slate-100">
+                    <span className="flex items-center gap-1.5">
+                      <Code2 className="w-4 h-4 text-indigo-500" />
+                      <span>{challenge.problemsCount} Problems</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-slate-400" />
+                      <span>{challenge.duration}</span>
+                    </span>
+                  </div>
+
+                  {/* Real User Progress Bar (When Started) */}
+                  {stats.status !== 'Not Started' ? (
+                    <div className="space-y-1.5 pt-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-slate-700 flex items-center gap-1">
+                          {stats.status === 'Completed' ? (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                          ) : (
+                            <Clock className="w-3.5 h-3.5 text-amber-500" />
+                          )}
+                          <span>{stats.status}</span>
+                        </span>
+                        <span className="font-extrabold text-slate-900">
+                          {stats.completedCount} / {stats.total} ({stats.percent}%)
+                        </span>
+                      </div>
+                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            stats.status === 'Completed' ? 'bg-emerald-500' : 'bg-indigo-600'
+                          }`}
+                          style={{ width: `${stats.percent}%` }}
+                        />
+                      </div>
+                    </div>
                   ) : (
-                    <Send className="w-3.5 h-3.5" />
+                    <div className="pt-1 flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                      <span className="w-2 h-2 rounded-full bg-slate-300" />
+                      <span>Status: Not Started</span>
+                    </div>
                   )}
-                  <span>Submit Solution</span>
-                </button>
+                </div>
+
+                {/* Card Action Footer */}
+                <div className="p-4 sm:p-5 bg-slate-50/60 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs font-bold text-indigo-700 flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>+{challenge.rewardPoints} Rep</span>
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveModalChallenge(challenge)}
+                    className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer ${
+                      stats.status === 'Completed'
+                        ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
+                        : stats.status === 'In Progress'
+                        ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-100'
+                        : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-100'
+                    }`}
+                  >
+                    <span>
+                      {stats.status === 'Completed'
+                        ? 'Review Challenge'
+                        : stats.status === 'In Progress'
+                        ? 'Continue Challenge'
+                        : 'Start Challenge'}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-            </form>
-          </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Admin: Create Challenge Modal */}
-      {showCreateModal && isAdmin && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+      {/* ========================================================= */}
+      {/* 4. CHALLENGE DETAILS MODAL */}
+      {/* ========================================================= */}
+      {activeModalChallenge && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-150">
           <div
-            className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150"
+            className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-slate-900">
-                Create Weekly Coding Challenge
-              </h3>
-              <button
-                type="button"
-                onClick={() => setShowCreateModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {createError && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
-                {createError}
-              </div>
-            )}
-
-            <form onSubmit={handleCreateChallenge} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-900 mb-1">
-                  Title <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={createForm.title}
-                  onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
-                  placeholder="e.g. Implement an LRU Cache in O(1)"
-                  required
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-900"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-900 mb-1">Category</label>
-                  <select
-                    value={createForm.category}
-                    onChange={(e) => setCreateForm({ ...createForm, category: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none text-slate-900"
-                  >
-                    <option value="Programming">Programming</option>
-                    <option value="DSA">DSA</option>
-                    <option value="Web Development">Web Development</option>
-                    <option value="Database">Database</option>
-                    <option value="AI & ML">AI & ML</option>
-                  </select>
+            {/* Modal Header */}
+            <div className="p-6 sm:p-7 border-b border-slate-100 bg-gradient-to-r from-indigo-50/80 via-white to-purple-50/50">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-3 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+                      {activeModalChallenge.category}
+                    </span>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                        DIFFICULTY_STYLES[activeModalChallenge.difficulty] || ''
+                      }`}
+                    >
+                      {activeModalChallenge.difficulty}
+                    </span>
+                    <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{activeModalChallenge.duration}</span>
+                    </span>
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    {activeModalChallenge.title}
+                  </h2>
                 </div>
-
-                <div>
-                  <label className="block font-bold text-slate-900 mb-1">Difficulty</label>
-                  <select
-                    value={createForm.difficulty}
-                    onChange={(e) => setCreateForm({ ...createForm, difficulty: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none text-slate-900"
-                  >
-                    <option value="Easy">Easy</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Hard">Hard</option>
-                    <option value="Expert">Expert</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-900 mb-1">
-                  Problem Description & Instructions (Markdown supported) <span className="text-rose-500">*</span>
-                </label>
-                <textarea
-                  rows={4}
-                  value={createForm.description}
-                  onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-                  placeholder="Explain the problem constraints, input/output examples, and rules..."
-                  required
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-100 text-slate-900 font-mono"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-900 mb-1">Start Date</label>
-                  <input
-                    type="date"
-                    value={createForm.startDate}
-                    onChange={(e) => setCreateForm({ ...createForm, startDate: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none text-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-900 mb-1">
-                    End Date <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    value={createForm.endDate}
-                    onChange={(e) => setCreateForm({ ...createForm, endDate: e.target.value })}
-                    required
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none text-slate-900"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-900 mb-1">Tags (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={createForm.tags}
-                    onChange={(e) => setCreateForm({ ...createForm, tags: e.target.value })}
-                    placeholder="dsa, algorithms, python"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none text-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-900 mb-1">Points Reward</label>
-                  <input
-                    type="number"
-                    value={createForm.pointsReward}
-                    onChange={(e) => setCreateForm({ ...createForm, pointsReward: Number(e.target.value) })}
-                    min={10}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none text-slate-900"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                  onClick={() => setActiveModalChallenge(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-white transition cursor-pointer"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={creating || !createForm.title.trim()}
-                  className="px-5 py-2 font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 rounded-xl transition cursor-pointer"
-                >
-                  {creating ? 'Creating...' : 'Create Challenge'}
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-            </form>
+
+              <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+                {activeModalChallenge.description}
+              </p>
+            </div>
+
+            {/* Modal Scrollable Content: Rules & Problem Checklist */}
+            <div className="p-6 sm:p-7 overflow-y-auto space-y-6 flex-1 text-sm">
+              {/* Challenge Rules */}
+              {activeModalChallenge.rules && activeModalChallenge.rules.length > 0 && (
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                  <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Challenge Rules & Guidelines</span>
+                  </h4>
+                  <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 leading-relaxed pl-1">
+                    {activeModalChallenge.rules.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Problem Checklist */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                      <Code2 className="w-4 h-4 text-indigo-600" />
+                      <span>Challenge Problems ({activeModalChallenge.problems?.length || 0})</span>
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      Check off problems as you solve them to track your verified progress.
+                    </p>
+                  </div>
+
+                  {(userProgress[activeModalChallenge.id] || []).length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => handleResetChallengeProgress(activeModalChallenge.id)}
+                      className="text-xs text-rose-600 hover:text-rose-700 font-semibold flex items-center gap-1 cursor-pointer"
+                      title="Reset challenge progress"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Reset</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Problems List */}
+                <div className="space-y-2.5">
+                  {(activeModalChallenge.problems || []).map((prob, idx) => {
+                    const completedList = userProgress[activeModalChallenge.id] || [];
+                    const isDone = completedList.includes(prob.id);
+
+                    return (
+                      <div
+                        key={prob.id}
+                        onClick={() => handleToggleProblem(activeModalChallenge.id, prob.id)}
+                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                          isDone
+                            ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
+                            : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-900'
+                        }`}
+                      >
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          <button
+                            type="button"
+                            className={`mt-0.5 shrink-0 rounded-md transition ${
+                              isDone ? 'text-emerald-600' : 'text-slate-400 hover:text-indigo-600'
+                            }`}
+                          >
+                            {isDone ? (
+                              <CheckSquare className="w-5 h-5 fill-emerald-100" />
+                            ) : (
+                              <Square className="w-5 h-5" />
+                            )}
+                          </button>
+                          <div className="flex-1 min-w-0">
+                            <span
+                              className={`text-xs sm:text-sm font-bold block ${
+                                isDone ? 'line-through text-emerald-800' : 'text-slate-900'
+                              }`}
+                            >
+                              {idx + 1}. {prob.title}
+                            </span>
+                            {prob.description && (
+                              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                                {prob.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <span
+                          className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full shrink-0 ${
+                            isDone
+                              ? 'bg-emerald-200/80 text-emerald-900'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          {isDone ? 'Solved ✓' : 'Open'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 sm:p-6 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="text-xs text-slate-600">
+                <span className="font-bold text-slate-900">
+                  {(userProgress[activeModalChallenge.id] || []).length} of{' '}
+                  {activeModalChallenge.problemsCount || 10}
+                </span>{' '}
+                problems completed.
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5">
+                <Link
+                  to="/create-problem"
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition"
+                >
+                  Post Solution / Discussion
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveModalChallenge(null)}
+                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
