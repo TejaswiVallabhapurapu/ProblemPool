@@ -42,7 +42,7 @@ import {
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 
 // 6 Core Standard Challenges
@@ -448,7 +448,7 @@ const Challenges = () => {
 
   return (
     <div className="relative min-h-screen">
-      <KnowledgeNetworkBackground variant="constellation" />
+      <ParticlesBackground />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* ========================================================= */}
       {/* 1. HEADER SECTION */}

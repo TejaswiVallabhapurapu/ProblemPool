@@ -18,7 +18,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 
 const CATEGORIES = [
@@ -69,7 +69,7 @@ const Leaderboard = () => {
 
   return (
     <div className="relative min-h-screen">
-      <KnowledgeNetworkBackground variant="constellation" />
+      <ParticlesBackground />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto mb-10">
