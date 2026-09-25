@@ -11,7 +11,6 @@ import {
   Calendar,
   Sparkles,
   Flame,
-  Loader2,
   TrendingUp,
   Users,
   MapPin,

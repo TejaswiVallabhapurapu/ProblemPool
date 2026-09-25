@@ -13,7 +13,6 @@ import {
   UserPlus,
   AtSign,
   MessageCircle,
-  Loader2,
   Sparkles,
   Inbox,
   Filter,
@@ -29,6 +28,7 @@ import {
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
+import { Loader, LoaderContainer } from '../components/Loader';
 
 const NOTIFICATION_ICONS = {
   answer: { icon: MessageSquare, color: 'text-indigo-600 bg-indigo-50 border-indigo-200' },
@@ -284,20 +284,7 @@ const Notifications = () => {
 
       {/* Content Area */}
       {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-4 animate-pulse"
-            >
-              <div className="w-10 h-10 rounded-xl bg-slate-200 shrink-0" />
-              <div className="space-y-2 flex-1">
-                <div className="h-4 w-48 bg-slate-200 rounded" />
-                <div className="h-3 w-3/4 bg-slate-100 rounded" />
-              </div>
-            </div>
-          ))}
-        </div>
+        <LoaderContainer minHeight="40vh" message="Loading notifications..." />
       ) : error ? (
         <div className="bg-white rounded-3xl border border-rose-200 p-8 text-center max-w-md mx-auto">
           <p className="text-sm text-rose-600 font-semibold mb-4">{error}</p>
