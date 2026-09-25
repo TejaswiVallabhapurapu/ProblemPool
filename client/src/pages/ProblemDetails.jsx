@@ -1302,6 +1302,111 @@ const ProblemDetails = () => {
               </div>
             </div>
           )}
+
+          {/* Create Collaborative Team Modal */}
+          {showCreateTeamModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+              <div className="relative max-w-md w-full p-6 sm:p-8 rounded-3xl bg-[#161616] border border-white/15 shadow-2xl">
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">🤝</span>
+                    <h3 className="text-lg font-bold text-white">Create Collaborative Team</h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateTeamModal(false)}
+                    className="text-slate-400 hover:text-white transition p-1 cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+                  Start a small team (up to 5 members). You will automatically become the Team Leader and get access to a private workspace with live chat, tasks, and a collaborative solution draft.
+                </p>
+
+                {createTeamError && (
+                  <div className="mb-4 p-3 rounded-xl bg-rose-950/80 border border-rose-500/30 text-xs text-rose-300">
+                    {createTeamError}
+                  </div>
+                )}
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (!teamNameInput.trim() || creatingTeam || !token) return;
+                    setCreatingTeam(true);
+                    setCreateTeamError(null);
+
+                    try {
+                      const res = await createTeam(
+                        id,
+                        { name: teamNameInput.trim(), description: teamDescInput.trim() },
+                        token
+                      );
+                      if (res.success && res.team) {
+                        setShowCreateTeamModal(false);
+                        setTeamNameInput('');
+                        setTeamDescInput('');
+                        navigate(`/problems/${id}/team/${res.team._id}`);
+                      }
+                    } catch (err) {
+                      setCreateTeamError(err.message || 'Failed to create team');
+                    } finally {
+                      setCreatingTeam(false);
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                      Team Name <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={teamNameInput}
+                      onChange={(e) => setTeamNameInput(e.target.value)}
+                      placeholder="e.g., ML Problem Solvers, Python Coders..."
+                      className="w-full px-4 py-3 rounded-xl bg-[#111111] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-white/30"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                      Short Description (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={teamDescInput}
+                      onChange={(e) => setTeamDescInput(e.target.value)}
+                      placeholder="e.g. Aiming for an optimal O(n) solution in Python"
+                      className="w-full px-4 py-3 rounded-xl bg-[#111111] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-white/30"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateTeamModal(false)}
+                      className="px-4 py-2 rounded-xl bg-[#222222] text-slate-300 hover:text-white text-xs font-semibold cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <GlassAiButton
+                      type="submit"
+                      disabled={!teamNameInput.trim() || creatingTeam}
+                      loading={creatingTeam}
+                      size="sm"
+                      variant="primary"
+                    >
+                      Create Team
+                    </GlassAiButton>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       )}
       </div>
