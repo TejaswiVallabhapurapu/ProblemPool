@@ -17,11 +17,11 @@ import AnswerCard from '../components/AnswerCard';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import AddToCollectionModal from '../components/AddToCollectionModal';
-import ReportModal from '../components/ReportModal';
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
-import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag, Bot, RefreshCw, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader, LoaderContainer } from '../components/Loader';
+import { Bookmark, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag, Bot, RefreshCw, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
