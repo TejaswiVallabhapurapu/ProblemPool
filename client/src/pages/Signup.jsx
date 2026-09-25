@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
 import '@designcodeio/threeui/style.css';
 import {
   User,
@@ -108,9 +107,6 @@ const Signup = () => {
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center px-4 py-12 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Dynamic 3D constellation background matching ProblemPool aesthetic */}
-      <KnowledgeNetworkBackground variant="constellation" />
-
       <div className="relative z-10 w-full max-w-md my-auto">
         {/* Main Uiverse Authentication Card */}
         <div className="uiverse-auth-container">
