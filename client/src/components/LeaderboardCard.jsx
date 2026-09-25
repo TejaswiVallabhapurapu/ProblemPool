@@ -82,7 +82,7 @@ export const LeaderboardCard = ({
           className="font-extrabold text-white hover:text-slate-300 text-base sm:text-lg line-clamp-1 mb-0.5 block"
           data-no-flip="true"
         >
-          {leader.name}
+          {leader.name || leader.username || 'Anonymous'}
         </Link>
         {leader.title ? (
           <p className="text-xs text-slate-400 line-clamp-1 mb-3">
@@ -142,7 +142,7 @@ export const LeaderboardCard = ({
         {/* Center Name */}
         <div className="text-center py-1">
           <h4 className="text-base font-bold text-white line-clamp-1">
-            {leader.name}
+            {leader.name || leader.username || 'Anonymous'}
           </h4>
           <p className="text-xs text-slate-400 mt-0.5">
             {leader.username ? `@${leader.username}` : 'Community Contributor'}
@@ -203,7 +203,7 @@ export const LeaderboardCard = ({
         frontContent={frontContent}
         backContent={backContent}
         {...circleColors}
-        ariaLabel={`Leaderboard rank ${rank}: ${leader.name}`}
+        ariaLabel={`Leaderboard rank ${rank}: ${leader.name || leader.username || 'Leader'}`}
       />
     </div>
   );

@@ -1420,7 +1420,7 @@ const Profile = () => {
             onClose={() => setShowReportUserModal(false)}
             contentType="user"
             contentId={user._id}
-            contentTitle={`User Profile: ${user.name}`}
+            contentTitle={`User Profile: ${user?.name || user?.username || 'User'}`}
           />
         )}
       </div>

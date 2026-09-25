@@ -834,7 +834,7 @@ const TeamWorkspace = () => {
                           <div className="flex items-center justify-between text-xs mb-2">
                             <span className="font-bold text-white flex items-center gap-1.5">
                               <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                              <span>{member.name}</span>
+                              <span>{member?.name || 'Team Member'}</span>
                             </span>
                             <span className="text-slate-300 font-bold">
                               {member.completedCount} tasks completed
