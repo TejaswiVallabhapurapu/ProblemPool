@@ -1,0 +1,263 @@
+/* ========================================================= */
+/* DesignCode ThreeUI - GlassAiButton Styles                 */
+/* ========================================================= */
+
+.glass-ai-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease,
+              filter 0.2s ease;
+  overflow: hidden;
+  border-radius: 14px;
+  background: transparent;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glass-ai-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.glass-ai-btn.is-disabled,
+.glass-ai-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.2);
+}
+
+/* Glass Surface Layer */
+.glass-ai-surface {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Specular Light Bar Highlight (Top Edge Glass Reflection) */
+.glass-ai-specular {
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 9999px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Conic Shader Aura / Glow */
+.glass-ai-aura {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  z-index: 1;
+  opacity: 0.35;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  pointer-events: none;
+}
+
+.glass-ai-btn:hover:not(:disabled) .glass-ai-aura {
+  opacity: 0.8;
+  filter: blur(6px);
+}
+
+/* Shimmer Sweep Animation */
+.glass-ai-shimmer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.2) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.2) 55%,
+    transparent 80%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.glass-ai-btn:hover:not(:disabled) .glass-ai-shimmer {
+  transform: translateX(100%);
+}
+
+/* ========================================================= */
+/* SIZE VARIANTS                                             */
+/* ========================================================= */
+
+.glass-ai-size-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-radius: 10px;
+}
+.glass-ai-size-xs .glass-ai-surface {
+  padding: 0.3rem 0.65rem;
+}
+
+.glass-ai-size-sm {
+  font-size: 0.8125rem;
+  line-height: 1.15rem;
+  border-radius: 12px;
+}
+.glass-ai-size-sm .glass-ai-surface {
+  padding: 0.45rem 0.85rem;
+}
+
+.glass-ai-size-md {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 14px;
+}
+.glass-ai-size-md .glass-ai-surface {
+  padding: 0.55rem 1.15rem;
+}
+
+.glass-ai-size-lg {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  border-radius: 16px;
+}
+.glass-ai-size-lg .glass-ai-surface {
+  padding: 0.75rem 1.5rem;
+}
+
+/* ========================================================= */
+/* THEME & COLOR VARIANTS                                    */
+/* ========================================================= */
+
+/* 1. Primary (Electric Indigo / Violet Glass) */
+.glass-ai-variant-primary .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.92) 0%, rgba(124, 58, 237, 0.88) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 14px -2px rgba(79, 70, 229, 0.35),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+.glass-ai-variant-primary:hover:not(:disabled) .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(67, 56, 202, 0.96) 0%, rgba(109, 40, 217, 0.94) 100%);
+  box-shadow: 0 6px 20px -2px rgba(79, 70, 229, 0.5),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+.glass-ai-variant-primary .glass-ai-aura {
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+}
+
+/* 2. Glass / Frosted Neutral */
+.glass-ai-variant-glass .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.75) 100%);
+  color: #1e293b;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.05),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+.glass-ai-variant-glass:hover:not(:disabled) .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 245, 249, 0.92) 100%);
+  color: #4f46e5;
+  border-color: rgba(199, 210, 254, 0.85);
+  box-shadow: 0 4px 14px -1px rgba(79, 70, 229, 0.12),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 1);
+}
+.glass-ai-variant-glass .glass-ai-aura {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3));
+}
+
+/* 3. Secondary / Indigo Tinted Glass */
+.glass-ai-variant-secondary .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(238, 242, 255, 0.85) 0%, rgba(224, 231, 255, 0.7) 100%);
+  color: #4338ca;
+  border: 1px solid rgba(199, 210, 254, 0.8);
+  box-shadow: 0 2px 6px -1px rgba(79, 70, 229, 0.08),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+.glass-ai-variant-secondary:hover:not(:disabled) .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(224, 231, 255, 0.95) 0%, rgba(199, 210, 254, 0.85) 100%);
+  color: #3730a3;
+  border-color: rgba(165, 180, 252, 0.9);
+  box-shadow: 0 4px 12px -1px rgba(79, 70, 229, 0.16);
+}
+.glass-ai-variant-secondary .glass-ai-aura {
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+}
+
+/* 4. Danger / Rose Glass */
+.glass-ai-variant-danger .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.9) 0%, rgba(244, 63, 94, 0.85) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 14px -2px rgba(225, 29, 72, 0.3),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+.glass-ai-variant-danger:hover:not(:disabled) .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(190, 18, 60, 0.95) 0%, rgba(225, 29, 72, 0.9) 100%);
+  box-shadow: 0 6px 18px -2px rgba(225, 29, 72, 0.45);
+}
+.glass-ai-variant-danger .glass-ai-aura {
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+}
+
+/* 5. Success / Emerald Glass */
+.glass-ai-variant-success .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.9) 0%, rgba(16, 185, 129, 0.85) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.3),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+.glass-ai-variant-success:hover:not(:disabled) .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(4, 120, 87, 0.95) 0%, rgba(5, 150, 105, 0.9) 100%);
+  box-shadow: 0 6px 18px -2px rgba(5, 150, 105, 0.45);
+}
+.glass-ai-variant-success .glass-ai-aura {
+  background: linear-gradient(135deg, #059669, #34d399);
+}
+
+/* 6. Dark / Onyx Glass */
+.glass-ai-variant-dark .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.88) 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.35),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+.glass-ai-variant-dark:hover:not(:disabled) .glass-ai-surface {
+  background: linear-gradient(135deg, rgba(2, 6, 23, 0.98) 0%, rgba(15, 23, 42, 0.95) 100%);
+  box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.5);
+}
+.glass-ai-variant-dark .glass-ai-aura {
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+}
+
+/* Full Width Utility */
+.glass-ai-full-width {
+  width: 100%;
+}

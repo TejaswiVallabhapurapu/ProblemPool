@@ -23,6 +23,7 @@ import { useAuth } from '../context/AuthContext';
 import { getProblems, getPersonalizedFeed } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
 import AnimatedBackground from '../components/AnimatedBackground';
+import GlassAiButton from '../components/GlassAiButton';
 
 const Home = () => {
   const { user: authUser, token, isAuthenticated } = useAuth();
@@ -157,21 +158,23 @@ const Home = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
+            <GlassAiButton
               to="/problems"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/35 transition-all duration-200 transform hover:-translate-y-0.5"
+              size="lg"
+              variant="primary"
+              icon={<Search className="w-5 h-5" />}
             >
-              <Search className="w-5 h-5" />
-              <span>Explore Problems</span>
-            </Link>
+              Explore Problems
+            </GlassAiButton>
 
-            <Link
+            <GlassAiButton
               to="/create-problem"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-semibold text-slate-800 bg-white/90 hover:bg-white backdrop-blur-md border border-slate-300 shadow-md hover:border-slate-400 transition-all duration-200 transform hover:-translate-y-0.5"
+              size="lg"
+              variant="glass"
+              icon={<PlusCircle className="w-5 h-5 text-indigo-600" />}
             >
-              <PlusCircle className="w-5 h-5 text-indigo-600" />
-              <span>Post a Problem</span>
-            </Link>
+              Post a Problem
+            </GlassAiButton>
           </div>
         </div>
       </section>
@@ -232,13 +235,15 @@ const Home = () => {
               </p>
             </div>
 
-            <Link
+            <GlassAiButton
               to="/problems"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition-colors self-start md:self-auto shrink-0"
+              size="sm"
+              variant="secondary"
+              icon={<ArrowRight className="w-4 h-4" />}
+              iconPosition="right"
             >
-              <span>Explore All Problems</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+              Explore All Problems
+            </GlassAiButton>
           </div>
 
           {/* Feed Navigation Tabs */}
@@ -357,12 +362,13 @@ const Home = () => {
                   <p className="text-xs text-slate-500 mb-6 max-w-sm mx-auto">
                     Follow other problem solvers and developers to see their latest challenges right here in your stream.
                   </p>
-                  <Link
+                  <GlassAiButton
                     to="/problems"
-                    className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                    size="sm"
+                    variant="primary"
                   >
                     Discover People & Problems
-                  </Link>
+                  </GlassAiButton>
                 </>
               ) : activeFeedTab === 'unanswered' ? (
                 <>
@@ -373,12 +379,13 @@ const Home = () => {
                   <p className="text-xs text-slate-500 mb-6">
                     Check out recent submissions or post a new challenging problem for the community.
                   </p>
-                  <Link
+                  <GlassAiButton
                     to="/create-problem"
-                    className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                    size="sm"
+                    variant="primary"
                   >
                     Post a Problem
-                  </Link>
+                  </GlassAiButton>
                 </>
               ) : (
                 <>
@@ -387,12 +394,13 @@ const Home = () => {
                   <p className="text-xs text-slate-500 mb-6">
                     Be the pioneer to post a problem in this category and kick off the solution process!
                   </p>
-                  <Link
+                  <GlassAiButton
                     to="/create-problem"
-                    className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                    size="sm"
+                    variant="primary"
                   >
                     Post a Problem
-                  </Link>
+                  </GlassAiButton>
                 </>
               )}
             </div>

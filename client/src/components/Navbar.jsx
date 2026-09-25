@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AnimatedButton from './AnimatedButton';
+import GlassAiButton from './GlassAiButton';
 import NotificationBell from './NotificationBell';
 import { Bell } from 'lucide-react';
 
@@ -83,21 +84,24 @@ const Navbar = () => {
                 {/* Notification Bell Dropdown */}
                 <NotificationBell />
 
-                <Link
+                <GlassAiButton
                   to="/create-problem"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-sm shadow-indigo-200 hover:shadow-md transition-all duration-200 active:scale-95"
+                  size="sm"
+                  variant="primary"
+                  icon={
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  }
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                  <span>Post Problem</span>
-                </Link>
+                  Post Problem
+                </GlassAiButton>
 
                 {/* Admin Dashboard link if user is admin */}
                 {user?.role === 'admin' && (
@@ -124,12 +128,14 @@ const Navbar = () => {
                 </Link>
 
                 {/* Logout Button */}
-                <button
+                <GlassAiButton
                   onClick={handleLogout}
-                  className="text-xs font-semibold text-slate-500 hover:text-rose-600 transition-colors cursor-pointer px-2.5 py-1.5 rounded-lg hover:bg-slate-100"
+                  size="xs"
+                  variant="glass"
+                  className="!text-slate-600 hover:!text-rose-600"
                 >
                   Logout
-                </button>
+                </GlassAiButton>
               </>
             ) : (
               <div className="flex items-center gap-3">
@@ -143,22 +149,25 @@ const Navbar = () => {
                   Sign Up
                 </AnimatedButton>
 
-                <Link
+                <GlassAiButton
                   to="/create-problem"
                   onClick={handlePostProblemClick}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-all duration-200 active:scale-95"
+                  size="sm"
+                  variant="glass"
+                  icon={
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  }
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                  <span>Post Problem</span>
-                </Link>
+                  Post Problem
+                </GlassAiButton>
               </div>
             )}
           </div>
@@ -261,22 +270,27 @@ const Navbar = () => {
                   🛡️ Admin Dashboard
                 </NavLink>
               )}
-              <Link
+              <GlassAiButton
                 to="/create-problem"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-base font-medium shadow-sm transition-all"
+                variant="primary"
+                fullWidth
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                }
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                <span>Post Problem</span>
-              </Link>
-              <button
+                Post Problem
+              </GlassAiButton>
+              <GlassAiButton
                 onClick={handleLogout}
-                className="w-full text-left px-3 py-2 text-rose-600 font-medium text-sm hover:bg-rose-50 rounded-md transition-colors"
+                variant="danger"
+                fullWidth
+                className="mt-2 text-left justify-start"
               >
                 Logout
-              </button>
+              </GlassAiButton>
             </div>
           ) : (
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2.5">
@@ -301,16 +315,19 @@ const Navbar = () => {
                 </AnimatedButton>
               </div>
 
-              <Link
+              <GlassAiButton
                 to="/create-problem"
                 onClick={handlePostProblemClick}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-all"
+                variant="glass"
+                fullWidth
+                icon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                }
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                <span>Post Problem</span>
-              </Link>
+                Post Problem
+              </GlassAiButton>
             </div>
           )}
         </div>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Flag, X, AlertTriangle, CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
+import { Flag, X, AlertTriangle, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { submitReport } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import GlassAiButton from './GlassAiButton';
 
 const REPORT_REASONS = [
   'Spam',
@@ -182,25 +183,24 @@ const ReportModal = ({
             </div>
 
             <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                variant="glass"
+                size="sm"
               >
                 Cancel
-              </button>
-              <button
+              </GlassAiButton>
+              <GlassAiButton
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 disabled:bg-rose-300 rounded-xl shadow-xs transition cursor-pointer"
+                loading={submitting}
+                variant="danger"
+                size="sm"
+                icon={ShieldAlert}
               >
-                {submitting ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <ShieldAlert className="w-3.5 h-3.5" />
-                )}
-                <span>Submit Report</span>
-              </button>
+                Submit Report
+              </GlassAiButton>
             </div>
           </form>
         )}

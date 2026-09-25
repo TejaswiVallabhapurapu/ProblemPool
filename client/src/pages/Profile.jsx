@@ -34,6 +34,7 @@ import {
   Flag,
 } from 'lucide-react';
 import ReportModal from '../components/ReportModal';
+import GlassAiButton from '../components/GlassAiButton';
 import { useAuth } from '../context/AuthContext';
 import {
   getMyProfileStats,
@@ -500,14 +501,15 @@ const Profile = () => {
             <div className="flex items-center gap-2 w-full sm:w-auto">
               {isViewingSelf ? (
                 <>
-                  <button
+                  <GlassAiButton
                     type="button"
                     onClick={() => setIsEditModalOpen(true)}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 transition shadow-xs cursor-pointer"
+                    size="xs"
+                    variant="glass"
+                    icon={<Edit3 className="w-3.5 h-3.5" />}
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
-                    <span>Edit Profile & Interests</span>
-                  </button>
+                    Edit Profile & Interests
+                  </GlassAiButton>
 
                   <button
                     type="button"
@@ -522,41 +524,32 @@ const Profile = () => {
               ) : (
                 /* Public Follow / Following Button & Report User */
                 <div className="flex items-center gap-2">
-                  <button
+                  <GlassAiButton
                     type="button"
                     onClick={() => handleFollowToggle(user._id)}
                     disabled={followLoading}
-                    className={`inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
-                      isFollowing
-                        ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 group'
-                        : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200'
-                    }`}
-                  >
-                    {followLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : isFollowing ? (
-                      <>
-                        <UserCheck className="w-4 h-4 text-indigo-600 group-hover:hidden" />
-                        <X className="w-4 h-4 text-rose-600 hidden group-hover:inline" />
-                        <span className="group-hover:hidden">Following</span>
-                        <span className="hidden group-hover:inline">Unfollow</span>
-                      </>
-                    ) : (
-                      <>
+                    loading={followLoading}
+                    size="sm"
+                    variant={isFollowing ? "glass" : "primary"}
+                    icon={
+                      isFollowing ? (
+                        <UserCheck className="w-4 h-4 text-indigo-600" />
+                      ) : (
                         <UserPlus className="w-4 h-4" />
-                        <span>Follow</span>
-                      </>
-                    )}
-                  </button>
+                      )
+                    }
+                  >
+                    {isFollowing ? 'Following' : 'Follow'}
+                  </GlassAiButton>
 
-                  <button
+                  <GlassAiButton
                     type="button"
                     onClick={() => setShowReportUserModal(true)}
+                    size="xs"
+                    variant="glass"
                     title="Report user profile"
-                    className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50/50 transition cursor-pointer"
-                  >
-                    <Flag className="w-4 h-4" />
-                  </button>
+                    icon={<Flag className="w-4 h-4 text-rose-500" />}
+                  />
                 </div>
               )}
             </div>
@@ -881,16 +874,14 @@ const Profile = () => {
 
                   {/* Follow / Unfollow button if not self */}
                   {!f.isSelf && isAuthenticated && (
-                    <button
+                    <GlassAiButton
+                      type="button"
                       onClick={() => handleFollowToggle(f._id)}
-                      className={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                        f.isFollowing
-                          ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200'
-                          : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs'
-                      }`}
+                      size="xs"
+                      variant={f.isFollowing ? "glass" : "primary"}
                     >
                       {f.isFollowing ? 'Following' : 'Follow'}
-                    </button>
+                    </GlassAiButton>
                   )}
                 </div>
               ))}
@@ -963,16 +954,14 @@ const Profile = () => {
 
                   {/* Follow / Unfollow button if not self */}
                   {!f.isSelf && isAuthenticated && (
-                    <button
+                    <GlassAiButton
+                      type="button"
                       onClick={() => handleFollowToggle(f._id)}
-                      className={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                        f.isFollowing
-                          ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200'
-                          : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs'
-                      }`}
+                      size="xs"
+                      variant={f.isFollowing ? "glass" : "primary"}
                     >
                       {f.isFollowing ? 'Following' : 'Follow'}
-                    </button>
+                    </GlassAiButton>
                   )}
                 </div>
               ))}
@@ -1435,21 +1424,23 @@ const Profile = () => {
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                <button
+                <GlassAiButton
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
+                  size="xs"
+                  variant="glass"
                 >
                   Cancel
-                </button>
-                <button
+                </GlassAiButton>
+                <GlassAiButton
                   type="submit"
                   disabled={savingProfile}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm cursor-pointer"
+                  loading={savingProfile}
+                  size="xs"
+                  variant="primary"
                 >
-                  {savingProfile ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                  <span>Save Changes</span>
-                </button>
+                  Save Changes
+                </GlassAiButton>
               </div>
             </form>
           </div>

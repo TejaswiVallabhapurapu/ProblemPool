@@ -26,6 +26,7 @@ import {
   deleteNotification,
   clearAllNotifications,
 } from '../services/api';
+import GlassAiButton from '../components/GlassAiButton';
 
 const NOTIFICATION_ICONS = {
   answer: { icon: MessageSquare, color: 'text-indigo-600 bg-indigo-50 border-indigo-200' },
@@ -215,26 +216,29 @@ const Notifications = () => {
         {/* Global Actions */}
         <div className="flex items-center gap-2 flex-wrap">
           {unreadCount > 0 && (
-            <button
+            <GlassAiButton
               type="button"
               onClick={handleMarkAllAsRead}
               disabled={actionLoading}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition cursor-pointer disabled:opacity-50"
+              loading={actionLoading}
+              size="xs"
+              variant="glass"
+              icon={<CheckCheck className="w-3.5 h-3.5" />}
             >
-              <CheckCheck className="w-3.5 h-3.5" />
-              <span>Mark All as Read</span>
-            </button>
+              Mark All as Read
+            </GlassAiButton>
           )}
 
-          <button
+          <GlassAiButton
             type="button"
             onClick={handleClearRead}
             disabled={actionLoading}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-rose-600 bg-white border border-slate-200 hover:border-rose-200 transition cursor-pointer disabled:opacity-50"
+            size="xs"
+            variant="glass"
+            icon={<Trash2 className="w-3.5 h-3.5" />}
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Clear Read</span>
-          </button>
+            Clear Read
+          </GlassAiButton>
         </div>
       </div>
 
@@ -293,12 +297,14 @@ const Notifications = () => {
       ) : error ? (
         <div className="bg-white rounded-3xl border border-rose-200 p-8 text-center max-w-md mx-auto">
           <p className="text-sm text-rose-600 font-semibold mb-4">{error}</p>
-          <button
+          <GlassAiButton
+            type="button"
             onClick={fetchNotificationList}
-            className="px-4 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-xl"
+            size="xs"
+            variant="primary"
           >
             Try Again
-          </button>
+          </GlassAiButton>
         </div>
       ) : notifications.length === 0 ? (
         <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-md mx-auto shadow-xs">

@@ -18,6 +18,7 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import AddToCollectionModal from '../components/AddToCollectionModal';
 import ReportModal from '../components/ReportModal';
+import GlassAiButton from '../components/GlassAiButton';
 import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag, Bot, RefreshCw, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 const CATEGORY_COLORS = {
@@ -399,65 +400,63 @@ const ProblemDetails = () => {
                 <span className="text-xs text-slate-400 font-medium">
                   Posted on {formatDate(problem.createdAt)}
                 </span>
-              </div>
-
-              {/* Right Side Actions: Save Problem, Collection Button & Creator Delete */}
+                         {/* Right Side Actions: Save Problem, Collection Button & Creator Delete */}
               <div className="flex items-center gap-2.5">
-                <button
+                <GlassAiButton
                   type="button"
                   onClick={handleSaveToggle}
                   disabled={savingState}
+                  loading={savingState}
+                  size="xs"
+                  variant={isSaved ? "primary" : "glass"}
                   title={isSaved ? 'Remove from saved problems' : 'Save problem for later'}
-                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
-                    isSaved
-                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  {savingState ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />
-                  ) : (
+                  icon={
                     <Bookmark
                       className={`w-3.5 h-3.5 ${
-                        isSaved ? 'fill-indigo-600 text-indigo-600' : 'text-slate-400'
+                        isSaved ? 'fill-white text-white' : 'text-slate-400'
                       }`}
                     />
-                  )}
-                  <span>{isSaved ? '🔖 Saved' : '🔖 Save'}</span>
-                </button>
+                  }
+                >
+                  {isSaved ? 'Saved' : 'Save'}
+                </GlassAiButton>
 
                 {isSaved && (
-                  <button
+                  <GlassAiButton
                     type="button"
                     onClick={() => setShowCollectionModal(true)}
+                    size="xs"
+                    variant="glass"
                     title="Organize into collections"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 transition shadow-2xs cursor-pointer"
+                    icon={<FolderPlus className="w-3.5 h-3.5 text-indigo-500" />}
                   >
-                    <FolderPlus className="w-3.5 h-3.5 text-indigo-500" />
-                    <span>Collections</span>
-                  </button>
+                    Collections
+                  </GlassAiButton>
                 )}
 
                 {isProblemOwner ? (
-                  <button
+                  <GlassAiButton
+                    type="button"
                     onClick={handleDeleteProblem}
                     disabled={isDeletingProblem}
-                    className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer ml-1"
+                    loading={isDeletingProblem}
+                    size="xs"
+                    variant="danger"
                     title="Delete this problem"
                   >
-                    {isDeletingProblem ? 'Deleting...' : 'Delete problem'}
-                  </button>
+                    Delete problem
+                  </GlassAiButton>
                 ) : (
-                  <button
+                  <GlassAiButton
                     type="button"
                     onClick={() => setShowReportProblemModal(true)}
+                    size="xs"
+                    variant="glass"
                     title="Report inappropriate problem"
-                    className="inline-flex items-center gap-1 text-slate-400 hover:text-rose-600 transition-colors p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer ml-1"
-                  >
-                    <Flag className="w-3.5 h-3.5" />
-                  </button>
+                    icon={<Flag className="w-3.5 h-3.5 text-rose-500" />}
+                  />
                 )}
-              </div>
+              </div>           </div>
             </div>
 
             {/* Title */}
@@ -541,25 +540,18 @@ const ProblemDetails = () => {
               <div className="flex flex-wrap items-center gap-3">
                 {/* AI Summarize Answers Button */}
                 {answers.length > 0 && (
-                  <button
+                  <GlassAiButton
                     type="button"
                     onClick={handleSummarizeAnswers}
                     disabled={summarizingAi}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs shadow-xs hover:shadow transition-all duration-200 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+                    loading={summarizingAi}
+                    size="xs"
+                    variant="primary"
                     title="Generate an AI-powered overview of all community solutions"
+                    icon={<Sparkles className="w-3.5 h-3.5 text-indigo-200" />}
                   >
-                    {summarizingAi ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Summarizing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
-                        <span>✨ Summarize Answers</span>
-                      </>
-                    )}
-                  </button>
+                    Summarize Answers
+                  </GlassAiButton>
                 )}
 
                 {/* Answer Sorting Options */}
@@ -774,23 +766,15 @@ const ProblemDetails = () => {
                     <span className="text-[11px] text-slate-400 font-medium">
                       💡 Tip: Use <code className="bg-slate-100 text-indigo-600 px-1 py-0.5 rounded font-mono">```language</code> for syntax-highlighted code blocks with a copy button.
                     </span>
-                    <button
+                    <GlassAiButton
                       type="submit"
                       disabled={submittingAnswer || !answerContent.trim()}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white font-semibold text-sm shadow-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed shrink-0"
+                      loading={submittingAnswer}
+                      variant="primary"
+                      size="md"
                     >
-                      {submittingAnswer ? (
-                        <>
-                          <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                          </svg>
-                          <span>Submitting Answer...</span>
-                        </>
-                      ) : (
-                        <span>Submit Answer</span>
-                      )}
-                    </button>
+                      Submit Answer
+                    </GlassAiButton>
                   </div>
                 </form>
               </div>

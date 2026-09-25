@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2, FolderPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { saveProblem, unsaveProblem } from '../services/api';
+import GlassAiButton from './GlassAiButton';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -256,60 +257,60 @@ const ProblemCard = ({
       {/* Footer Info: Save Button, Collection Button & View Action */}
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
         <div className="flex items-center gap-1.5">
-          <button
+          <GlassAiButton
             type="button"
             onClick={handleSaveToggle}
             disabled={saving}
+            loading={saving}
+            size="xs"
+            variant={saved ? "primary" : "glass"}
             title={saved ? 'Remove from saved problems' : 'Save for later'}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
-              saved
-                ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-            }`}
-          >
-            {saving ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />
-            ) : (
+            icon={
               <Bookmark
                 className={`w-3.5 h-3.5 ${
-                  saved ? 'fill-indigo-600 text-indigo-600' : 'text-slate-400'
+                  saved ? 'fill-white text-white' : 'text-slate-400'
                 }`}
               />
-            )}
-            <span>{saved ? '🔖 Saved' : '🔖 Save'}</span>
-          </button>
+            }
+          >
+            {saved ? 'Saved' : 'Save'}
+          </GlassAiButton>
 
           {saved && onManageCollections && (
-            <button
+            <GlassAiButton
               type="button"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 onManageCollections(problem);
               }}
+              size="xs"
+              variant="glass"
               title="Add or remove from custom collections"
-              className="p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-indigo-50 hover:text-indigo-600 text-slate-500 hover:border-indigo-200 transition shadow-2xs cursor-pointer"
-            >
-              <FolderPlus className="w-3.5 h-3.5" />
-            </button>
+              icon={<FolderPlus className="w-3.5 h-3.5" />}
+            />
           )}
         </div>
 
-        <Link
+        <GlassAiButton
           to={`/problems/${problem._id}`}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 px-3.5 py-1.5 rounded-xl transition-colors shrink-0"
+          size="xs"
+          variant="secondary"
+          icon={
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          }
+          iconPosition="right"
         >
-          <span>View Problem</span>
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        </Link>
+          View Problem
+        </GlassAiButton>
       </div>
     </div>
   );

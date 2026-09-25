@@ -26,6 +26,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import GlassAiButton from '../components/GlassAiButton';
 import {
   getAdminStats,
   getAdminReports,
@@ -246,12 +247,13 @@ const AdminDashboard = () => {
         <p className="text-sm text-slate-600 mb-6 leading-relaxed">
           You must be signed in with an authorized <span className="font-semibold text-slate-900">Administrator</span> account to access the ProblemPool Moderation Dashboard.
         </p>
-        <Link
+        <GlassAiButton
           to="/dashboard"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold transition"
+          variant="dark"
+          size="md"
         >
-          <span>Return to Dashboard</span>
-        </Link>
+          Return to Dashboard
+        </GlassAiButton>
       </div>
     );
   }
@@ -786,17 +788,14 @@ const AdminDashboard = () => {
 
                           <td className="py-3.5 px-4 text-right">
                             {!isSelf ? (
-                              <button
+                              <GlassAiButton
                                 type="button"
                                 onClick={() => setSuspendModalUser(u)}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
-                                  u.isSuspended
-                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100'
-                                    : 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
-                                }`}
+                                variant={u.isSuspended ? "success" : "danger"}
+                                size="xs"
                               >
                                 {u.isSuspended ? 'Unsuspend' : 'Suspend'}
-                              </button>
+                              </GlassAiButton>
                             ) : (
                               <span className="text-[11px] text-slate-400 italic">Current user</span>
                             )}
@@ -832,26 +831,25 @@ const AdminDashboard = () => {
             </p>
 
             <div className="flex items-center justify-end gap-2.5">
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={() => setRemoveContentModal(null)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                variant="glass"
+                size="sm"
               >
                 Cancel
-              </button>
-              <button
+              </GlassAiButton>
+              <GlassAiButton
                 type="button"
                 onClick={handleRemoveContent}
                 disabled={actionLoading}
-                className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 disabled:bg-rose-300 rounded-xl shadow-xs transition cursor-pointer"
+                loading={actionLoading}
+                variant="danger"
+                size="sm"
+                icon={Trash2}
               >
-                {actionLoading ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Trash2 className="w-3.5 h-3.5" />
-                )}
-                <span>Yes, Delete Content</span>
-              </button>
+                Yes, Delete Content
+              </GlassAiButton>
             </div>
           </div>
         </div>
@@ -896,34 +894,25 @@ const AdminDashboard = () => {
             )}
 
             <div className="flex items-center justify-end gap-2.5">
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={() => setSuspendModalUser(null)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                variant="glass"
+                size="sm"
               >
                 Cancel
-              </button>
-              <button
+              </GlassAiButton>
+              <GlassAiButton
                 type="button"
                 onClick={handleToggleSuspend}
                 disabled={actionLoading}
-                className={`inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white rounded-xl shadow-xs transition cursor-pointer ${
-                  suspendModalUser.isSuspended
-                    ? 'bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300'
-                    : 'bg-rose-600 hover:bg-rose-700 disabled:bg-rose-300'
-                }`}
+                loading={actionLoading}
+                variant={suspendModalUser.isSuspended ? 'success' : 'danger'}
+                size="sm"
+                icon={suspendModalUser.isSuspended ? UserCheck : UserX}
               >
-                {actionLoading ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : suspendModalUser.isSuspended ? (
-                  <UserCheck className="w-3.5 h-3.5" />
-                ) : (
-                  <UserX className="w-3.5 h-3.5" />
-                )}
-                <span>
-                  {suspendModalUser.isSuspended ? 'Yes, Unsuspend User' : 'Yes, Suspend User'}
-                </span>
-              </button>
+                {suspendModalUser.isSuspended ? 'Yes, Unsuspend User' : 'Yes, Suspend User'}
+              </GlassAiButton>
             </div>
           </div>
         </div>

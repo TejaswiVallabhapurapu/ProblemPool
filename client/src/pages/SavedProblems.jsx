@@ -32,6 +32,7 @@ import {
 } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
 import AddToCollectionModal from '../components/AddToCollectionModal';
+import GlassAiButton from '../components/GlassAiButton';
 
 // Helper to safely extract the problem entity from various API response shapes
 const getProblemObj = (item) => {
@@ -418,18 +419,19 @@ const SavedProblems = () => {
         </div>
 
         <div className="flex items-center gap-3 self-start sm:self-auto">
-          <button
+          <GlassAiButton
             type="button"
             onClick={() => {
               setCollectionForm({ name: '', description: '', color: 'indigo' });
               setColError(null);
               setShowCreateModal(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-100 hover:shadow-indigo-200 transition-all cursor-pointer"
+            variant="primary"
+            size="md"
+            icon={<FolderPlus className="w-4 h-4" />}
           >
-            <FolderPlus className="w-4 h-4" />
-            <span>+ New Collection</span>
-          </button>
+            New Collection
+          </GlassAiButton>
 
           <button
             type="button"
@@ -525,7 +527,7 @@ const SavedProblems = () => {
             </div>
 
             <div className="flex items-center gap-2.5 shrink-0">
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={() => {
                   setCollectionForm({
@@ -536,20 +538,22 @@ const SavedProblems = () => {
                   setColError(null);
                   setShowEditModal(true);
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/15 transition cursor-pointer"
+                size="xs"
+                variant="glass"
+                icon={<Edit2 className="w-3.5 h-3.5" />}
               >
-                <Edit2 className="w-3.5 h-3.5" />
-                <span>Rename / Edit</span>
-              </button>
+                Rename / Edit
+              </GlassAiButton>
 
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={() => setShowDeleteModal(true)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-500/30 transition cursor-pointer"
+                size="xs"
+                variant="danger"
+                icon={<Trash2 className="w-3.5 h-3.5" />}
               >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Delete Collection</span>
-              </button>
+                Delete Collection
+              </GlassAiButton>
             </div>
           </div>
         </div>
@@ -625,14 +629,15 @@ const SavedProblems = () => {
           </div>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Failed to Load Saved Problems</h2>
           <p className="text-sm text-slate-600 mb-6">{error}</p>
-          <button
+          <GlassAiButton
             type="button"
             onClick={fetchData}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition cursor-pointer"
+            variant="primary"
+            size="md"
+            icon={<RefreshCw className="w-4 h-4" />}
           >
-            <RefreshCw className="w-4 h-4" />
-            <span>Try Again</span>
-          </button>
+            Try Again
+          </GlassAiButton>
         </div>
       ) : currentProblemsList.length === 0 ? (
         /* Empty State */
@@ -651,20 +656,22 @@ const SavedProblems = () => {
               : 'Add problems to this collection using the folder button on any saved problem.'}
           </p>
           {activeCollectionId === 'all' ? (
-            <Link
+            <GlassAiButton
               to="/problems"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all"
+              variant="primary"
+              size="md"
             >
-              <span>Browse Problems</span>
-            </Link>
+              Browse Problems
+            </GlassAiButton>
           ) : (
-            <button
+            <GlassAiButton
               type="button"
               onClick={() => setActiveCollectionId('all')}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all cursor-pointer"
+              variant="dark"
+              size="md"
             >
-              <span>View All Saved Problems</span>
-            </button>
+              View All Saved Problems
+            </GlassAiButton>
           )}
         </div>
       ) : filteredAndSorted.length === 0 ? (
@@ -865,25 +872,24 @@ const SavedProblems = () => {
               </div>
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
-                <button
+                <GlassAiButton
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                  size="xs"
+                  variant="glass"
                 >
                   Cancel
-                </button>
-                <button
+                </GlassAiButton>
+                <GlassAiButton
                   type="submit"
                   disabled={submittingCol || !collectionForm.name.trim()}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 rounded-xl shadow-xs transition cursor-pointer"
+                  loading={submittingCol}
+                  size="xs"
+                  variant="primary"
+                  icon={<Plus className="w-3.5 h-3.5" />}
                 >
-                  {submittingCol ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Plus className="w-3.5 h-3.5" />
-                  )}
-                  <span>Create Collection</span>
-                </button>
+                  Create Collection
+                </GlassAiButton>
               </div>
             </form>
           </div>
@@ -994,25 +1000,24 @@ const SavedProblems = () => {
               </div>
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
-                <button
+                <GlassAiButton
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                  size="xs"
+                  variant="glass"
                 >
                   Cancel
-                </button>
-                <button
+                </GlassAiButton>
+                <GlassAiButton
                   type="submit"
                   disabled={submittingCol || !collectionForm.name.trim()}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 rounded-xl shadow-xs transition cursor-pointer"
+                  loading={submittingCol}
+                  size="xs"
+                  variant="primary"
+                  icon={<Check className="w-3.5 h-3.5" />}
                 >
-                  {submittingCol ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Check className="w-3.5 h-3.5" />
-                  )}
-                  <span>Save Changes</span>
-                </button>
+                  Save Changes
+                </GlassAiButton>
               </div>
             </form>
           </div>
@@ -1041,26 +1046,25 @@ const SavedProblems = () => {
             </p>
 
             <div className="flex items-center justify-end gap-2.5">
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                size="xs"
+                variant="glass"
               >
                 Cancel
-              </button>
-              <button
+              </GlassAiButton>
+              <GlassAiButton
                 type="button"
                 onClick={handleDeleteCollection}
                 disabled={submittingCol}
-                className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 disabled:bg-rose-300 rounded-xl shadow-xs transition cursor-pointer"
+                loading={submittingCol}
+                size="xs"
+                variant="danger"
+                icon={<Trash2 className="w-3.5 h-3.5" />}
               >
-                {submittingCol ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Trash2 className="w-3.5 h-3.5" />
-                )}
-                <span>Yes, Delete Collection</span>
-              </button>
+                Yes, Delete Collection
+              </GlassAiButton>
             </div>
           </div>
         </div>

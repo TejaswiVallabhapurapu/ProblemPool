@@ -3,6 +3,7 @@ import { voteAnswer, removeAnswerVote, setBestAnswer, removeBestAnswer } from '.
 import ReviewSection from './ReviewSection';
 import MarkdownRenderer from './MarkdownRenderer';
 import ReportModal from './ReportModal';
+import GlassAiButton from './GlassAiButton';
 import { Flag } from 'lucide-react';
 
 const formatDate = (dateString) => {
@@ -188,22 +189,24 @@ const AnswerCard = ({
         {/* Actions for Author vs Other Users */}
         <div className="flex items-center gap-2">
           {isAnswerAuthor ? (
-            <button
+            <GlassAiButton
+              type="button"
               onClick={() => onDeleteAnswer(answer._id)}
-              className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
+              size="xs"
+              variant="danger"
               title="Delete your answer"
             >
               Delete
-            </button>
+            </GlassAiButton>
           ) : (
-            <button
+            <GlassAiButton
               type="button"
               onClick={() => setShowReportModal(true)}
-              className="text-slate-400 hover:text-rose-600 transition-colors p-1 rounded-lg hover:bg-slate-50 cursor-pointer"
+              size="xs"
+              variant="glass"
               title="Report inappropriate answer"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
+              icon={<Flag className="w-3.5 h-3.5 text-rose-500" />}
+            />
           )}
         </div>
       </div>
@@ -216,82 +219,62 @@ const AnswerCard = ({
       {/* Interactive Actions Bar */}
       <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
         {/* Voting & Reviews Buttons */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {/* Helpful Button */}
-          <button
+          <GlassAiButton
             type="button"
             onClick={() => handleVote('helpful')}
             disabled={isAnswerAuthor || voting}
+            size="xs"
+            variant={userVote === 'helpful' ? "success" : "glass"}
             title={
               isAnswerAuthor
                 ? 'You cannot vote on your own answer'
                 : 'Mark this answer as helpful'
             }
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
-              userVote === 'helpful'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-xs'
-                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-            } ${isAnswerAuthor ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
           >
-            <span>👍</span>
-            <span>{helpfulCount}</span>
-            <span className="hidden sm:inline">Helpful</span>
-          </button>
+            👍 {helpfulCount} <span className="hidden sm:inline">Helpful</span>
+          </GlassAiButton>
 
           {/* Not Helpful Button */}
-          <button
+          <GlassAiButton
             type="button"
             onClick={() => handleVote('not_helpful')}
             disabled={isAnswerAuthor || voting}
+            size="xs"
+            variant={userVote === 'not_helpful' ? "danger" : "glass"}
             title={
               isAnswerAuthor
                 ? 'You cannot vote on your own answer'
                 : 'Mark this answer as not helpful'
             }
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
-              userVote === 'not_helpful'
-                ? 'bg-rose-50 text-rose-700 border-rose-300 shadow-xs'
-                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-            } ${isAnswerAuthor ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
           >
-            <span>👎</span>
-            <span>{notHelpfulCount}</span>
-            <span className="hidden sm:inline">Not Helpful</span>
-          </button>
+            👎 {notHelpfulCount} <span className="hidden sm:inline">Not Helpful</span>
+          </GlassAiButton>
 
           {/* Toggle Reviews Section Button */}
-          <button
+          <GlassAiButton
             type="button"
             onClick={() => setShowReviews(!showReviews)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
-              showReviews
-                ? 'bg-indigo-50 text-indigo-700 border-indigo-200 shadow-xs'
-                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-            }`}
+            size="xs"
+            variant={showReviews ? "primary" : "glass"}
           >
-            <span>⭐</span>
-            <span>Reviews</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[11px]">
-              {reviewCount}
-            </span>
-          </button>
+            ⭐ Reviews ({reviewCount})
+          </GlassAiButton>
         </div>
 
         {/* Problem Owner Best Answer Action Button */}
         {isProblemOwner && (
-          <button
+          <GlassAiButton
             type="button"
             onClick={handleBestAnswerToggle}
             disabled={togglingBestAnswer}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
-              isBestAnswer
-                ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-200'
-                : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200'
-            }`}
+            loading={togglingBestAnswer}
+            size="xs"
+            variant={isBestAnswer ? "primary" : "glass"}
           >
-            <span>⭐</span>
-            <span>{isBestAnswer ? 'Unmark Best Answer' : 'Mark as Best Answer'}</span>
-          </button>
+            ⭐ {isBestAnswer ? 'Unmark Best Answer' : 'Mark as Best Answer'}
+          </GlassAiButton>
         )}
       </div>
 

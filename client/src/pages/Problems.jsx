@@ -22,6 +22,7 @@ import { getProblems, getPopularTags, getMySavedProblemIds } from '../services/a
 import { useAuth } from '../context/AuthContext';
 import ProblemCard from '../components/ProblemCard';
 import CategoryFilter, { POPULAR_CATEGORIES } from '../components/CategoryFilter';
+import GlassAiButton from '../components/GlassAiButton';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Problems', icon: Layers },
@@ -210,13 +211,15 @@ const Problems = () => {
           </p>
         </div>
 
-        <Link
+        <GlassAiButton
           to="/create-problem"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors self-start md:self-auto shrink-0"
+          size="md"
+          variant="primary"
+          icon={<PlusCircle className="w-4 h-4" />}
+          className="self-start md:self-auto shrink-0"
         >
-          <PlusCircle className="w-4 h-4" />
-          <span>Post a Problem</span>
-        </Link>
+          Post a Problem
+        </GlassAiButton>
       </div>
 
       {/* ========================================================= */}
@@ -522,14 +525,15 @@ const Problems = () => {
           </div>
           <h2 className="text-lg font-bold text-slate-900 mb-2">Failed to Load Problems</h2>
           <p className="text-sm text-slate-600 mb-6">{error}</p>
-          <button
+          <GlassAiButton
             type="button"
             onClick={fetchProblemsList}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition"
+            variant="primary"
+            size="md"
+            icon={<RefreshCw className="w-4 h-4" />}
           >
-            <RefreshCw className="w-4 h-4" />
-            <span>Try Again</span>
-          </button>
+            Try Again
+          </GlassAiButton>
         </div>
       ) : problems.length === 0 ? (
         <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
@@ -545,20 +549,22 @@ const Problems = () => {
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             {hasActiveFilters && (
-              <button
+              <GlassAiButton
                 type="button"
                 onClick={handleClearAllFilters}
-                className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
+                variant="glass"
+                size="md"
               >
                 Clear All Filters
-              </button>
+              </GlassAiButton>
             )}
-            <Link
+            <GlassAiButton
               to="/create-problem"
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+              variant="primary"
+              size="md"
             >
               Post a Problem
-            </Link>
+            </GlassAiButton>
           </div>
         </div>
       ) : (

@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
+import GlassAiButton from '../components/GlassAiButton';
 import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Loader2, Wand2, Lightbulb, Check } from 'lucide-react';
 
 const SUGGESTED_TAGS = [
@@ -354,24 +355,17 @@ const CreateProblem = () => {
             </div>
           </div>
 
-          <button
+          <GlassAiButton
             type="button"
             onClick={handleImproveWithAI}
             disabled={improvingAi || (!formData.title.trim() && !formData.description.trim())}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-xs shadow-sm hover:shadow transition-all duration-200 cursor-pointer disabled:cursor-not-allowed shrink-0"
+            loading={improvingAi}
+            variant="primary"
+            size="sm"
+            icon={Sparkles}
           >
-            {improvingAi ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Improving draft...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
-                <span>✨ Improve My Problem</span>
-              </>
-            )}
-          </button>
+            {improvingAi ? 'Improving draft...' : '✨ Improve My Problem'}
+          </GlassAiButton>
         </div>
 
         {/* AI Error Notification */}
@@ -405,14 +399,15 @@ const CreateProblem = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <button
+                <GlassAiButton
                   type="button"
                   onClick={handleApplyAll}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs cursor-pointer transition"
+                  variant="primary"
+                  size="xs"
+                  icon={Check}
                 >
-                  <Check className="w-3.5 h-3.5" />
-                  <span>Apply All</span>
-                </button>
+                  Apply All
+                </GlassAiButton>
                 <button
                   type="button"
                   onClick={() => setAiSuggestion(null)}
@@ -851,29 +846,22 @@ const CreateProblem = () => {
 
           {/* Submit Button */}
           <div className="pt-2 flex items-center justify-end gap-3">
-            <Link
+            <GlassAiButton
               to="/problems"
-              className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium text-sm transition-colors"
+              variant="glass"
+              size="md"
             >
               Cancel
-            </Link>
-            <button
+            </GlassAiButton>
+            <GlassAiButton
               type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold text-sm shadow-md shadow-indigo-200 hover:shadow-indigo-300 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
+              loading={loading}
+              variant="primary"
+              size="md"
             >
-              {loading ? (
-                <>
-                  <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  <span>Posting...</span>
-                </>
-              ) : (
-                <span>Post Problem</span>
-              )}
-            </button>
+              Post Problem
+            </GlassAiButton>
           </div>
         </form>
       </div>
