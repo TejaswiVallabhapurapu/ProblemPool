@@ -4,12 +4,12 @@ import {
   FolderPlus,
   X,
   Check,
-  Loader2,
   Plus,
   Sparkles,
   AlertCircle,
   FolderCheck,
 } from 'lucide-react';
+import { Loader } from './Loader';
 import {
   getMyCollections,
   createCollection,
@@ -223,8 +223,8 @@ const AddToCollectionModal = ({
 
         {/* Content: Collections list or loading */}
         {loading ? (
-          <div className="py-10 flex flex-col items-center justify-center text-slate-400 gap-2">
-            <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
+          <div className="py-10 flex flex-col items-center justify-center text-slate-400 gap-3">
+            <Loader size="sm" />
             <span className="text-xs font-medium">Loading your collections...</span>
           </div>
         ) : (
@@ -286,7 +286,7 @@ const AddToCollectionModal = ({
 
                       <div className="shrink-0 flex items-center">
                         {isUpdating ? (
-                          <Loader2 className="w-4 h-4 animate-spin text-indigo-600" />
+                          <Loader size="sm" />
                         ) : isChecked ? (
                           <div className="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-xs">
                             <Check className="w-3.5 h-3.5 stroke-[3]" />

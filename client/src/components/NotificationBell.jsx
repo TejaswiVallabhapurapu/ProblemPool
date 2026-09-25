@@ -12,9 +12,9 @@ import {
   UserPlus,
   AtSign,
   MessageCircle,
-  Loader2,
   Sparkles,
 } from 'lucide-react';
+import { Loader } from './Loader';
 import { useAuth } from '../context/AuthContext';
 import {
   getNotifications,
@@ -193,8 +193,8 @@ const NotificationBell = () => {
           {/* Notifications List */}
           <div className="max-h-[360px] overflow-y-auto divide-y divide-slate-100">
             {loading ? (
-              <div className="py-8 flex flex-col items-center justify-center text-slate-400 gap-2">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
+              <div className="py-8 flex flex-col items-center justify-center text-slate-400 gap-3">
+                <Loader size="sm" />
                 <span className="text-xs font-medium">Loading notifications...</span>
               </div>
             ) : notifications.length === 0 ? (
