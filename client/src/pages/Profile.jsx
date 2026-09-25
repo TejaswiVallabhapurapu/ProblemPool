@@ -51,7 +51,6 @@ import {
   followUser,
 } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
-import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 
 // Available pre-defined interests list
