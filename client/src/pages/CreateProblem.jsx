@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createProblem, checkSimilarProblems } from '../services/api';
+import { createProblem, checkSimilarProblems, improveProblemWithAI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
-import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Loader2, Wand2, Lightbulb, Check } from 'lucide-react';
 
 const SUGGESTED_TAGS = [
   'React',
@@ -47,6 +47,93 @@ const CreateProblem = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+
+  // AI Problem Assistant states
+  const [improvingAi, setImprovingAi] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState(null);
+  const [aiError, setAiError] = useState(null);
+  const [appliedFields, setAppliedFields] = useState({});
+
+  const handleImproveWithAI = async () => {
+    const titleVal = formData.title.trim();
+    const descVal = formData.description.trim();
+
+    if (!titleVal && !descVal) {
+      setAiError('Please enter at least a rough title or description first so AI can assist you.');
+      return;
+    }
+
+    setImprovingAi(true);
+    setAiError(null);
+    setAppliedFields({});
+
+    try {
+      const res = await improveProblemWithAI(
+        {
+          title: titleVal,
+          description: descVal,
+          category: formData.category,
+          tags,
+        },
+        token
+      );
+
+      if (res?.success && res.suggestion) {
+        setAiSuggestion(res.suggestion);
+      } else {
+        setAiError(res?.message || 'Unable to generate suggestions at this time.');
+      }
+    } catch (err) {
+      setAiError(err.message || 'AI assistant request failed. Please check connection and try again.');
+    } finally {
+      setImprovingAi(false);
+    }
+  };
+
+  const handleApplyTitle = () => {
+    if (aiSuggestion?.improvedTitle) {
+      setFormData((prev) => ({ ...prev, title: aiSuggestion.improvedTitle }));
+      setAppliedFields((prev) => ({ ...prev, title: true }));
+      if (fieldErrors.title) setFieldErrors((prev) => ({ ...prev, title: null }));
+    }
+  };
+
+  const handleApplyDescription = () => {
+    if (aiSuggestion?.improvedDescription) {
+      setFormData((prev) => ({ ...prev, description: aiSuggestion.improvedDescription }));
+      setAppliedFields((prev) => ({ ...prev, description: true }));
+      if (fieldErrors.description) setFieldErrors((prev) => ({ ...prev, description: null }));
+    }
+  };
+
+  const handleApplyTags = () => {
+    if (aiSuggestion?.suggestedTags && Array.isArray(aiSuggestion.suggestedTags)) {
+      const newTags = [...tags];
+      aiSuggestion.suggestedTags.forEach((st) => {
+        const clean = st.toLowerCase().trim();
+        if (clean && !newTags.includes(clean) && newTags.length < 10) {
+          newTags.push(clean);
+        }
+      });
+      setTags(newTags);
+      setAppliedFields((prev) => ({ ...prev, tags: true }));
+    }
+  };
+
+  const handleApplyCategory = () => {
+    if (aiSuggestion?.suggestedCategory) {
+      setFormData((prev) => ({ ...prev, category: aiSuggestion.suggestedCategory }));
+      setAppliedFields((prev) => ({ ...prev, category: true }));
+      if (fieldErrors.category) setFieldErrors((prev) => ({ ...prev, category: null }));
+    }
+  };
+
+  const handleApplyAll = () => {
+    handleApplyTitle();
+    handleApplyDescription();
+    handleApplyTags();
+    handleApplyCategory();
+  };
 
   // Debounced search for similar problems as user types title
   useEffect(() => {
@@ -244,6 +331,222 @@ const CreateProblem = () => {
             <div>
               <div className="font-semibold">Submission failed</div>
               <div>{error}</div>
+            </div>
+          </div>
+        )}
+
+        {/* AI Problem Assistant Banner / Action Bar */}
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-50/80 via-purple-50/60 to-pink-50/40 border border-indigo-100/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xs shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <span>AI Problem Assistant</span>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                  Powered by AI
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                Draft your question and let AI suggest an improved title, structured description, tags & category.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleImproveWithAI}
+            disabled={improvingAi || (!formData.title.trim() && !formData.description.trim())}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-xs shadow-sm hover:shadow transition-all duration-200 cursor-pointer disabled:cursor-not-allowed shrink-0"
+          >
+            {improvingAi ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Improving draft...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
+                <span>✨ Improve My Problem</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* AI Error Notification */}
+        {aiError && (
+          <div className="mb-6 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start justify-between gap-2 animate-in fade-in duration-200">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>{aiError}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setAiError(null)}
+              className="text-amber-600 hover:text-amber-900 font-bold ml-2 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* AI Suggestions Review & Action Box */}
+        {aiSuggestion && (
+          <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/60 border border-indigo-200 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-100 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">✨</span>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">AI Improvement Suggestions</h4>
+                  <p className="text-[11px] text-slate-500">
+                    Review and click the buttons below to selectively apply what you like. Your original input is never changed automatically.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleApplyAll}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs cursor-pointer transition"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Apply All</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAiSuggestion(null)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white/80 transition cursor-pointer"
+                  title="Dismiss AI suggestions"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              {/* 1. Improved Title */}
+              {aiSuggestion.improvedTitle && (
+                <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                      <span>Suggested Title</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleApplyTitle}
+                      className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
+                        appliedFields.title
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                          : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'
+                      }`}
+                    >
+                      {appliedFields.title ? '✓ Applied' : 'Use Title'}
+                    </button>
+                  </div>
+                  <p className="text-slate-900 font-semibold">{aiSuggestion.improvedTitle}</p>
+                </div>
+              )}
+
+              {/* 2. Missing Information Questions */}
+              {aiSuggestion.missingInformation && aiSuggestion.missingInformation.length > 0 && (
+                <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200/80">
+                  <div className="font-bold text-amber-900 mb-1.5 flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                    <span>Missing Information / Questions to Consider Adding:</span>
+                  </div>
+                  <ul className="list-disc list-inside space-y-1 text-amber-800/90 pl-1">
+                    {aiSuggestion.missingInformation.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* 3. Suggested Category & Tags */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Category */}
+                {aiSuggestion.suggestedCategory && (
+                  <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-slate-700 block mb-1">Recommended Category</span>
+                      <span className="inline-block px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-bold text-[11px] border border-indigo-100">
+                        {aiSuggestion.suggestedCategory}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleApplyCategory}
+                      className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
+                        appliedFields.category
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                          : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'
+                      }`}
+                    >
+                      {appliedFields.category ? '✓ Applied' : 'Use Category'}
+                    </button>
+                  </div>
+                )}
+
+                {/* Tags */}
+                {aiSuggestion.suggestedTags && aiSuggestion.suggestedTags.length > 0 && (
+                  <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs flex flex-col justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="font-bold text-slate-700">Suggested Tags</span>
+                      <button
+                        type="button"
+                        onClick={handleApplyTags}
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
+                          appliedFields.tags
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                            : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'
+                        }`}
+                      >
+                        {appliedFields.tags ? '✓ Applied' : 'Use Tags'}
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {aiSuggestion.suggestedTags.map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => handleAddTag(tag)}
+                          className="px-2 py-0.5 rounded bg-slate-50 hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 text-[10px] font-semibold transition cursor-pointer"
+                        >
+                          +{tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Improved Description */}
+              {aiSuggestion.improvedDescription && (
+                <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                      <span>Structured Description Template</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleApplyDescription}
+                      className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
+                        appliedFields.description
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                          : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-2xs'
+                      }`}
+                    >
+                      {appliedFields.description ? '✓ Applied' : 'Use Description'}
+                    </button>
+                  </div>
+                  <div className="p-3 rounded-lg bg-slate-50/80 border border-slate-200 max-h-48 overflow-y-auto font-mono text-[11px] text-slate-700 whitespace-pre-wrap">
+                    {aiSuggestion.improvedDescription}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

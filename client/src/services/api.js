@@ -1442,6 +1442,53 @@ export const selectChallengeBestAnswer = async (id, answerId, token) => {
   });
 };
 
+/**
+ * =========================================================
+ * SECTION 10: AI PROBLEM ASSISTANT & AI ANSWER SUMMARY
+ * =========================================================
+ */
+
+/**
+ * Improve Problem Draft with AI
+ * @param {Object} data - { title, description, category, tags }
+ * @param {string} token - Optional auth token
+ */
+export const improveProblemWithAI = async (data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/ai/improve-problem', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+/**
+ * Summarize Community Answers with AI
+ * @param {Object} data - { problemId, problemTitle, problemDescription, answers }
+ * @param {string} token - Optional auth token
+ */
+export const summarizeAnswersWithAI = async (data, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/ai/summarize-answers', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+};
+
+
 
 
 

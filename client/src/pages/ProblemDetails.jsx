@@ -10,6 +10,7 @@ import {
   unsaveProblem,
   getMySavedProblemIds,
   getRelatedProblems,
+  summarizeAnswersWithAI,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
@@ -17,7 +18,7 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import AddToCollectionModal from '../components/AddToCollectionModal';
 import ReportModal from '../components/ReportModal';
-import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag } from 'lucide-react';
+import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight, Sparkles, FolderPlus, Flag, Bot, RefreshCw, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -78,6 +79,53 @@ const ProblemDetails = () => {
   const [submittingAnswer, setSubmittingAnswer] = useState(false);
   const [answerError, setAnswerError] = useState('');
   const [answerSuccess, setAnswerSuccess] = useState('');
+
+  // AI Answer Summary states
+  const [aiSummary, setAiSummary] = useState(null);
+  const [aiKeyTakeaways, setAiKeyTakeaways] = useState([]);
+  const [summarizingAi, setSummarizingAi] = useState(false);
+  const [aiSummaryError, setAiSummaryError] = useState(null);
+  const [showAiSummaryCard, setShowAiSummaryCard] = useState(false);
+
+  const handleSummarizeAnswers = async () => {
+    if (!answers || answers.length === 0) {
+      setAiSummaryError('No answers are available to summarize yet.');
+      setShowAiSummaryCard(true);
+      return;
+    }
+
+    setSummarizingAi(true);
+    setAiSummaryError(null);
+    setShowAiSummaryCard(true);
+
+    try {
+      const res = await summarizeAnswersWithAI(
+        {
+          problemId: id,
+          problemTitle: problem?.title || '',
+          problemDescription: problem?.description || '',
+          answers: answers.map((a) => ({
+            content: a.content,
+            upvotes: a.upvotes || 0,
+            isAccepted: a.isAccepted || false,
+            createdAt: a.createdAt,
+          })),
+        },
+        token
+      );
+
+      if (res?.success && res.summary) {
+        setAiSummary(res.summary);
+        setAiKeyTakeaways(res.keyTakeaways || []);
+      } else {
+        setAiSummaryError(res?.message || 'Unable to generate summary at this moment.');
+      }
+    } catch (err) {
+      setAiSummaryError(err.message || 'Failed to generate AI summary. Please check your connection.');
+    } finally {
+      setSummarizingAi(false);
+    }
+  };
 
   const fetchProblemAndAnswers = async (currentSort = answerSort) => {
     try {
@@ -489,59 +537,170 @@ const ProblemDetails = () => {
                 </span>
               </div>
 
-              {/* Answer Sorting Options */}
-              {answers.length > 0 && (
-                <div className="flex items-center gap-1.5 text-xs">
-                  <span className="text-slate-400 font-semibold">Sort by:</span>
-                  <div className="inline-flex rounded-xl bg-slate-100 p-1">
+              {/* Right Side Header Controls: Sort & AI Summarize Answers */}
+              <div className="flex flex-wrap items-center gap-3">
+                {/* AI Summarize Answers Button */}
+                {answers.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleSummarizeAnswers}
+                    disabled={summarizingAi}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs shadow-xs hover:shadow transition-all duration-200 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+                    title="Generate an AI-powered overview of all community solutions"
+                  >
+                    {summarizingAi ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Summarizing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
+                        <span>✨ Summarize Answers</span>
+                      </>
+                    )}
+                  </button>
+                )}
+
+                {/* Answer Sorting Options */}
+                {answers.length > 0 && (
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <span className="text-slate-400 font-semibold hidden sm:inline">Sort:</span>
+                    <div className="inline-flex rounded-xl bg-slate-100 p-1">
+                      <button
+                        type="button"
+                        onClick={() => setAnswerSort('best_answer')}
+                        className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                          answerSort === 'best_answer'
+                            ? 'bg-white text-indigo-600 shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        ⭐ Best Answer
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAnswerSort('most_helpful')}
+                        className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                          answerSort === 'most_helpful'
+                            ? 'bg-white text-indigo-600 shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        👍 Most Helpful
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAnswerSort('newest')}
+                        className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                          answerSort === 'newest'
+                            ? 'bg-white text-indigo-600 shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        🕒 Newest
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAnswerSort('oldest')}
+                        className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                          answerSort === 'oldest'
+                            ? 'bg-white text-indigo-600 shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        ⌛ Oldest
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* AI Answer Summary Display Card */}
+            {showAiSummaryCard && (
+              <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/70 border border-indigo-200 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-start justify-between gap-3 pb-3 border-b border-indigo-100 mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xs">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-sm font-bold text-slate-900">AI Answer Summary</h4>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                          ✨ AI-generated summary
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        Synthesized from {answers.length} community answer{answers.length > 1 ? 's' : ''}. Does not replace original answers.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
-                      onClick={() => setAnswerSort('best_answer')}
-                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                        answerSort === 'best_answer'
-                          ? 'bg-white text-indigo-600 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
+                      onClick={handleSummarizeAnswers}
+                      disabled={summarizingAi}
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-white/80 transition cursor-pointer"
+                      title="Re-generate summary"
                     >
-                      ⭐ Best Answer
+                      <RefreshCw className={`w-3.5 h-3.5 ${summarizingAi ? 'animate-spin' : ''}`} />
                     </button>
                     <button
                       type="button"
-                      onClick={() => setAnswerSort('most_helpful')}
-                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                        answerSort === 'most_helpful'
-                          ? 'bg-white text-indigo-600 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
+                      onClick={() => setShowAiSummaryCard(false)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white/80 transition cursor-pointer"
+                      title="Close summary"
                     >
-                      👍 Most Helpful
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAnswerSort('newest')}
-                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                        answerSort === 'newest'
-                          ? 'bg-white text-indigo-600 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      🕒 Newest
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAnswerSort('oldest')}
-                      className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                        answerSort === 'oldest'
-                          ? 'bg-white text-indigo-600 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      ⌛ Oldest
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-              )}
-            </div>
+
+                {summarizingAi ? (
+                  <div className="py-6 flex flex-col items-center justify-center gap-2 text-center text-xs text-indigo-700 font-medium">
+                    <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
+                    <span>Analyzing community solutions and generating summary...</span>
+                  </div>
+                ) : aiSummaryError ? (
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between">
+                    <span>{aiSummaryError}</span>
+                    <button
+                      type="button"
+                      onClick={handleSummarizeAnswers}
+                      className="font-bold underline ml-2 cursor-pointer text-rose-900"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-xl bg-white/90 border border-indigo-100/80 shadow-2xs text-xs sm:text-sm text-slate-800 leading-relaxed">
+                      {aiSummary}
+                    </div>
+
+                    {aiKeyTakeaways && aiKeyTakeaways.length > 0 && (
+                      <div className="p-3.5 rounded-xl bg-indigo-50/60 border border-indigo-100">
+                        <span className="text-xs font-bold text-indigo-950 block mb-1.5">
+                          💡 Key Takeaways:
+                        </span>
+                        <ul className="list-disc list-inside space-y-1 text-xs text-indigo-900/90">
+                          {aiKeyTakeaways.map((takeaway, idx) => (
+                            <li key={idx}>{takeaway}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                      <span>💡 AI summaries help understand answers quickly. Always check original code blocks below.</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Answer Form (If Logged In) */}
             {isAuthenticated ? (
