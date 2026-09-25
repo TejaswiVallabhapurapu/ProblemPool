@@ -164,13 +164,22 @@ const getMySavedProblems = async (req, res) => {
 
         const status = computeProblemStatus(prob, answersCount);
 
-        return {
+        const problemData = {
           ...prob,
-          savedAt: rec.createdAt,
           answersCount,
           totalHelpfulVotes,
           status,
           isSaved: true,
+        };
+
+        return {
+          _id: prob._id, // Problem ID
+          savedProblemId: rec._id,
+          user: rec.user,
+          savedAt: rec.createdAt,
+          createdAt: rec.createdAt,
+          problem: problemData,
+          ...problemData,
         };
       })
     );

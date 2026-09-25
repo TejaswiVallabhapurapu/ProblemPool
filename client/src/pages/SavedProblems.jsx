@@ -15,6 +15,15 @@ import { useAuth } from '../context/AuthContext';
 import { getMySavedProblems } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
 
+// Helper to safely extract the problem entity from various API response shapes
+const getProblemObj = (item) => {
+  if (!item) return null;
+  if (item.problem && typeof item.problem === 'object' && item.problem._id) {
+    return item.problem;
+  }
+  return item;
+};
+
 const SavedProblems = () => {
   const { token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -44,7 +53,7 @@ const SavedProblems = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && token) {
       fetchSavedList();
     } else {
       setLoading(false);
@@ -57,8 +66,8 @@ const SavedProblems = () => {
       // Remove from saved items immediately
       setSavedItems((prev) =>
         prev.filter((item) => {
-          const id = item.problem?._id || item.problem;
-          return id !== problemId;
+          const prob = getProblemObj(item);
+          return prob?._id !== problemId && item._id !== problemId;
         })
       );
     }
@@ -67,13 +76,17 @@ const SavedProblems = () => {
   // Filter and Sort saved problems
   const filteredAndSorted = useMemo(() => {
     // Filter out any orphaned/null problem references
-    const validItems = savedItems.filter((item) => Boolean(item && item.problem && item.problem._id));
+    const validItems = savedItems.filter((item) => {
+      const prob = getProblemObj(item);
+      return Boolean(prob && (prob._id || prob.title));
+    });
 
     // Filter by search query
     const term = searchTerm.trim().toLowerCase();
     const filtered = validItems.filter((item) => {
       if (!term) return true;
-      const prob = item.problem;
+      const prob = getProblemObj(item);
+      if (!prob) return false;
       const titleMatch = prob.title && prob.title.toLowerCase().includes(term);
       const descMatch = prob.description && prob.description.toLowerCase().includes(term);
       const catMatch = prob.category && prob.category.toLowerCase().includes(term);
@@ -83,8 +96,8 @@ const SavedProblems = () => {
 
     // Sort by saved date
     return filtered.sort((a, b) => {
-      const dateA = new Date(a.createdAt || 0).getTime();
-      const dateB = new Date(b.createdAt || 0).getTime();
+      const dateA = new Date(a.savedAt || a.createdAt || a.problem?.savedAt || 0).getTime();
+      const dateB = new Date(b.savedAt || b.createdAt || b.problem?.savedAt || 0).getTime();
       if (sortOrder === 'recent') {
         return dateB - dateA;
       } else {
@@ -115,12 +128,24 @@ const SavedProblems = () => {
           </p>
         </div>
 
-        <Link
-          to="/problems"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-xs transition-colors self-start sm:self-auto"
-        >
-          <span>Browse All Problems</span>
-        </Link>
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={fetchSavedList}
+            disabled={loading}
+            title="Refresh saved problems"
+            className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition shadow-xs"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-600' : ''}`} />
+          </button>
+
+          <Link
+            to="/problems"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 shadow-xs transition-colors"
+          >
+            <span>Browse All Problems</span>
+          </Link>
+        </div>
       </div>
 
       {/* Search & Sort Controls Bar */}
@@ -196,7 +221,7 @@ const SavedProblems = () => {
           <button
             type="button"
             onClick={fetchSavedList}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Try Again</span>
@@ -234,7 +259,7 @@ const SavedProblems = () => {
           <button
             type="button"
             onClick={() => setSearchTerm('')}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition cursor-pointer"
           >
             Clear Search
           </button>
@@ -250,20 +275,31 @@ const SavedProblems = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSorted.map((item) => (
-              <div key={item._id} className="flex flex-col">
-                <ProblemCard
-                  problem={item.problem}
-                  isSaved={true}
-                  onToggleSave={handleToggleSave}
-                />
-                {item.createdAt && (
-                  <div className="text-[11px] text-slate-400 font-medium px-2 pt-1.5 flex items-center gap-1">
-                    <span>Saved on {new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                  </div>
-                )}
-              </div>
-            ))}
+            {filteredAndSorted.map((item) => {
+              const prob = getProblemObj(item);
+              const savedDate = item.savedAt || item.createdAt || prob?.savedAt || prob?.createdAt;
+              return (
+                <div key={prob?._id || item.savedProblemId || item._id} className="flex flex-col">
+                  <ProblemCard
+                    problem={prob}
+                    isSaved={true}
+                    onToggleSave={handleToggleSave}
+                  />
+                  {savedDate && (
+                    <div className="text-[11px] text-slate-400 font-medium px-2 pt-1.5 flex items-center gap-1">
+                      <span>
+                        Saved on{' '}
+                        {new Date(savedDate).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </>
       )}
