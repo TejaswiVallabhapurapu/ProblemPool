@@ -141,6 +141,52 @@ const ProblemCard = ({
     }
   };
 
+  const isOwner = Boolean(
+    isAuthenticated &&
+      user &&
+      problem?.createdBy &&
+      ((problem.createdBy?._id && (problem.createdBy._id === user._id || problem.createdBy._id === user.id)) ||
+        problem.createdBy === user._id ||
+        problem.createdBy === user.id ||
+        user.role === 'admin')
+  );
+
+  const handleDeleteClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCancel = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDeleting) {
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleDeleteConfirm = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isDeleting || !token) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteProblem(problem._id, token);
+      setShowDeleteModal(false);
+      if (onDelete) {
+        onDelete(problem._id);
+      }
+    } catch (err) {
+      console.error('Delete problem error:', err);
+      setShowDeleteModal(false);
+      setNotice(err.message || 'Failed to delete problem');
+      setTimeout(() => setNotice(null), 3500);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="group glass-card-3d rounded-3xl border border-slate-200/90 shadow-xs hover:shadow-xl hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between p-6 relative">
       {/* Toast / Notice notification */}
@@ -155,6 +201,71 @@ const ProblemCard = ({
               Login
             </button>
           )}
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={handleDeleteCancel}
+        >
+          <div
+            className="bg-white rounded-3xl border border-slate-200/90 shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={handleDeleteCancel}
+              className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3.5 mb-4">
+              <div className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 shadow-xs">
+                <AlertTriangle className="w-5 h-5 text-rose-500" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Delete Problem Post?</h3>
+                <p className="text-xs text-slate-500">This action is permanent and cannot be undone.</p>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-3.5 mb-5 border border-slate-100">
+              <p className="text-xs font-semibold text-slate-800 line-clamp-2">
+                "{problem.title}"
+              </p>
+              <p className="text-[11px] text-slate-500 mt-1">
+                All associated answers, reviews, and community votes on this post will be removed.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5">
+              <GlassAiButton
+                type="button"
+                onClick={handleDeleteCancel}
+                disabled={isDeleting}
+                size="sm"
+                variant="glass"
+              >
+                Cancel
+              </GlassAiButton>
+
+              <GlassAiButton
+                type="button"
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+                loading={isDeleting}
+                size="sm"
+                variant="danger"
+                icon={<Trash2 className="w-4 h-4" />}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Post'}
+              </GlassAiButton>
+            </div>
+          </div>
         </div>
       )}
 
@@ -257,7 +368,7 @@ const ProblemCard = ({
         </div>
       </div>
 
-      {/* Footer Info: Save Button, Collection Button & View Action */}
+      {/* Footer Info: Save Button, Collection Button, Owner Delete & View Action */}
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
         <div className="flex items-center gap-1.5">
           <GlassAiButton
@@ -291,6 +402,19 @@ const ProblemCard = ({
               variant="glass"
               title="Add or remove from custom collections"
               icon={<FolderPlus className="w-3.5 h-3.5" />}
+            />
+          )}
+
+          {/* Owner Delete Button */}
+          {isOwner && (
+            <GlassAiButton
+              type="button"
+              onClick={handleDeleteClick}
+              disabled={isDeleting}
+              size="xs"
+              variant="danger"
+              title="Delete your problem post"
+              icon={<Trash2 className="w-3.5 h-3.5" />}
             />
           )}
         </div>
