@@ -114,15 +114,15 @@ const Home = () => {
       : feedData.recent;
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-x-hidden bg-[#120F17]">
+    <div className="flex flex-col min-h-screen relative overflow-x-hidden bg-[#080808]">
       {/* ========================================================= */}
       {/* DASHBOARD AEROSHARDS BACKGROUND LAYER */}
       {/* ========================================================= */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <AeroShards
-          backgroundColor="#120F17"
-          shardColor="#896ABD"
-          accentColor="#A855F7"
+          backgroundColor="#080808"
+          shardColor="#2e2e2e"
+          accentColor="#666666"
           placement="full"
           flow="stream"
           material="pearl"
@@ -162,8 +162,8 @@ const Home = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left Column: Typography & CTAs */}
               <div className="lg:col-span-7 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/70 backdrop-blur-md border border-purple-500/30 text-purple-200 text-xs sm:text-sm font-bold mb-6 shadow-xs">
-                  <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] backdrop-blur-md border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-xs">
+                  <Sparkles className="w-4 h-4 text-slate-400 animate-pulse" />
                   <span>Problem-First Innovation Platform</span>
                 </div>
 
@@ -174,7 +174,7 @@ const Home = () => {
                   </span>
                 </h1>
 
-                <p className="text-base sm:text-lg md:text-xl text-purple-100/90 max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed font-medium">
+                <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed font-medium">
                   Discover authentic challenges, collaborate with expert solvers, exchange code and insights, and build verified solutions together.
                 </p>
 
@@ -193,23 +193,23 @@ const Home = () => {
                     to="/create-problem"
                     size="lg"
                     variant="glass"
-                    icon={<PlusCircle className="w-5 h-5 text-purple-400" />}
+                    icon={<PlusCircle className="w-5 h-5 text-slate-400" />}
                   >
                     Post a Problem
                   </GlassAiButton>
                 </div>
 
-                <div className="flex items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-purple-200/80">
+                <div className="flex items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-slate-400">
                   <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <CheckCircle2 className="w-4 h-4 text-white" />
                     <span>Verified Solutions</span>
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400" />
+                    <CheckCircle2 className="w-4 h-4 text-slate-300" />
                     <span>Reputation-Backed</span>
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                    <CheckCircle2 className="w-4 h-4 text-slate-400" />
                     <span>Open Community</span>
                   </span>
                 </div>
@@ -224,38 +224,38 @@ const Home = () => {
         </section>
 
         {/* 2. STATS SECTION (3D Glass Cards) */}
-        <section className="relative z-10 py-12 bg-slate-900/60 backdrop-blur-md border-y border-purple-500/20">
+        <section className="relative z-10 py-12 bg-[#0d0d0d] backdrop-blur-md border-y border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               {/* Stat 1 */}
-              <div className="glass-card-3d p-6 rounded-3xl border border-purple-500/30 bg-slate-900/70 shadow-lg shadow-purple-950/40">
-                <div className="text-4xl sm:text-5xl font-black text-indigo-400 mb-2">
+              <div className="glass-card-3d p-6 rounded-3xl border border-white/10 bg-[#141414] shadow-lg">
+                <div className="text-4xl sm:text-5xl font-black text-white mb-2">
                   {stats.problemsCount}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-purple-200/80 flex items-center justify-center gap-1.5">
-                  <HelpCircle className="w-4 h-4 text-indigo-400" />
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-1.5">
+                  <HelpCircle className="w-4 h-4 text-slate-400" />
                   <span>Problems Posted</span>
                 </div>
               </div>
 
               {/* Stat 2 */}
-              <div className="glass-card-3d p-6 rounded-3xl border border-purple-500/30 bg-slate-900/70 shadow-lg shadow-purple-950/40">
-                <div className="text-4xl sm:text-5xl font-black text-purple-400 mb-2">
+              <div className="glass-card-3d p-6 rounded-3xl border border-white/10 bg-[#141414] shadow-lg">
+                <div className="text-4xl sm:text-5xl font-black text-white mb-2">
                   {stats.categoriesCount}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-purple-200/80 flex items-center justify-center gap-1.5">
-                  <Layers className="w-4 h-4 text-purple-400" />
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-1.5">
+                  <Layers className="w-4 h-4 text-slate-400" />
                   <span>Categories</span>
                 </div>
               </div>
 
               {/* Stat 3 */}
-              <div className="glass-card-3d p-6 rounded-3xl border border-purple-500/30 bg-slate-900/70 shadow-lg shadow-purple-950/40">
+              <div className="glass-card-3d p-6 rounded-3xl border border-white/10 bg-[#141414] shadow-lg">
                 <div className="text-4xl sm:text-5xl font-black text-slate-200 mb-2">
                   {stats.communitiesCount}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-purple-200/80 flex items-center justify-center gap-1.5">
-                  <Users className="w-4 h-4 text-sky-400" />
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-1.5">
+                  <Users className="w-4 h-4 text-slate-400" />
                   <span>Communities</span>
                 </div>
               </div>
@@ -264,19 +264,19 @@ const Home = () => {
         </section>
 
         {/* 3. PERSONALIZED COMMUNITY HOME FEED SECTION */}
-        <section className="relative z-10 py-16 sm:py-20 bg-slate-950/50 backdrop-blur-md border-b border-purple-500/20">
+        <section className="relative z-10 py-16 sm:py-20 bg-[#080808] backdrop-blur-md border-b border-white/10">
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Feed Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950/70 border border-purple-500/30 text-purple-300 text-xs font-bold mb-2.5">
-                  <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
+                  <Sparkles className="w-3.5 h-3.5 text-slate-400" />
                   <span>Smart Community Feed</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
                   Personalized Problem Pool
                 </h2>
-                <p className="text-purple-200/80 text-sm sm:text-base mt-1.5 max-w-2xl">
+                <p className="text-slate-400 text-sm sm:text-base mt-1.5 max-w-2xl">
                   Discover challenges matched to your technical interests, problem solvers you follow, trending discussions, and unanswered questions.
                 </p>
               </div>
@@ -293,7 +293,7 @@ const Home = () => {
             </div>
 
             {/* Feed Navigation Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar border-b border-purple-500/20">
+            <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar border-b border-white/10">
               {[
                 {
                   id: 'recommended',
@@ -328,8 +328,8 @@ const Home = () => {
                     onClick={() => setActiveFeedTab(tab.id)}
                     className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-150 cursor-pointer ${
                       isActive
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-950/50'
-                        : 'text-purple-200 hover:text-white bg-slate-900/80 border border-purple-500/30 hover:border-purple-400'
+                        ? 'bg-[#242424] text-white border border-white/25 shadow-md'
+                        : 'text-slate-400 hover:text-white bg-[#141414] border border-[#242424] hover:border-[#444444]'
                     }`}
                   >
                     <span>{tab.label}</span>
@@ -338,7 +338,7 @@ const Home = () => {
                         className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-full ${
                           isActive
                             ? 'bg-white/20 text-white'
-                            : 'bg-purple-950/80 text-purple-300 border border-purple-500/30'
+                            : 'bg-[#202020] text-slate-300 border border-white/10'
                         }`}
                       >
                         {tab.badge}
@@ -351,24 +351,24 @@ const Home = () => {
 
             {/* Context Banner: Recommendations based on user interests */}
             {activeFeedTab === 'recommended' && feedMeta.hasInterests && (
-              <div className="mb-6 p-3.5 rounded-2xl bg-purple-950/60 border border-purple-500/30 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex flex-wrap items-center gap-1.5 text-purple-200">
-                  <span className="font-bold text-purple-300">🎯 Curated for your interests:</span>
+              <div className="mb-6 p-3.5 rounded-2xl bg-[#141414] border border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex flex-wrap items-center gap-1.5 text-slate-300">
+                  <span className="font-bold text-white">🎯 Curated for your interests:</span>
                   {feedMeta.userInterests.slice(0, 5).map((interest) => (
                     <span
                       key={interest}
-                      className="px-2 py-0.5 rounded-md bg-slate-900 border border-purple-500/40 text-purple-300 font-semibold"
+                      className="px-2 py-0.5 rounded-md bg-[#1c1c1c] border border-white/10 text-slate-300 font-semibold"
                     >
                       {interest}
                     </span>
                   ))}
                   {feedMeta.userInterests.length > 5 && (
-                    <span className="text-purple-400">+{feedMeta.userInterests.length - 5} more</span>
+                    <span className="text-slate-400">+{feedMeta.userInterests.length - 5} more</span>
                   )}
                 </div>
                 <Link
                   to="/profile?tab=overview"
-                  className="text-purple-400 hover:text-purple-300 font-bold underline shrink-0"
+                  className="text-slate-300 hover:text-white font-bold underline shrink-0"
                 >
                   Manage Interests →
                 </Link>
@@ -421,8 +421,8 @@ const Home = () => {
           </div>
         </section>
 
-        {/* 4. HOW PROBLEMMPOOL WORKS — INTERACTIVE KNOWLEDGE FLOW */}
-        <section className="relative z-10 py-20 md:py-24 bg-slate-900/50 backdrop-blur-md border-t border-purple-500/20">
+        {/* 4. HOW PROBLEMPOOL WORKS — INTERACTIVE KNOWLEDGE FLOW */}
+        <section className="relative z-10 py-20 md:py-24 bg-[#0d0d0d] backdrop-blur-md border-t border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <KnowledgeFlowVisual />
           </div>
