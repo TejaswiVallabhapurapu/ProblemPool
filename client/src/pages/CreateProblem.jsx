@@ -6,6 +6,7 @@ import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
+import ParticlesBackground from '../components/ParticlesBackground';
 import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Loader2, Wand2, Lightbulb, Check } from 'lucide-react';
 
 const SUGGESTED_TAGS = [
