@@ -7,7 +7,6 @@ import {
   AlertCircle,
   RefreshCw,
   FolderSearch,
-  Loader2,
   Folder,
   FolderPlus,
   Edit2,
@@ -34,6 +33,7 @@ import ProblemCard from '../components/ProblemCard';
 import AddToCollectionModal from '../components/AddToCollectionModal';
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
+import { Loader, LoaderContainer } from '../components/Loader';
 import EmptyState3D from '../components/EmptyState3D';
 
 // Helper to safely extract the problem entity from various API response shapes
@@ -607,25 +607,7 @@ const SavedProblems = () => {
 
       {/* Main Content Areas: Loading, Error, Empty State, or Grid */}
       {loading || collectionLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 animate-pulse"
-            >
-              <div className="flex justify-between items-center">
-                <div className="h-5 w-24 bg-slate-200 rounded-full" />
-                <div className="h-4 w-16 bg-slate-100 rounded" />
-              </div>
-              <div className="h-6 w-3/4 bg-slate-200 rounded" />
-              <div className="space-y-2">
-                <div className="h-4 w-full bg-slate-100 rounded" />
-                <div className="h-4 w-5/6 bg-slate-100 rounded" />
-              </div>
-              <div className="h-4 w-32 bg-slate-100 rounded" />
-            </div>
-          ))}
-        </div>
+        <LoaderContainer minHeight="40vh" message="Loading saved problems and collections..." />
       ) : error ? (
         <div className="bg-white rounded-2xl border border-rose-200 p-8 text-center max-w-lg mx-auto shadow-sm">
           <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
