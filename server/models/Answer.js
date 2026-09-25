@@ -18,6 +18,23 @@ const answerSchema = new mongoose.Schema(
       required: [true, 'Answer content cannot be empty'],
       trim: true,
     },
+    isTeamAnswer: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+      default: null,
+      index: true,
+    },
+    teamMembers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,

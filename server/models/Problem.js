@@ -44,6 +44,11 @@ const problemSchema = new mongoose.Schema(
       ref: 'Answer',
       default: null,
     },
+    allowTeamUp: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
   },
   {
     timestamps: true,
