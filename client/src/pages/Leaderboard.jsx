@@ -20,6 +20,7 @@ import { getLeaderboard } from '../services/api';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
 import { LoaderContainer } from '../components/Loader';
+import LeaderboardCard from '../components/LeaderboardCard';
 
 const CATEGORIES = [
   { id: 'reputation', label: 'Reputation', icon: Trophy, desc: 'Overall community points' },
@@ -160,165 +161,67 @@ const Leaderboard = () => {
         </div>
       ) : (
         <div className="space-y-10">
-          {/* PODIUM: Top 3 Contributors */}
+          {/* PODIUM: Top 3 Contributors with 3D Flip Cards */}
           {topThree.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-4xl mx-auto pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-5xl mx-auto pt-4">
               {/* 2nd Place (Silver) */}
               {topThree[1] && (
-                <div className="order-2 md:order-1 bg-white rounded-3xl border-2 border-slate-200 p-6 text-center shadow-md relative hover:shadow-xl transition-all duration-200">
-                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-slate-200 border-2 border-white text-slate-700 flex items-center justify-center font-black text-sm shadow-md">
-                    🥈 2
-                  </div>
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-slate-400 to-slate-200 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
-                    {topThree[1].name?.charAt(0).toUpperCase()}
-                  </div>
-                  <Link
-                    to={`/profile/${topThree[1].username || topThree[1]._id}`}
-                    className="font-bold text-slate-900 hover:text-indigo-600 text-base line-clamp-1 mb-0.5 block"
-                  >
-                    {topThree[1].name}
-                  </Link>
-                  {topThree[1].title && (
-                    <p className="text-xs text-slate-400 line-clamp-1 mb-3">
-                      {topThree[1].title}
-                    </p>
-                  )}
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 mt-2">
-                    <div className="text-xl font-black text-slate-900">
-                      {topThree[1].primaryMetric}
-                    </div>
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                      {metricLabel}
-                    </div>
-                  </div>
+                <div className="order-2 md:order-1">
+                  <LeaderboardCard
+                    leader={topThree[1]}
+                    metricLabel={metricLabel}
+                    isPodium={true}
+                    podiumRank={2}
+                  />
                 </div>
               )}
 
               {/* 1st Place (Gold Champion) */}
               {topThree[0] && (
-                <div className="order-1 md:order-2 bg-gradient-to-b from-amber-500/10 via-white to-amber-500/5 rounded-3xl border-2 border-amber-400 p-7 text-center shadow-xl relative scale-105 z-10">
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 border-2 border-white text-amber-950 flex items-center justify-center font-black text-base shadow-lg animate-bounce">
-                    👑 1
-                  </div>
-                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-white font-black text-3xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-amber-200">
-                    {topThree[0].name?.charAt(0).toUpperCase()}
-                  </div>
-                  <Link
-                    to={`/profile/${topThree[0].username || topThree[0]._id}`}
-                    className="font-black text-slate-900 hover:text-indigo-600 text-lg line-clamp-1 mb-0.5 block"
-                  >
-                    {topThree[0].name}
-                  </Link>
-                  {topThree[0].title && (
-                    <p className="text-xs text-slate-500 line-clamp-1 mb-3">
-                      {topThree[0].title}
-                    </p>
-                  )}
-                  <div className="p-3.5 bg-amber-100/70 rounded-2xl border border-amber-300 mt-2">
-                    <div className="text-2xl font-black text-amber-950">
-                      {topThree[0].primaryMetric}
-                    </div>
-                    <div className="text-[10px] font-extrabold text-amber-800 uppercase tracking-wider">
-                      🏆 Champion • {metricLabel}
-                    </div>
-                  </div>
+                <div className="order-1 md:order-2 md:-translate-y-4">
+                  <LeaderboardCard
+                    leader={topThree[0]}
+                    metricLabel={`👑 Champion • ${metricLabel}`}
+                    isPodium={true}
+                    podiumRank={1}
+                  />
                 </div>
               )}
 
               {/* 3rd Place (Bronze) */}
               {topThree[2] && (
-                <div className="order-3 bg-white rounded-3xl border-2 border-amber-600/30 p-6 text-center shadow-md relative hover:shadow-xl transition-all duration-200">
-                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-amber-700/20 border-2 border-white text-amber-900 flex items-center justify-center font-black text-sm shadow-md">
-                    🥉 3
-                  </div>
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-700 to-amber-500 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
-                    {topThree[2].name?.charAt(0).toUpperCase()}
-                  </div>
-                  <Link
-                    to={`/profile/${topThree[2].username || topThree[2]._id}`}
-                    className="font-bold text-slate-900 hover:text-indigo-600 text-base line-clamp-1 mb-0.5 block"
-                  >
-                    {topThree[2].name}
-                  </Link>
-                  {topThree[2].title && (
-                    <p className="text-xs text-slate-400 line-clamp-1 mb-3">
-                      {topThree[2].title}
-                    </p>
-                  )}
-                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 mt-2">
-                    <div className="text-xl font-black text-slate-900">
-                      {topThree[2].primaryMetric}
-                    </div>
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                      {metricLabel}
-                    </div>
-                  </div>
+                <div className="order-3">
+                  <LeaderboardCard
+                    leader={topThree[2]}
+                    metricLabel={metricLabel}
+                    isPodium={true}
+                    podiumRank={3}
+                  />
                 </div>
               )}
             </div>
           )}
 
-          {/* Leaderboard Table (Ranks 4+) */}
+          {/* Remaining Leaders (Ranks 4+) in 3D Cards Grid */}
           {remainingLeaders.length > 0 && (
-            <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                <h3 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-indigo-600" />
+            <div className="space-y-6 pt-6">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-indigo-600" />
                   <span>Community Rankings (Ranks 4 – {leaders.length})</span>
                 </h3>
                 <span className="text-xs font-semibold text-slate-400">
-                  Updated in real-time
+                  Interactive 3D Cards
                 </span>
               </div>
 
-              <div className="divide-y divide-slate-100">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {remainingLeaders.map((lead) => (
-                  <div
+                  <LeaderboardCard
                     key={lead._id}
-                    className="p-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors"
-                  >
-                    {/* Rank & User Info */}
-                    <div className="flex items-center gap-4 min-w-0">
-                      <span className="w-8 text-center font-black text-sm text-slate-400">
-                        #{lead.rank}
-                      </span>
-
-                      <div className="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold text-sm flex items-center justify-center shrink-0">
-                        {lead.name?.charAt(0).toUpperCase()}
-                      </div>
-
-                      <div className="min-w-0">
-                        <Link
-                          to={`/profile/${lead.username || lead._id}`}
-                          className="font-bold text-sm text-slate-900 hover:text-indigo-600 truncate block"
-                        >
-                          {lead.name}
-                        </Link>
-                        <div className="flex items-center gap-2 text-xs text-slate-400 truncate">
-                          {lead.username && <span>@{lead.username}</span>}
-                          {lead.location && (
-                            <>
-                              <span>•</span>
-                              <span className="flex items-center gap-0.5">
-                                <MapPin className="w-3 h-3" />
-                                {lead.location}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Metric Highlight */}
-                    <div className="text-right shrink-0">
-                      <div className="font-black text-base text-slate-900">
-                        {lead.primaryMetric}
-                      </div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                        {metricLabel}
-                      </div>
-                    </div>
-                  </div>
+                    leader={lead}
+                    metricLabel={metricLabel}
+                  />
                 ))}
               </div>
             </div>

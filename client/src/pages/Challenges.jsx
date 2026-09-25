@@ -43,6 +43,7 @@ import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
 import EmptyState3D from '../components/EmptyState3D';
+import ChallengeCard from '../components/ChallengeCard';
 
 // 6 Core Standard Challenges
 const CORE_CHALLENGES = [
@@ -611,106 +612,13 @@ const Challenges = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {filteredChallenges.map((challenge) => {
             const stats = getChallengeStats(challenge);
-            const diffStyle =
-              DIFFICULTY_STYLES[challenge.difficulty] ||
-              'bg-slate-50 text-slate-700 border-slate-200';
-
             return (
-              <div
+              <ChallengeCard
                 key={challenge.id}
-                className="glass-card-3d rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
-              >
-                <div className="p-6 sm:p-7 space-y-4">
-                  {/* Top Metadata: Category & Difficulty */}
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                      {challenge.category}
-                    </span>
-                    <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${diffStyle}`}
-                    >
-                      {challenge.difficulty}
-                    </span>
-                  </div>
-
-                  {/* Title & Description */}
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors leading-snug mb-2">
-                      {challenge.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">
-                      {challenge.description}
-                    </p>
-                  </div>
-
-                  {/* Challenge Specs: Problems Count & Duration */}
-                  <div className="pt-2 flex items-center justify-between text-xs font-semibold text-slate-500 border-t border-slate-100">
-                    <span className="flex items-center gap-1.5">
-                      <Code2 className="w-4 h-4 text-indigo-500" />
-                      <span>{challenge.problemsCount} Problems</span>
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-slate-400" />
-                      <span>{challenge.duration}</span>
-                    </span>
-                  </div>
-
-                  {/* Real User Progress Bar (When Started) */}
-                  {stats.status !== 'Not Started' ? (
-                    <div className="space-y-1.5 pt-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-700 flex items-center gap-1">
-                          {stats.status === 'Completed' ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                          ) : (
-                            <Clock className="w-3.5 h-3.5 text-amber-500" />
-                          )}
-                          <span>{stats.status}</span>
-                        </span>
-                        <span className="font-extrabold text-slate-900">
-                          {stats.completedCount} / {stats.total} ({stats.percent}%)
-                        </span>
-                      </div>
-                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-300 ${
-                            stats.status === 'Completed' ? 'bg-emerald-500' : 'bg-indigo-600'
-                          }`}
-                          style={{ width: `${stats.percent}%` }}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="pt-1 flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-slate-300" />
-                      <span>Status: Not Started</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Card Action Footer */}
-                <div className="p-4 sm:p-5 bg-slate-50/60 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs font-bold text-indigo-700 flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                    <span>+{challenge.rewardPoints} Rep</span>
-                  </span>
-
-                  <GlassAiButton
-                    type="button"
-                    onClick={() => setActiveModalChallenge(challenge)}
-                    size="xs"
-                    variant={stats.status === 'Completed' ? "success" : "primary"}
-                    icon={<ArrowRight className="w-3.5 h-3.5" />}
-                    iconPosition="right"
-                  >
-                    {stats.status === 'Completed'
-                      ? 'Review Challenge'
-                      : stats.status === 'In Progress'
-                      ? 'Continue Challenge'
-                      : 'Start Challenge'}
-                  </GlassAiButton>
-                </div>
-              </div>
+                challenge={challenge}
+                stats={stats}
+                onOpenDetails={setActiveModalChallenge}
+              />
             );
           })}
         </div>
