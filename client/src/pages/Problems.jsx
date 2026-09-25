@@ -1,23 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import {
-  Search,
-  PlusCircle,
-  AlertCircle,
-  RefreshCw,
-  FolderSearch,
-  Filter,
-  ArrowUpDown,
-  X,
-  Tag as TagIcon,
-  Sparkles,
-  Layers,
-  CheckCircle2,
-  Bookmark,
-  MessageSquare,
-  Eye,
-  SlidersHorizontal,
-} from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { getProblems, getPopularTags, getMySavedProblemIds } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ProblemCard from '../components/ProblemCard';
@@ -27,21 +9,21 @@ import EmptyState3D from '../components/EmptyState3D';
 import { LoaderContainer } from '../components/Loader';
 
 const STATUS_OPTIONS = [
-  { value: 'all', label: 'All Problems', icon: Layers },
-  { value: 'unanswered', label: '🟡 Unanswered', icon: MessageSquare },
-  { value: 'answered', label: '🟢 Answered', icon: MessageSquare },
-  { value: 'solved', label: '🔵 Solved', icon: CheckCircle2 },
-  { value: 'my_problems', label: '👤 My Problems', icon: Layers, authRequired: true },
-  { value: 'saved_problems', label: '🔖 Saved Problems', icon: Bookmark, authRequired: true },
+  { value: 'all', label: 'All Problems' },
+  { value: 'unanswered', label: 'Unanswered' },
+  { value: 'answered', label: 'Answered' },
+  { value: 'solved', label: 'Solved' },
+  { value: 'my_problems', label: 'My Problems', authRequired: true },
+  { value: 'saved_problems', label: 'Saved Problems', authRequired: true },
 ];
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: '🕒 Newest' },
-  { value: 'oldest', label: '⌛ Oldest' },
-  { value: 'most_viewed', label: '👀 Most Viewed' },
-  { value: 'most_answered', label: '💬 Most Answered' },
-  { value: 'most_helpful', label: '👍 Most Helpful' },
-  { value: 'most_saved', label: '🔖 Most Saved' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'most_viewed', label: 'Most Viewed' },
+  { value: 'most_answered', label: 'Most Answered' },
+  { value: 'most_helpful', label: 'Most Helpful' },
+  { value: 'most_saved', label: 'Most Saved' },
 ];
 
 const Problems = () => {
@@ -199,352 +181,329 @@ const Problems = () => {
   return (
     <div className="relative min-h-screen">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Real-world Problem Pool</span>
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-300 text-xs font-mono mb-2">
+              <span>Real-world Problem Pool</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+              Explore Problems
+            </h1>
+            <p className="text-neutral-400 mt-2 text-sm sm:text-base max-w-2xl">
+              Search across titles, descriptions, categories, tags, and authors to find real-world challenges to solve.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Explore Problems
-          </h1>
-          <p className="text-slate-300 mt-2 text-base max-w-2xl">
-            Search across titles, descriptions, categories, tags, and authors to find real-world challenges to solve.
-          </p>
+
+          <GlassAiButton
+            to="/create-problem"
+            size="md"
+            variant="primary"
+            className="self-start md:self-auto shrink-0"
+          >
+            Post a Problem
+          </GlassAiButton>
         </div>
 
-        <GlassAiButton
-          to="/create-problem"
-          size="md"
-          variant="primary"
-          icon={<PlusCircle className="w-4 h-4" />}
-          className="self-start md:self-auto shrink-0"
-        >
-          Post a Problem
-        </GlassAiButton>
-      </div>
-
-      {/* ========================================================= */}
-      {/* SEARCH & FILTERS CONTROL BAR */}
-      {/* ========================================================= */}
-      <div className="glass-card-3d rounded-3xl p-6 border border-white/10 shadow-sm mb-8 space-y-5">
-        {/* 1. Main Search Bar */}
-        <div className="relative flex items-center">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search problems by title, description, tags, category, or author username..."
-            className="w-full pl-12 pr-24 py-3.5 rounded-2xl border border-white/10 focus:border-indigo-500 focus:ring-4 focus:ring-white/10 text-white placeholder:text-slate-400 text-sm outline-none transition bg-[#181818] focus:bg-[#141414]/90 backdrop-blur-md"
-          />
-          {searchTerm && (
-            <button
-              type="button"
-              onClick={handleClearSearch}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-100 bg-[#202020] hover:bg-slate-200 px-2.5 py-1.5 rounded-xl font-medium transition flex items-center gap-1 cursor-pointer"
-            >
-              <X className="w-3.5 h-3.5" />
-              <span>Clear</span>
-            </button>
-          )}
-        </div>
-
-        {/* 2. Dropdown Filters & Sorters Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-          {/* Status Filter Dropdown */}
-          <div className="relative">
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1">
-              <Filter className="w-3 h-3" />
-              <span>Status Filter</span>
-            </label>
-            <div className="relative">
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-100 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-white/10 cursor-pointer pr-9 transition"
+        {/* ========================================================= */}
+        {/* SEARCH & FILTERS CONTROL BAR */}
+        {/* ========================================================= */}
+        <div className="rounded-3xl p-6 bg-[#121212]/80 backdrop-blur-md border border-white/10 shadow-sm mb-8 space-y-5">
+          {/* 1. Main Search Bar */}
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search problems by title, description, tags, category, or author username..."
+              className="w-full px-4 py-3.5 rounded-2xl border border-white/10 focus:border-white/30 text-white placeholder:text-neutral-500 text-sm outline-none transition bg-white/5"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-neutral-400 hover:text-white bg-white/10 hover:bg-white/20 px-2.5 py-1.5 rounded-xl font-medium transition cursor-pointer"
               >
-                {STATUS_OPTIONS.map((opt) => (
-                  <option
-                    key={opt.value}
-                    value={opt.value}
-                    disabled={opt.authRequired && !isAuthenticated}
-                  >
-                    {opt.label} {opt.authRequired && !isAuthenticated ? '(Sign In required)' : ''}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-              </div>
-            </div>
+                Clear
+              </button>
+            )}
           </div>
 
-          {/* Sort By Dropdown */}
-          <div className="relative">
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1">
-              <ArrowUpDown className="w-3 h-3" />
-              <span>Sort Order</span>
-            </label>
+          {/* 2. Dropdown Filters & Sorters Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+            {/* Status Filter Dropdown */}
             <div className="relative">
-              <select
-                value={selectedSort}
-                onChange={(e) => setSelectedSort(e.target.value)}
-                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-100 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-white/10 cursor-pointer pr-9 transition"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                <ArrowUpDown className="w-3.5 h-3.5" />
-              </div>
-            </div>
-          </div>
-
-          {/* Category Dropdown (for quick mobile selection) */}
-          <div className="relative sm:col-span-2 lg:col-span-2">
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-              <span className="flex items-center gap-1">
-                <Layers className="w-3 h-3" />
-                <span>Selected Category</span>
-              </span>
-              {selectedCategory !== 'All' && (
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategory('All')}
-                  className="text-white hover:text-indigo-800 text-[10px] font-semibold lowercase underline"
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5">
+                Status Filter
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-xs font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
                 >
-                  Reset category
-                </button>
-              )}
-            </label>
-            <div className="relative">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-100 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-white/10 cursor-pointer pr-9 transition"
-              >
-                <option value="All">🌐 All Categories</option>
-                {POPULAR_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                <Layers className="w-3.5 h-3.5" />
+                  {STATUS_OPTIONS.map((opt) => (
+                    <option
+                      key={opt.value}
+                      value={opt.value}
+                      disabled={opt.authRequired && !isAuthenticated}
+                    >
+                      {opt.label} {opt.authRequired && !isAuthenticated ? '(Sign In required)' : ''}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* 3. Category Filter Horizontal Scroll Pills */}
-        <div className="pt-2 border-t border-white/10">
-          <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
-            <span>Browse by Category</span>
-          </div>
-          <CategoryFilter
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-          />
-        </div>
-
-        {/* 4. Trending / Popular Tags Ribbon */}
-        {popularTags.length > 0 && (
-          <div className="pt-3 border-t border-white/10 flex items-center gap-2 flex-wrap">
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 shrink-0">
-              <TagIcon className="w-3 h-3" />
-              <span>Trending Tags:</span>
+            {/* Sort By Dropdown */}
+            <div className="relative">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5">
+                Sort Order
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedSort}
+                  onChange={(e) => setSelectedSort(e.target.value)}
+                  className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-xs font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
+                >
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-1.5">
-              {popularTags.map((item) => {
-                const isSelected = selectedTag.toLowerCase() === item.tag.toLowerCase();
-                return (
-                  <button
-                    key={item.tag}
-                    type="button"
-                    onClick={() => setSelectedTag(isSelected ? '' : item.tag)}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition border cursor-pointer ${
-                      isSelected
-                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                        : 'bg-[#181818] text-slate-300 border-white/10 hover:border-indigo-300 hover:bg-white/10 hover:text-slate-200'
-                    }`}
-                  >
-                    <span>#{item.tag}</span>
-                    <span className={`text-[10px] opacity-75 ${isSelected ? 'text-white' : 'text-slate-400'}`}>
-                      ({item.count})
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
-        {/* 5. Active Filter Badges Bar */}
-        {hasActiveFilters && (
-          <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap bg-[#181818] p-3 rounded-2xl">
-            <div className="flex items-center gap-2 flex-wrap text-xs">
-              <span className="font-bold text-slate-500">Active Filters:</span>
-
-              {debouncedSearch && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141414]/90 backdrop-blur-md border border-white/10 text-slate-100 font-medium shadow-2xs">
-                  <span>Query: "{debouncedSearch}"</span>
-                  <button
-                    type="button"
-                    onClick={handleClearSearch}
-                    className="hover:text-rose-400 cursor-pointer ml-1"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-
-              {selectedCategory !== 'All' && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20 text-indigo-800 font-medium">
-                  <span>Category: {selectedCategory}</span>
+            {/* Category Dropdown (for quick mobile selection) */}
+            <div className="relative sm:col-span-2 lg:col-span-2">
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center justify-between">
+                <span>Selected Category</span>
+                {selectedCategory !== 'All' && (
                   <button
                     type="button"
                     onClick={() => setSelectedCategory('All')}
-                    className="hover:text-rose-400 cursor-pointer ml-1"
+                    className="text-neutral-400 hover:text-white text-[10px] font-mono underline"
                   >
-                    <X className="w-3 h-3" />
+                    Reset category
                   </button>
-                </span>
-              )}
-
-              {selectedTag && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-medium">
-                  <span>Tag: #{selectedTag}</span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedTag('')}
-                    className="hover:text-indigo-200 cursor-pointer ml-1"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-
-              {selectedStatus !== 'all' && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141414]/90 backdrop-blur-md border border-white/10 text-slate-100 font-medium shadow-2xs">
-                  <span>
-                    Status: {STATUS_OPTIONS.find((s) => s.value === selectedStatus)?.label || selectedStatus}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedStatus('all')}
-                    className="hover:text-rose-400 cursor-pointer ml-1"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
-
-              {selectedSort !== 'newest' && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141414]/90 backdrop-blur-md border border-white/10 text-slate-100 font-medium shadow-2xs">
-                  <span>
-                    Sort: {SORT_OPTIONS.find((s) => s.value === selectedSort)?.label || selectedSort}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedSort('newest')}
-                    className="hover:text-rose-400 cursor-pointer ml-1"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
+                )}
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-xs font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
+                >
+                  <option value="All">All Categories</option>
+                  {POPULAR_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
+          </div>
 
-            <button
+          {/* 3. Category Filter Horizontal Scroll Pills */}
+          <div className="pt-2 border-t border-white/10">
+            <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2.5">
+              Browse by Category
+            </div>
+            <CategoryFilter
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+            />
+          </div>
+
+          {/* 4. Trending / Popular Tags Ribbon */}
+          {popularTags.length > 0 && (
+            <div className="pt-3 border-t border-white/10 flex items-center gap-2 flex-wrap">
+              <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider shrink-0">
+                Trending Tags:
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {popularTags.map((item) => {
+                  const isSelected = selectedTag.toLowerCase() === item.tag.toLowerCase();
+                  return (
+                    <button
+                      key={item.tag}
+                      type="button"
+                      onClick={() => setSelectedTag(isSelected ? '' : item.tag)}
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono transition border cursor-pointer ${
+                        isSelected
+                          ? 'bg-white text-black border-white font-semibold'
+                          : 'bg-white/5 text-neutral-300 border-white/10 hover:border-white/20 hover:text-white'
+                      }`}
+                    >
+                      <span>#{item.tag}</span>
+                      <span className={`text-[10px] ${isSelected ? 'text-black/70' : 'text-neutral-500'}`}>
+                        ({item.count})
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 5. Active Filter Badges Bar */}
+          {hasActiveFilters && (
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap bg-white/5 p-3 rounded-2xl">
+              <div className="flex items-center gap-2 flex-wrap text-xs">
+                <span className="font-mono text-neutral-400">Active Filters:</span>
+
+                {debouncedSearch && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-white font-medium">
+                    <span>Query: "{debouncedSearch}"</span>
+                    <button
+                      type="button"
+                      onClick={handleClearSearch}
+                      className="hover:text-red-400 cursor-pointer ml-1 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+
+                {selectedCategory !== 'All' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-white font-medium">
+                    <span>Category: {selectedCategory}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory('All')}
+                      className="hover:text-red-400 cursor-pointer ml-1 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+
+                {selectedTag && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white text-black font-semibold">
+                    <span>Tag: #{selectedTag}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedTag('')}
+                      className="hover:opacity-70 cursor-pointer ml-1 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+
+                {selectedStatus !== 'all' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-white font-medium">
+                    <span>
+                      Status: {STATUS_OPTIONS.find((s) => s.value === selectedStatus)?.label || selectedStatus}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStatus('all')}
+                      className="hover:text-red-400 cursor-pointer ml-1 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+
+                {selectedSort !== 'newest' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-white/10 text-white font-medium">
+                    <span>
+                      Sort: {SORT_OPTIONS.find((s) => s.value === selectedSort)?.label || selectedSort}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSort('newest')}
+                      className="hover:text-red-400 cursor-pointer ml-1 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleClearAllFilters}
+                className="text-xs font-medium text-neutral-400 hover:text-white underline cursor-pointer ml-auto"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ========================================================= */}
+        {/* SEARCH RESULTS HEADER */}
+        {/* ========================================================= */}
+        <div className="flex items-center justify-between text-xs font-medium text-neutral-400 mb-6 px-1">
+          <div className="flex items-center gap-2">
+            {debouncedSearch ? (
+              <span>
+                Search Results for <strong className="text-white">"{debouncedSearch}"</strong>
+              </span>
+            ) : selectedTag ? (
+              <span>
+                Problems tagged with <strong className="text-white">#{selectedTag}</strong>
+              </span>
+            ) : (
+              <span>Showing all matching problems</span>
+            )}
+            <span className="px-2 py-0.5 rounded-full bg-white/5 text-neutral-300 border border-white/10 font-mono">
+              {totalCount} {totalCount === 1 ? 'problem found' : 'problems found'}
+            </span>
+          </div>
+        </div>
+
+        {/* ========================================================= */}
+        {/* MAIN CONTENT: SKELETON / ERROR / EMPTY / PROBLEM CARDS */}
+        {/* ========================================================= */}
+        {loading ? (
+          <LoaderContainer minHeight="40vh" message="Loading problems..." />
+        ) : error ? (
+          <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-red-500/20 p-10 text-center max-w-lg mx-auto shadow-sm">
+            <h2 className="text-lg font-bold text-white mb-2">Failed to Load Problems</h2>
+            <p className="text-sm text-neutral-400 mb-6">{error}</p>
+            <GlassAiButton
               type="button"
-              onClick={handleClearAllFilters}
-              className="text-xs font-semibold text-rose-400 hover:text-rose-300 underline cursor-pointer ml-auto"
+              onClick={fetchProblemsList}
+              variant="primary"
+              size="md"
             >
-              Clear All Filters
-            </button>
+              Try Again
+            </GlassAiButton>
+          </div>
+        ) : problems.length === 0 ? (
+          <div className="py-8">
+            <EmptyState3D
+              type="problems"
+              title="No Problems Found"
+              description={
+                hasActiveFilters
+                  ? 'No problems match your current search criteria or active filters. Try clearing your filters or searching for different keywords.'
+                  : 'There are currently no problems posted. Be the first to share a real-world problem!'
+              }
+              actionLabel={hasActiveFilters ? 'Clear All Filters' : 'Post a Problem'}
+              actionOnClick={hasActiveFilters ? handleClearAllFilters : undefined}
+              actionTo={hasActiveFilters ? undefined : '/create-problem'}
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {problems.map((problem) => (
+              <ProblemCard
+                key={problem._id}
+                problem={problem}
+                isSaved={savedIds.has(problem._id)}
+                onToggleSave={handleToggleSave}
+                onTagClick={handleTagClick}
+                onDelete={(deletedId) => setProblems((prev) => prev.filter((p) => p._id !== deletedId))}
+              />
+            ))}
           </div>
         )}
-      </div>
-
-      {/* ========================================================= */}
-      {/* SEARCH RESULTS HEADER */}
-      {/* ========================================================= */}
-      <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-6 px-1">
-        <div className="flex items-center gap-2">
-          {debouncedSearch ? (
-            <span>
-              Search Results for <strong className="text-white">"{debouncedSearch}"</strong>
-            </span>
-          ) : selectedTag ? (
-            <span>
-              Problems tagged with <strong className="text-white">#{selectedTag}</strong>
-            </span>
-          ) : (
-            <span>Showing all matching problems</span>
-          )}
-          <span className="px-2 py-0.5 rounded-full bg-[#202020] text-slate-300 border border-white/10">
-            {totalCount} {totalCount === 1 ? 'problem found' : 'problems found'}
-          </span>
-        </div>
-      </div>
-
-      {/* ========================================================= */}
-      {/* MAIN CONTENT: SKELETON / ERROR / EMPTY / PROBLEM CARDS */}
-      {/* ========================================================= */}
-      {loading ? (
-        <LoaderContainer minHeight="40vh" message="Loading problems..." />
-      ) : error ? (
-        <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-rose-500/20 p-10 text-center max-w-lg mx-auto shadow-sm">
-          <div className="w-12 h-12 rounded-full bg-rose-950/40 text-rose-400 flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-6 h-6" />
-          </div>
-          <h2 className="text-lg font-bold text-white mb-2">Failed to Load Problems</h2>
-          <p className="text-sm text-slate-300 mb-6">{error}</p>
-          <GlassAiButton
-            type="button"
-            onClick={fetchProblemsList}
-            variant="primary"
-            size="md"
-            icon={<RefreshCw className="w-4 h-4" />}
-          >
-            Try Again
-          </GlassAiButton>
-        </div>
-      ) : problems.length === 0 ? (
-        <div className="py-8">
-          <EmptyState3D
-            type="problems"
-            title="No Problems Found"
-            description={
-              hasActiveFilters
-                ? 'No problems match your current search criteria or active filters. Try clearing your filters or searching for different keywords.'
-                : 'There are currently no problems posted. Be the first to share a real-world problem!'
-            }
-            actionLabel={hasActiveFilters ? 'Clear All Filters' : 'Post a Problem'}
-            actionOnClick={hasActiveFilters ? handleClearAllFilters : undefined}
-            actionTo={hasActiveFilters ? undefined : '/create-problem'}
-          />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {problems.map((problem) => (
-            <ProblemCard
-              key={problem._id}
-              problem={problem}
-              isSaved={savedIds.has(problem._id)}
-              onToggleSave={handleToggleSave}
-              onTagClick={handleTagClick}
-              onDelete={(deletedId) => setProblems((prev) => prev.filter((p) => p._id !== deletedId))}
-            />
-          ))}
-        </div>
-      )}
       </div>
     </div>
   );
