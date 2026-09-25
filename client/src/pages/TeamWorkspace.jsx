@@ -19,31 +19,6 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
 import { Loader, LoaderContainer } from '../components/Loader';
-import {
-  Users,
-  MessageSquare,
-  CheckSquare,
-  FileCode2,
-  Crown,
-  User,
-  ArrowLeft,
-  Send,
-  Plus,
-  Trash2,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  Sparkles,
-  ArrowRight,
-  LogOut,
-  UserMinus,
-  RefreshCw,
-  Clock,
-  Shield,
-  Layers,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
 
 const formatTime = (dateString) => {
   if (!dateString) return '';
@@ -345,17 +320,17 @@ const TeamWorkspace = () => {
       <div className="min-h-screen relative flex items-center justify-center px-4">
         <div className="relative z-10 max-w-md w-full p-8 rounded-3xl bg-[#141414] border border-white/10 text-center shadow-2xl">
           <div className="w-16 h-16 rounded-2xl bg-[#1e1e1e] border border-white/10 flex items-center justify-center mx-auto mb-4 text-white">
-            <Shield className="w-8 h-8 text-slate-300" />
+            
           </div>
           <h2 className="text-xl font-bold text-white mb-2">Workspace Access Denied</h2>
-          <p className="text-sm text-slate-400 mb-6 leading-relaxed">
+          <p className="text-sm text-neutral-400 mb-6 leading-relaxed">
             {error || 'You are not a member of this team or this team does not exist.'}
           </p>
           <GlassAiButton
             to={problemId ? `/problems/${problemId}` : '/problems'}
             variant="primary"
             size="md"
-            icon={<ArrowLeft className="w-4 h-4" />}
+            icon={}
           >
             Back to Problem
           </GlassAiButton>
@@ -376,9 +351,9 @@ const TeamWorkspace = () => {
         <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
           <Link
             to={`/problems/${problemData._id || problemId}`}
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition-colors group"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-neutral-400 hover:text-white transition-colors group"
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            
             <span>Problem: <strong className="text-slate-200 font-bold">{problemData.title || 'View Problem'}</strong></span>
           </Link>
 
@@ -388,9 +363,9 @@ const TeamWorkspace = () => {
               onClick={() => setShowProblemContext((prev) => !prev)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#181818] hover:bg-[#222222] border border-white/10 text-xs font-semibold text-slate-300 hover:text-white transition cursor-pointer"
             >
-              <HelpCircle className="w-3.5 h-3.5" />
+              
               <span>{showProblemContext ? 'Hide Problem Details' : 'View Problem Details'}</span>
-              {showProblemContext ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              {showProblemContext ?  : }
             </button>
 
             {!isSubmitted && (
@@ -399,7 +374,7 @@ const TeamWorkspace = () => {
                 onClick={() => setShowLeaveModal(true)}
                 size="xs"
                 variant="glass"
-                icon={<LogOut className="w-3.5 h-3.5 text-slate-400" />}
+                icon={}
               >
                 Leave Team
               </GlassAiButton>
@@ -411,7 +386,7 @@ const TeamWorkspace = () => {
         {showProblemContext && (
           <div className="mb-6 p-6 rounded-3xl bg-[#121212]/95 border border-white/10 backdrop-blur-md animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between gap-2 mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Problem Objective</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">Problem Objective</span>
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1e1e1e] border border-white/10 text-slate-300 font-semibold">
                 {problemData.category || 'General'}
               </span>
@@ -429,7 +404,7 @@ const TeamWorkspace = () => {
             <div>
               <div className="flex items-center gap-3 mb-2 flex-wrap">
                 <div className="w-10 h-10 rounded-2xl bg-[#1e1e1e] border border-white/15 flex items-center justify-center text-xl shadow-md">
-                  🤝
+                  
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                   {team.name}
@@ -448,7 +423,7 @@ const TeamWorkspace = () => {
                 </span>
               </div>
               {team.description && (
-                <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+                <p className="text-sm text-neutral-400 max-w-2xl leading-relaxed">
                   {team.description}
                 </p>
               )}
@@ -462,7 +437,7 @@ const TeamWorkspace = () => {
                   onClick={() => setShowSubmitModal(true)}
                   size="md"
                   variant="primary"
-                  icon={<Sparkles className="w-4 h-4 text-slate-200" />}
+                  icon={}
                 >
                   Submit Team Answer
                 </GlassAiButton>
@@ -470,7 +445,7 @@ const TeamWorkspace = () => {
 
               {isSubmitted && (
                 <div className="p-3 rounded-2xl bg-[#1b1b1b] border border-white/15 flex items-center gap-2.5 text-xs text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-white" />
+                  
                   <span>Team solution has been submitted for community review!</span>
                 </div>
               )}
@@ -480,7 +455,7 @@ const TeamWorkspace = () => {
           {/* Members Bar */}
           <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider mr-2">
                 Team Members ({team.members?.length || 0}/5):
               </span>
               {team.members?.map((member) => {
@@ -498,7 +473,7 @@ const TeamWorkspace = () => {
                     <span>{member.name} {isSelf && '(You)'}</span>
                     {isMemberLeader && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-[#2c2c2c] text-slate-200 border border-white/15">
-                        <Crown className="w-2.5 h-2.5 text-slate-300" />
+                        
                         Leader
                       </span>
                     )}
@@ -509,10 +484,10 @@ const TeamWorkspace = () => {
                         <button
                           type="button"
                           onClick={() => handleRemoveMember(member._id, member.name)}
-                          className="text-slate-400 hover:text-rose-400 p-0.5 transition cursor-pointer"
+                          className="text-neutral-400 hover:text-rose-400 p-0.5 transition cursor-pointer"
                           title={`Remove ${member.name}`}
                         >
-                          <UserMinus className="w-3.5 h-3.5" />
+                          
                         </button>
                       </div>
                     )}
@@ -525,7 +500,7 @@ const TeamWorkspace = () => {
               <button
                 type="button"
                 onClick={() => setShowTransferModal(true)}
-                className="text-xs text-slate-400 hover:text-white underline font-semibold cursor-pointer"
+                className="text-xs text-neutral-400 hover:text-white underline font-semibold cursor-pointer"
               >
                 Transfer Leadership
               </button>
@@ -541,10 +516,10 @@ const TeamWorkspace = () => {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'discussion'
                 ? 'bg-[#222222] text-white shadow-md border border-white/15'
-                : 'text-slate-400 hover:text-white hover:bg-[#181818]'
+                : 'text-neutral-400 hover:text-white hover:bg-[#181818]'
             }`}
           >
-            <MessageSquare className="w-4 h-4" />
+            
             <span>Discussion</span>
             {messages.length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full bg-[#121212] text-[10px] text-slate-300">
@@ -559,10 +534,10 @@ const TeamWorkspace = () => {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'tasks'
                 ? 'bg-[#222222] text-white shadow-md border border-white/15'
-                : 'text-slate-400 hover:text-white hover:bg-[#181818]'
+                : 'text-neutral-400 hover:text-white hover:bg-[#181818]'
             }`}
           >
-            <CheckSquare className="w-4 h-4" />
+            
             <span>Tasks</span>
             {tasks.length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full bg-[#121212] text-[10px] text-slate-300">
@@ -577,10 +552,10 @@ const TeamWorkspace = () => {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'solution'
                 ? 'bg-[#222222] text-white shadow-md border border-white/15'
-                : 'text-slate-400 hover:text-white hover:bg-[#181818]'
+                : 'text-neutral-400 hover:text-white hover:bg-[#181818]'
             }`}
           >
-            <FileCode2 className="w-4 h-4" />
+            
             <span>Shared Solution</span>
           </button>
         </div>
@@ -592,18 +567,18 @@ const TeamWorkspace = () => {
           <div className="rounded-3xl bg-[#141414] border border-white/10 shadow-xl overflow-hidden flex flex-col h-[600px]">
             <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-[#181818]">
               <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-slate-300" />
+                
                 <h3 className="text-sm font-bold text-white">Team Chat & Strategy</h3>
               </div>
-              <span className="text-xs text-slate-400">Private to team members</span>
+              <span className="text-xs text-neutral-400">Private to team members</span>
             </div>
 
             {/* Messages Stream */}
             <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
               {messages.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
+                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-neutral-400">
                   <div className="w-12 h-12 rounded-2xl bg-[#1c1c1c] border border-white/10 flex items-center justify-center mx-auto mb-3 text-white">
-                    💬
+                    
                   </div>
                   <h4 className="text-base font-bold text-white mb-1">No discussion yet</h4>
                   <p className="text-xs max-w-xs leading-relaxed">
@@ -629,11 +604,11 @@ const TeamWorkspace = () => {
                         <div className={`flex items-center gap-2 mb-1 ${isMyMsg ? 'justify-end' : ''}`}>
                           <span className="text-xs font-bold text-slate-300">{senderName}</span>
                           {isLeaderMsg && (
-                            <span className="text-[10px] text-slate-400 font-bold px-1.5 rounded bg-[#1e1e1e] border border-white/10">
+                            <span className="text-[10px] text-neutral-400 font-bold px-1.5 rounded bg-[#1e1e1e] border border-white/10">
                               Leader
                             </span>
                           )}
-                          <span className="text-[10px] text-slate-500">{formatTime(msg.createdAt)}</span>
+                          <span className="text-[10px] text-neutral-400">{formatTime(msg.createdAt)}</span>
                         </div>
 
                         <div
@@ -669,7 +644,7 @@ const TeamWorkspace = () => {
                 loading={sendingMsg}
                 size="sm"
                 variant="primary"
-                icon={<Send className="w-4 h-4" />}
+                icon={}
               >
                 Send
               </GlassAiButton>
@@ -688,10 +663,10 @@ const TeamWorkspace = () => {
                 <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
                   <div>
                     <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <CheckSquare className="w-5 h-5 text-slate-300" />
+                      
                       <span>Team Action Items</span>
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-neutral-400 mt-0.5">
                       Break down problem solving steps and assign them to team members.
                     </p>
                   </div>
@@ -702,7 +677,7 @@ const TeamWorkspace = () => {
                       onClick={() => setShowNewTaskForm(true)}
                       size="xs"
                       variant="primary"
-                      icon={<Plus className="w-3.5 h-3.5" />}
+                      icon={}
                     >
                       New Task
                     </GlassAiButton>
@@ -712,7 +687,7 @@ const TeamWorkspace = () => {
                 {/* New Task Form */}
                 {showNewTaskForm && (
                   <form onSubmit={handleCreateTask} className="p-4 sm:p-5 rounded-2xl bg-[#181818] border border-white/10 mb-6 animate-in fade-in zoom-in-95 duration-200">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Create New Task</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3">Create New Task</h4>
                     <div className="space-y-3">
                       <div>
                         <input
@@ -764,9 +739,9 @@ const TeamWorkspace = () => {
 
                 {/* Task Items */}
                 {tasks.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400">
+                  <div className="text-center py-12 text-neutral-400">
                     <div className="w-12 h-12 rounded-2xl bg-[#1e1e1e] border border-white/10 flex items-center justify-center mx-auto mb-3 text-white">
-                      📋
+                      �
                     </div>
                     <h4 className="text-sm font-bold text-white mb-1">No tasks yet</h4>
                     <p className="text-xs">Create the first team task to track contribution and solution milestones.</p>
@@ -797,7 +772,7 @@ const TeamWorkspace = () => {
                             <div className="flex items-center justify-between gap-2">
                               <h4
                                 className={`text-sm font-bold ${
-                                  task.completed ? 'line-through text-slate-400' : 'text-white'
+                                  task.completed ? 'line-through text-neutral-400' : 'text-white'
                                 }`}
                               >
                                 {task.title}
@@ -807,23 +782,23 @@ const TeamWorkspace = () => {
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteTask(task._id)}
-                                  className="text-slate-500 hover:text-rose-400 transition p-1 cursor-pointer"
+                                  className="text-neutral-400 hover:text-rose-400 transition p-1 cursor-pointer"
                                   title="Delete task"
                                 >
-                                  <Trash2 className="w-3.5 h-3.5" />
+                                  
                                 </button>
                               )}
                             </div>
 
-                            <div className="flex items-center gap-3 mt-2 text-[11px] text-slate-400 flex-wrap">
+                            <div className="flex items-center gap-3 mt-2 text-[11px] text-neutral-400 flex-wrap">
                               {task.assignedTo ? (
                                 <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-semibold ${
                                   isAssignedToMe ? 'bg-[#252525] text-white border border-white/15' : 'bg-[#1c1c1c] text-slate-300'
                                 }`}>
-                                  👤 {task.assignedTo.name} {isAssignedToMe && '(You)'}
+                                   {task.assignedTo.name} {isAssignedToMe && '(You)'}
                                 </span>
                               ) : (
-                                <span className="text-slate-500 italic">Unassigned</span>
+                                <span className="text-neutral-400 italic">Unassigned</span>
                               )}
 
                               <span>Created by {task.createdBy?.name || 'Member'}</span>
@@ -846,14 +821,14 @@ const TeamWorkspace = () => {
             {/* Right Col: Team Contribution Breakdown */}
             <div className="space-y-6">
               <div className="p-6 rounded-3xl bg-[#141414] border border-white/10 shadow-xl">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-slate-300" />
+                <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-400 mb-4 flex items-center gap-2">
+                  
                   <span>Team Contribution</span>
                 </h3>
 
                 <div className="space-y-4">
                   {taskContribution.length === 0 ? (
-                    <p className="text-xs text-slate-400">Complete tasks to see live contribution statistics.</p>
+                    <p className="text-xs text-neutral-400">Complete tasks to see live contribution statistics.</p>
                   ) : (
                     taskContribution.map((member) => {
                       const totalTasks = tasks.length || 1;
@@ -896,10 +871,10 @@ const TeamWorkspace = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                   <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <FileCode2 className="w-5 h-5 text-slate-300" />
+                    
                     <span>Collaborative Solution Workspace</span>
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-neutral-400 mt-1">
                     All team members can draft, review, and format the joint markdown & code solution here.
                   </p>
                 </div>
@@ -950,7 +925,7 @@ const TeamWorkspace = () => {
                     {solutionDraft.trim() ? (
                       <MarkdownRenderer content={solutionDraft} />
                     ) : (
-                      <p className="text-sm text-slate-500 italic">
+                      <p className="text-sm text-neutral-400 italic">
                         No solution text written yet. Switch to Write mode to prepare your team's solution.
                       </p>
                     )}
@@ -960,7 +935,7 @@ const TeamWorkspace = () => {
 
               {/* Leader Submit Action Footer */}
               <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-neutral-400">
                   {isLeader
                     ? 'As Team Leader, you can submit this draft as the official Team Answer.'
                     : 'Your Team Leader will submit the final solution when ready.'}
@@ -973,7 +948,7 @@ const TeamWorkspace = () => {
                     disabled={!solutionDraft.trim()}
                     size="md"
                     variant="primary"
-                    icon={<Sparkles className="w-4 h-4" />}
+                    icon={}
                   >
                     Submit Team Answer
                   </GlassAiButton>

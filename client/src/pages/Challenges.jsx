@@ -1,35 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Sparkles,
-  Trophy,
-  Calendar,
-  Clock,
-  CheckCircle2,
-  Users,
-  MessageSquare,
-  Star,
-  Plus,
-  AlertCircle,
-  Tag,
-  ArrowRight,
-  Flame,
-  Code2,
-  Award,
-  ChevronRight,
-  Send,
-  X,
-  Search,
-  BookOpen,
-  Check,
-  Filter,
-  Play,
-  Layers,
-  HelpCircle,
-  CheckSquare,
-  Square,
-  RotateCcw,
-} from 'lucide-react';
+
 import { useAuth } from '../context/AuthContext';
 import {
   getChallenges,
@@ -454,7 +425,7 @@ const Challenges = () => {
       <div className="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between gap-6 border-b border-white/10 pb-8">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-bold mb-3 shadow-2xs">
-            <Trophy className="w-3.5 h-3.5 text-white" />
+            
             <span>ProblemPool Learning Tracks</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
@@ -471,7 +442,7 @@ const Challenges = () => {
             <span className="block text-xl font-extrabold text-white">
               {allChallenges.length}
             </span>
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
               Challenges
             </span>
           </div>
@@ -479,7 +450,7 @@ const Challenges = () => {
             <span className="block text-xl font-extrabold text-emerald-600">
               {allChallenges.reduce((acc, c) => acc + (c.problemsCount || 0), 0)}
             </span>
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
               Problems
             </span>
           </div>
@@ -492,21 +463,21 @@ const Challenges = () => {
       <div className="space-y-4 mb-10">
         {/* Search Input */}
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search challenges by title, category, or problem..."
-            className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white placeholder:text-slate-400 text-sm sm:text-base font-medium focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-white/10 shadow-xs transition"
+            className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white placeholder:text-neutral-400 text-sm sm:text-base font-medium focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-white/10 shadow-xs transition"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-300 rounded-full hover:bg-[#202020]"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-neutral-400 hover:text-slate-300 rounded-full hover:bg-[#202020]"
             >
-              <X className="w-4 h-4" />
+              
             </button>
           )}
         </div>
@@ -536,8 +507,8 @@ const Challenges = () => {
 
           {/* Difficulty Dropdown Filter */}
           <div className="flex items-center gap-2 self-start lg:self-auto shrink-0 text-xs">
-            <span className="font-semibold text-slate-500 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-semibold text-neutral-400 flex items-center gap-1">
+              
               <span>Difficulty:</span>
             </span>
             <div className="flex items-center gap-1 bg-[#141414]/90 backdrop-blur-md p-1 rounded-xl border border-white/10 shadow-2xs">
@@ -646,8 +617,8 @@ const Challenges = () => {
                     >
                       {activeModalChallenge.difficulty}
                     </span>
-                    <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-xs text-neutral-400 font-semibold flex items-center gap-1">
+                      
                       <span>{activeModalChallenge.duration}</span>
                     </span>
                   </div>
@@ -658,9 +629,9 @@ const Challenges = () => {
                 <button
                   type="button"
                   onClick={() => setActiveModalChallenge(null)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md transition cursor-pointer"
+                  className="p-2 rounded-xl text-neutral-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md transition cursor-pointer"
                 >
-                  <X className="w-5 h-5" />
+                  
                 </button>
               </div>
 
@@ -675,7 +646,7 @@ const Challenges = () => {
               {activeModalChallenge.rules && activeModalChallenge.rules.length > 0 && (
                 <div className="p-4 rounded-2xl bg-[#181818] border border-white/10">
                   <h4 className="font-bold text-white text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <BookOpen className="w-3.5 h-3.5 text-white" />
+                    
                     <span>Challenge Rules & Guidelines</span>
                   </h4>
                   <ul className="list-disc list-inside space-y-1 text-xs text-slate-300 leading-relaxed pl-1">
@@ -691,10 +662,10 @@ const Challenges = () => {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h4 className="font-bold text-white text-sm flex items-center gap-1.5">
-                      <Code2 className="w-4 h-4 text-white" />
+                      
                       <span>Challenge Problems ({activeModalChallenge.problems?.length || 0})</span>
                     </h4>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-neutral-400">
                       Check off problems as you solve them to track your verified progress.
                     </p>
                   </div>
@@ -706,7 +677,7 @@ const Challenges = () => {
                       className="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1 cursor-pointer"
                       title="Reset challenge progress"
                     >
-                      <RotateCcw className="w-3 h-3" />
+                      
                       <span>Reset</span>
                     </button>
                   )}
@@ -732,13 +703,13 @@ const Challenges = () => {
                           <button
                             type="button"
                             className={`mt-0.5 shrink-0 rounded-md transition ${
-                              isDone ? 'text-emerald-600' : 'text-slate-400 hover:text-white'
+                              isDone ? 'text-emerald-600' : 'text-neutral-400 hover:text-white'
                             }`}
                           >
                             {isDone ? (
-                              <CheckSquare className="w-5 h-5 fill-emerald-100" />
+                              
                             ) : (
-                              <Square className="w-5 h-5" />
+                              
                             )}
                           </button>
                           <div className="flex-1 min-w-0">
@@ -750,7 +721,7 @@ const Challenges = () => {
                               {idx + 1}. {prob.title}
                             </span>
                             {prob.description && (
-                              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                              <p className="text-xs text-neutral-400 mt-0.5 leading-relaxed">
                                 {prob.description}
                               </p>
                             )}

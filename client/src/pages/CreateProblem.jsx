@@ -7,7 +7,7 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
 import { Loader } from '../components/Loader';
-import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp, Wand2, Lightbulb, Check } from 'lucide-react';
+
 
 const SUGGESTED_TAGS = [
   'React',
@@ -302,7 +302,7 @@ const CreateProblem = () => {
         <div className="mb-8">
         <Link
           to="/problems"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-white transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-400 hover:text-white transition-colors mb-4"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -344,7 +344,7 @@ const CreateProblem = () => {
         <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-50/80 via-purple-50/60 to-pink-50/40 border border-white/15/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xs shrink-0">
-              <Sparkles className="w-4 h-4" />
+              
             </div>
             <div>
               <div className="text-xs font-bold text-white flex items-center gap-1.5">
@@ -366,9 +366,8 @@ const CreateProblem = () => {
             loading={improvingAi}
             variant="primary"
             size="sm"
-            icon={Sparkles}
           >
-            {improvingAi ? 'Improving draft...' : '✨ Improve My Problem'}
+            {improvingAi ? 'Improving draft...' : ' Improve My Problem'}
           </GlassAiButton>
         </div>
 
@@ -376,7 +375,7 @@ const CreateProblem = () => {
         {aiError && (
           <div className="mb-6 p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/20 text-amber-900 text-xs flex items-start justify-between gap-2 animate-in fade-in duration-200">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+              
               <span>{aiError}</span>
             </div>
             <button
@@ -384,7 +383,7 @@ const CreateProblem = () => {
               onClick={() => setAiError(null)}
               className="text-amber-400 hover:text-amber-900 font-bold ml-2 cursor-pointer"
             >
-              <X className="w-3.5 h-3.5" />
+              
             </button>
           </div>
         )}
@@ -394,10 +393,10 @@ const CreateProblem = () => {
           <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/60 border border-white/20 shadow-sm animate-in fade-in zoom-in-95 duration-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/15 mb-4">
               <div className="flex items-center gap-2">
-                <span className="text-lg">✨</span>
+                
                 <div>
                   <h4 className="text-sm font-bold text-white">AI Improvement Suggestions</h4>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-neutral-400">
                     Review and click the buttons below to selectively apply what you like. Your original input is never changed automatically.
                   </p>
                 </div>
@@ -408,17 +407,16 @@ const CreateProblem = () => {
                   onClick={handleApplyAll}
                   variant="primary"
                   size="xs"
-                  icon={Check}
                 >
                   Apply All
                 </GlassAiButton>
                 <button
                   type="button"
                   onClick={() => setAiSuggestion(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
+                  className="p-1.5 rounded-lg text-neutral-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
                   title="Dismiss AI suggestions"
                 >
-                  <X className="w-4 h-4" />
+                  
                 </button>
               </div>
             </div>
@@ -452,7 +450,7 @@ const CreateProblem = () => {
               {aiSuggestion.missingInformation && aiSuggestion.missingInformation.length > 0 && (
                 <div className="p-3.5 rounded-xl bg-amber-950/40/80 border border-amber-500/20/80">
                   <div className="font-bold text-amber-900 mb-1.5 flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+                    
                     <span>Missing Information / Questions to Consider Adding:</span>
                   </div>
                   <ul className="list-disc list-inside space-y-1 text-amber-800/90 pl-1">
@@ -587,7 +585,7 @@ const CreateProblem = () => {
               <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-amber-50/80 to-amber-50/30 border border-amber-500/20/90 shadow-xs animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
-                    <span className="text-base">🔎</span>
+                    <span className="text-base">�</span>
                     <span>Possible Similar Problems ({similarProblems.length})</span>
                   </div>
                   <button
@@ -596,7 +594,7 @@ const CreateProblem = () => {
                     className="text-xs text-amber-800/80 hover:text-amber-950 font-semibold inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100/70 hover:bg-amber-200/70 transition cursor-pointer"
                   >
                     <span>Dismiss</span>
-                    <X className="w-3.5 h-3.5" />
+                    
                   </button>
                 </div>
 
@@ -625,14 +623,14 @@ const CreateProblem = () => {
                                   : 'bg-[#202020] text-slate-200'
                               }`}
                             >
-                              {isSolved ? '🏆 Solved' : isAnswered ? '💡 Answered' : '❓ Open'}
+                              {isSolved ? ' Solved' : isAnswered ? ' Answered' : ' Open'}
                             </span>
-                            <span className="text-xs font-semibold text-slate-500">
+                            <span className="text-xs font-semibold text-neutral-400">
                               {sim.category || 'General'}
                             </span>
                             <span className="text-slate-300">•</span>
-                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                              <MessageSquare className="w-3 h-3 text-slate-400" />
+                            <span className="text-xs text-neutral-400 flex items-center gap-1">
+                              
                               <span>{sim.answersCount || 0} answers</span>
                             </span>
                           </div>
@@ -649,7 +647,7 @@ const CreateProblem = () => {
                             className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-200 bg-white/10 hover:bg-indigo-100 border border-white/20/80 transition"
                           >
                             <span>View Problem</span>
-                            <ExternalLink className="w-3 h-3" />
+                            
                           </a>
                         </div>
                       </div>
@@ -704,7 +702,7 @@ const CreateProblem = () => {
           {/* Tags Input with Chips */}
           <div>
             <label className="block text-sm font-semibold text-white mb-1.5">
-              Tags <span className="text-xs text-slate-400 font-normal">(Add up to 10 tags to help others find your problem)</span>
+              Tags <span className="text-xs text-neutral-400 font-normal">(Add up to 10 tags to help others find your problem)</span>
             </label>
 
             <div className="p-2.5 rounded-xl border border-white/10 bg-[#181818] focus-within:bg-[#141414]/90 backdrop-blur-md focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-white/10 transition-all flex flex-wrap items-center gap-2">
@@ -713,14 +711,14 @@ const CreateProblem = () => {
                   key={t}
                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-white/10 text-slate-200 border border-white/20 animate-in fade-in zoom-in duration-100"
                 >
-                  <Tag className="w-3 h-3 text-indigo-500" />
+                  
                   <span>#{t}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(t)}
                     className="p-0.5 text-indigo-400 hover:text-slate-200 rounded-full cursor-pointer"
                   >
-                    <X className="w-3 h-3" />
+                    
                   </button>
                 </span>
               ))}
@@ -733,7 +731,7 @@ const CreateProblem = () => {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                     placeholder={tags.length === 0 ? 'Type a tag and press Enter...' : 'Add another tag...'}
-                    className="w-full bg-transparent px-2 py-1 text-sm text-white placeholder:text-slate-400 focus:outline-none"
+                    className="w-full bg-transparent px-2 py-1 text-sm text-white placeholder:text-neutral-400 focus:outline-none"
                   />
                   {tagInput.trim() && (
                     <button
@@ -750,8 +748,8 @@ const CreateProblem = () => {
 
             {/* Popular Tag Suggestions */}
             <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-slate-400 font-medium flex items-center gap-1 mr-1">
-                <Sparkles className="w-3 h-3 text-indigo-500" />
+              <span className="text-xs text-neutral-400 font-medium flex items-center gap-1 mr-1">
+                
                 <span>Suggestions:</span>
               </span>
               {SUGGESTED_TAGS.filter((st) => !tags.includes(st.toLowerCase())).slice(0, 6).map((st) => (
@@ -796,7 +794,7 @@ const CreateProblem = () => {
               <label htmlFor="description" className="block text-sm font-semibold text-white">
                 Description <span className="text-rose-500">*</span>
               </label>
-              <span className="text-xs text-slate-400 font-medium">Markdown & code blocks supported</span>
+              <span className="text-xs text-neutral-400 font-medium">Markdown & code blocks supported</span>
             </div>
 
             <div
@@ -835,7 +833,7 @@ const CreateProblem = () => {
                   {formData.description.trim() ? (
                     <MarkdownRenderer content={formData.description} />
                   ) : (
-                    <p className="text-sm text-slate-400 italic">
+                    <p className="text-sm text-neutral-400 italic">
                       Nothing to preview yet. Switch back to Write mode and type some markdown or code blocks.
                     </p>
                   )}
@@ -848,7 +846,7 @@ const CreateProblem = () => {
             )}
           </div>
 
-          {/* 🤝 Allow Team Up Toggle Setting */}
+          {/*  Allow Team Up Toggle Setting */}
           <div className="p-4 sm:p-5 rounded-2xl bg-[#141414] border border-white/10 flex items-start gap-3.5 shadow-sm transition-all hover:border-white/20">
             <div className="pt-0.5">
               <input
@@ -863,14 +861,14 @@ const CreateProblem = () => {
             <label htmlFor="allowTeamUp" className="cursor-pointer select-none">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                  <span>🤝</span>
+                  
                   <span>Allow Team Up</span>
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#222222] text-slate-300 border border-white/10">
                   Collaborative Solving
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+              <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
                 Allow a small group of users (up to 5 members) to collaborate on this problem in a dedicated workspace, create shared tasks, and submit a joint answer.
               </p>
             </label>

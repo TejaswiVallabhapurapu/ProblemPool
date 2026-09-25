@@ -1,31 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Trophy,
-  Medal,
-  Award,
-  Crown,
-  ThumbsUp,
-  Star,
-  CheckCircle2,
-  Calendar,
-  Sparkles,
-  Flame,
-  TrendingUp,
-  Users,
-  MapPin,
-  ExternalLink,
-} from 'lucide-react';
+
 import { getLeaderboard } from '../services/api';
 import EmptyState3D from '../components/EmptyState3D';
 import { LoaderContainer } from '../components/Loader';
 import LeaderboardCard from '../components/LeaderboardCard';
 
 const CATEGORIES = [
-  { id: 'reputation', label: 'Reputation', icon: Trophy, desc: 'Overall community points' },
-  { id: 'helpful', label: 'Helpful Answers', icon: ThumbsUp, desc: 'Most helpful votes received' },
-  { id: 'best_answers', label: 'Best Answers', icon: Star, desc: 'Solutions chosen as best answer' },
-  { id: 'solved', label: 'Problems Solved', icon: CheckCircle2, desc: 'Questions resolved & closed' },
+  { id: 'reputation', label: 'Reputation', desc: 'Overall community points' },
+  { id: 'helpful', label: 'Helpful Answers', desc: 'Most helpful votes received' },
+  { id: 'best_answers', label: 'Best Answers', desc: 'Solutions chosen as best answer' },
+  { id: 'solved', label: 'Problems Solved', desc: 'Questions resolved & closed' },
 ];
 
 const TIMEFRAMES = [
@@ -73,11 +58,11 @@ const Leaderboard = () => {
       {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-950/40 border border-amber-500/20/80 text-amber-800 text-xs font-bold mb-3 shadow-xs">
-          <Trophy className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+          
           <span>ProblemPool Hall of Fame</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-3">
-          🏆 Community Leaderboard
+           Community Leaderboard
         </h1>
         <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
           Celebrating top problem solvers, insightful answerers, and outstanding contributors.
@@ -103,7 +88,7 @@ const Leaderboard = () => {
                     : 'bg-[#181818] hover:bg-[#202020] text-slate-200 border border-white/10'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-neutral-400'}`} />
                 <span>{cat.label}</span>
               </button>
             );
@@ -179,7 +164,7 @@ const Leaderboard = () => {
                 <div className="order-1 md:order-2 md:-translate-y-4">
                   <LeaderboardCard
                     leader={topThree[0]}
-                    metricLabel={`👑 Champion • ${metricLabel}`}
+                    metricLabel={` Champion • ${metricLabel}`}
                     isPodium={true}
                     podiumRank={1}
                   />
@@ -205,10 +190,10 @@ const Leaderboard = () => {
             <div className="space-y-6 pt-6">
               <div className="flex items-center justify-between pb-2 border-b border-white/10">
                 <h3 className="font-extrabold text-base text-white flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-white" />
+                  
                   <span>Community Rankings (Ranks 4 – {leaders.length})</span>
                 </h3>
-                <span className="text-xs font-semibold text-slate-400">
+                <span className="text-xs font-semibold text-neutral-400">
                   Interactive 3D Cards
                 </span>
               </div>

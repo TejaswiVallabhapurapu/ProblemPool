@@ -1,24 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Bookmark,
-  Search,
-  ArrowUpDown,
-  AlertCircle,
-  RefreshCw,
-  FolderSearch,
-  Folder,
-  FolderPlus,
-  Edit2,
-  Trash2,
-  Plus,
-  Sparkles,
-  CheckCircle2,
-  Layers,
-  X,
-  Tag,
-  Check,
-} from 'lucide-react';
+
 import { useAuth } from '../context/AuthContext';
 import {
   getMySavedProblems,
@@ -395,7 +377,7 @@ const SavedProblems = () => {
       {/* Toast Notice */}
       {toastNotice && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white text-xs font-semibold py-2.5 px-4 rounded-2xl shadow-xl border border-slate-700/60 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          
           <span>{toastNotice}</span>
         </div>
       )}
@@ -404,11 +386,11 @@ const SavedProblems = () => {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold mb-2">
-            <Bookmark className="w-3.5 h-3.5 fill-indigo-600 text-white" />
+            
             <span>Personal Collection System</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
-            <span>🔖 Saved Problems</span>
+            <span> Saved Problems</span>
             {!loading && (
               <span className="text-sm font-semibold px-2.5 py-1 bg-[#202020] text-slate-200 rounded-full">
                 {savedItems.length} {savedItems.length === 1 ? 'saved' : 'saved'}
@@ -430,7 +412,7 @@ const SavedProblems = () => {
             }}
             variant="primary"
             size="md"
-            icon={<FolderPlus className="w-4 h-4" />}
+            icon={}
           >
             New Collection
           </GlassAiButton>
@@ -442,7 +424,7 @@ const SavedProblems = () => {
             title="Refresh saved problems and collections"
             className="p-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-300 hover:bg-[#181818] hover:border-slate-300 transition shadow-xs cursor-pointer"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-white' : ''}`} />
+            
           </button>
         </div>
       </div>
@@ -460,7 +442,7 @@ const SavedProblems = () => {
                 : 'bg-[#141414]/90 backdrop-blur-md text-slate-300 border border-white/10 hover:border-slate-300 hover:bg-[#181818]'
             }`}
           >
-            <Layers className="w-4 h-4" />
+            
             <span>All Saved Problems</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
@@ -489,7 +471,7 @@ const SavedProblems = () => {
                     : `bg-[#141414]/90 backdrop-blur-md text-slate-200 border border-white/10 hover:border-slate-300 hover:bg-[#181818]`
                 }`}
               >
-                <Folder className="w-4 h-4" />
+                
                 <span>{col.name}</span>
                 <span
                   className={`px-2 py-0.5 rounded-full text-[11px] font-extrabold ${
@@ -512,7 +494,7 @@ const SavedProblems = () => {
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="text-xl">📁</span>
+                <span className="text-xl">�</span>
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
                   {selectedCollection.name}
                 </h2>
@@ -542,7 +524,7 @@ const SavedProblems = () => {
                 }}
                 size="xs"
                 variant="glass"
-                icon={<Edit2 className="w-3.5 h-3.5" />}
+                icon={}
               >
                 Rename / Edit
               </GlassAiButton>
@@ -552,7 +534,7 @@ const SavedProblems = () => {
                 onClick={() => setShowDeleteModal(true)}
                 size="xs"
                 variant="danger"
-                icon={<Trash2 className="w-3.5 h-3.5" />}
+                icon={}
               >
                 Delete Collection
               </GlassAiButton>
@@ -566,19 +548,19 @@ const SavedProblems = () => {
         <div className="bg-[#141414]/90 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/10 shadow-sm mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="🔍 Search problems by title, description, or category..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-white/10 text-white placeholder:text-slate-400 text-sm outline-none transition"
+              placeholder="� Search problems by title, description, or category..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-white/10 text-white placeholder:text-neutral-400 text-sm outline-none transition"
             />
             {searchTerm && (
               <button
                 type="button"
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-300 px-1.5 py-0.5"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 hover:text-slate-300 px-1.5 py-0.5"
               >
                 Clear
               </button>
@@ -587,8 +569,8 @@ const SavedProblems = () => {
 
           {/* Sort Selector */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-              <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-xs font-semibold text-neutral-400 flex items-center gap-1">
+              
               <span>Sort:</span>
             </span>
             <select
@@ -609,7 +591,7 @@ const SavedProblems = () => {
       ) : error ? (
         <div className="bg-[#141414]/90 backdrop-blur-md rounded-2xl border border-rose-500/20 p-8 text-center max-w-lg mx-auto shadow-sm">
           <div className="w-12 h-12 rounded-full bg-rose-950/40 text-rose-400 flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-6 h-6" />
+            
           </div>
           <h2 className="text-lg font-bold text-white mb-2">Failed to Load Saved Problems</h2>
           <p className="text-sm text-slate-300 mb-6">{error}</p>
@@ -618,7 +600,7 @@ const SavedProblems = () => {
             onClick={fetchData}
             variant="primary"
             size="md"
-            icon={<RefreshCw className="w-4 h-4" />}
+            icon={}
           >
             Try Again
           </GlassAiButton>
@@ -627,7 +609,7 @@ const SavedProblems = () => {
         /* Empty State */
         <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 p-12 text-center max-w-lg mx-auto shadow-sm">
           <div className="w-16 h-16 rounded-2xl bg-white/10 text-white flex items-center justify-center mx-auto mb-5 text-3xl">
-            {activeCollectionId === 'all' ? '🔖' : '📁'}
+            {activeCollectionId === 'all' ? '' : '�'}
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">
             {activeCollectionId === 'all'
@@ -662,7 +644,7 @@ const SavedProblems = () => {
         /* Empty State: Search query yielded no results */
         <div className="bg-[#141414]/90 backdrop-blur-md rounded-2xl border border-white/10 p-10 text-center max-w-md mx-auto shadow-sm">
           <div className="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center mx-auto mb-3">
-            <FolderSearch className="w-6 h-6" />
+            
           </div>
           <h3 className="text-base font-bold text-white mb-1">No matching problems</h3>
           <p className="text-xs text-slate-300 mb-4">
@@ -679,7 +661,7 @@ const SavedProblems = () => {
       ) : (
         /* Grid of Saved Problem Cards */
         <>
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-4 px-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-neutral-400 mb-4 px-1">
             <span>
               Showing {filteredAndSorted.length} of {currentProblemsList.length}{' '}
               {currentProblemsList.length === 1 ? 'problem' : 'problems'}
@@ -702,7 +684,7 @@ const SavedProblems = () => {
                   />
 
                   {/* Card Sub-bar: Saved date & Remove from Collection button */}
-                  <div className="px-2 pt-1.5 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                  <div className="px-2 pt-1.5 flex items-center justify-between text-[11px] text-neutral-400 font-medium">
                     {savedDate && (
                       <span>
                         Saved on{' '}
@@ -718,10 +700,10 @@ const SavedProblems = () => {
                       <button
                         type="button"
                         onClick={() => handleRemoveFromCurrentCollection(prob._id, prob.title)}
-                        className="text-slate-400 hover:text-rose-400 transition ml-auto font-semibold flex items-center gap-1 cursor-pointer"
+                        className="text-neutral-400 hover:text-rose-400 transition ml-auto font-semibold flex items-center gap-1 cursor-pointer"
                         title="Remove from this collection (problem remains in saved list)"
                       >
-                        <X className="w-3 h-3" />
+                        
                         <span>Remove from folder</span>
                       </button>
                     )}
@@ -760,25 +742,25 @@ const SavedProblems = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
                 <div className="w-10 h-10 rounded-2xl bg-white/10 text-white flex items-center justify-center">
-                  <FolderPlus className="w-5 h-5" />
+                  
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white">New Collection</h3>
-                  <p className="text-xs text-slate-500">Organize your saved problems</p>
+                  <p className="text-xs text-neutral-400">Organize your saved problems</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-300 rounded-xl"
+                className="p-1.5 text-neutral-400 hover:text-slate-300 rounded-xl"
               >
-                <X className="w-5 h-5" />
+                
               </button>
             </div>
 
             {colError && (
               <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                
                 <span>{colError}</span>
               </div>
             )}
@@ -803,7 +785,7 @@ const SavedProblems = () => {
 
               <div>
                 <label className="block text-xs font-bold text-white mb-1.5">
-                  Description <span className="text-slate-400 font-normal">(Optional)</span>
+                  Description <span className="text-neutral-400 font-normal">(Optional)</span>
                 </label>
                 <textarea
                   rows={3}
@@ -870,7 +852,7 @@ const SavedProblems = () => {
                   loading={submittingCol}
                   size="xs"
                   variant="primary"
-                  icon={<Plus className="w-3.5 h-3.5" />}
+                  icon={}
                 >
                   Create Collection
                 </GlassAiButton>
@@ -890,25 +872,25 @@ const SavedProblems = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
                 <div className="w-10 h-10 rounded-2xl bg-white/10 text-white flex items-center justify-center">
-                  <Edit2 className="w-5 h-5" />
+                  
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white">Edit Collection</h3>
-                  <p className="text-xs text-slate-500">Update name and description</p>
+                  <p className="text-xs text-neutral-400">Update name and description</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowEditModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-300 rounded-xl"
+                className="p-1.5 text-neutral-400 hover:text-slate-300 rounded-xl"
               >
-                <X className="w-5 h-5" />
+                
               </button>
             </div>
 
             {colError && (
               <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                
                 <span>{colError}</span>
               </div>
             )}
@@ -932,7 +914,7 @@ const SavedProblems = () => {
 
               <div>
                 <label className="block text-xs font-bold text-white mb-1.5">
-                  Description <span className="text-slate-400 font-normal">(Optional)</span>
+                  Description <span className="text-neutral-400 font-normal">(Optional)</span>
                 </label>
                 <textarea
                   rows={3}
@@ -998,7 +980,7 @@ const SavedProblems = () => {
                   loading={submittingCol}
                   size="xs"
                   variant="primary"
-                  icon={<Check className="w-3.5 h-3.5" />}
+                  icon={}
                 >
                   Save Changes
                 </GlassAiButton>
@@ -1016,7 +998,7 @@ const SavedProblems = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-12 h-12 rounded-2xl bg-rose-950/40 text-rose-400 flex items-center justify-center mb-4">
-              <Trash2 className="w-6 h-6" />
+              
             </div>
 
             <h3 className="text-lg font-bold text-white mb-1">
@@ -1045,7 +1027,7 @@ const SavedProblems = () => {
                 loading={submittingCol}
                 size="xs"
                 variant="danger"
-                icon={<Trash2 className="w-3.5 h-3.5" />}
+                icon={}
               >
                 Yes, Delete Collection
               </GlassAiButton>

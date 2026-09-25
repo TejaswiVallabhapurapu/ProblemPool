@@ -1,29 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Shield,
-  AlertTriangle,
-  Users,
-  HelpCircle,
-  MessageSquare,
-  CheckCircle2,
-  Flag,
-  Search,
-  Filter,
-  RefreshCw,
-  Eye,
-  Trash2,
-  UserX,
-  UserCheck,
-  Check,
-  X,
-  ExternalLink,
-  Clock,
-  ChevronRight,
-  AlertOctagon,
-  ShieldCheck,
-  BarChart3,
-} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import GlassAiButton from '../components/GlassAiButton';
 import { Loader } from '../components/Loader';
@@ -241,7 +217,7 @@ const AdminDashboard = () => {
     return (
       <div className="max-w-md mx-auto my-20 p-8 bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-rose-500/20 shadow-sm text-center">
         <div className="w-14 h-14 rounded-2xl bg-rose-950/40 text-rose-400 flex items-center justify-center mx-auto mb-4">
-          <ShieldAlert className="w-8 h-8" />
+          
         </div>
         <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
         <p className="text-sm text-slate-300 mb-6 leading-relaxed">
@@ -264,7 +240,7 @@ const AdminDashboard = () => {
       {/* Toast Notice */}
       {toastMsg && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white text-xs font-semibold py-2.5 px-4 rounded-2xl shadow-xl border border-slate-700/60 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          
           <span>{toastMsg}</span>
         </div>
       )}
@@ -273,11 +249,11 @@ const AdminDashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-950/40 border border-rose-100 text-rose-300 text-xs font-bold mb-2">
-            <Shield className="w-3.5 h-3.5 fill-rose-600 text-rose-400" />
+            
             <span>Admin Console</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
-            <span>🛡️ Moderation Dashboard</span>
+            <span> Moderation Dashboard</span>
           </h1>
           <p className="text-slate-300 mt-1 text-sm">
             Review community reports, moderate content, and manage user suspensions.
@@ -294,42 +270,40 @@ const AdminDashboard = () => {
           className="p-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-300 hover:bg-[#181818] transition shadow-xs self-start sm:self-auto cursor-pointer"
           title="Refresh dashboard"
         >
-          <RefreshCw
-            className={`w-4 h-4 ${reportsLoading || statsLoading || usersLoading ? 'animate-spin text-white' : ''}`}
-          />
+          
         </button>
       </div>
 
       {/* Metric Cards Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <div className="bg-[#141414]/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Users</span>
-            <Users className="w-4 h-4 text-indigo-500" />
+          <div className="flex items-center justify-between text-neutral-400 mb-2">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Users</span>
+            
           </div>
           <p className="text-2xl font-black text-white">{stats?.totalUsers || 0}</p>
         </div>
 
         <div className="bg-[#141414]/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Problems</span>
-            <HelpCircle className="w-4 h-4 text-sky-500" />
+          <div className="flex items-center justify-between text-neutral-400 mb-2">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Problems</span>
+            
           </div>
           <p className="text-2xl font-black text-white">{stats?.totalProblems || 0}</p>
         </div>
 
         <div className="bg-[#141414]/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Answers</span>
-            <MessageSquare className="w-4 h-4 text-emerald-500" />
+          <div className="flex items-center justify-between text-neutral-400 mb-2">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Answers</span>
+            
           </div>
           <p className="text-2xl font-black text-white">{stats?.totalAnswers || 0}</p>
         </div>
 
         <div className="bg-[#141414]/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Solved</span>
-            <CheckCircle2 className="w-4 h-4 text-amber-500" />
+          <div className="flex items-center justify-between text-neutral-400 mb-2">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Solved</span>
+            
           </div>
           <p className="text-2xl font-black text-white">{stats?.solvedProblems || 0}</p>
         </div>
@@ -345,7 +319,7 @@ const AdminDashboard = () => {
         <div className="bg-rose-950/40/50 p-4 sm:p-5 rounded-2xl border border-rose-500/20/80 shadow-2xs">
           <div className="flex items-center justify-between text-rose-400 mb-2">
             <span className="text-xs font-bold text-rose-800 uppercase tracking-wider">Suspended</span>
-            <UserX className="w-4 h-4 text-rose-500" />
+            
           </div>
           <p className="text-2xl font-black text-rose-900">{stats?.suspendedUsers || 0}</p>
         </div>
@@ -359,7 +333,7 @@ const AdminDashboard = () => {
           className={`px-4 py-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'reports'
               ? 'border-indigo-600 text-white'
-              : 'border-transparent text-slate-500 hover:text-white'
+              : 'border-transparent text-neutral-400 hover:text-white'
           }`}
         >
           <Flag className="w-4 h-4" />
@@ -377,10 +351,10 @@ const AdminDashboard = () => {
           className={`px-4 py-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'users'
               ? 'border-indigo-600 text-white'
-              : 'border-transparent text-slate-500 hover:text-white'
+              : 'border-transparent text-neutral-400 hover:text-white'
           }`}
         >
-          <Users className="w-4 h-4" />
+          
           <span>User Management</span>
           {stats?.suspendedUsers > 0 && (
             <span className="px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-rose-100 text-rose-800">
@@ -398,7 +372,7 @@ const AdminDashboard = () => {
             <div className="flex flex-wrap items-center gap-3">
               {/* Status Filter */}
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-slate-500">Status:</span>
+                <span className="font-semibold text-neutral-400">Status:</span>
                 <select
                   value={reportFilterStatus}
                   onChange={(e) => setReportFilterStatus(e.target.value)}
@@ -414,7 +388,7 @@ const AdminDashboard = () => {
 
               {/* Content Type Filter */}
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-slate-500">Type:</span>
+                <span className="font-semibold text-neutral-400">Type:</span>
                 <select
                   value={reportFilterType}
                   onChange={(e) => setReportFilterType(e.target.value)}
@@ -430,7 +404,7 @@ const AdminDashboard = () => {
 
               {/* Reason Filter */}
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-slate-500">Reason:</span>
+                <span className="font-semibold text-neutral-400">Reason:</span>
                 <select
                   value={reportFilterReason}
                   onChange={(e) => setReportFilterReason(e.target.value)}
@@ -447,24 +421,24 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <span className="text-slate-400 font-medium">
+            <span className="text-neutral-400 font-medium">
               Showing {reports.length} of {totalReportCount} reports
             </span>
           </div>
 
           {/* Reports Table / List */}
           {reportsLoading ? (
-            <div className="py-20 flex flex-col items-center justify-center text-slate-400 gap-4">
+            <div className="py-20 flex flex-col items-center justify-center text-neutral-400 gap-4">
               <Loader size="md" />
               <span className="text-sm font-medium">Loading reports...</span>
             </div>
           ) : reports.length === 0 ? (
             <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 p-12 text-center max-w-lg mx-auto">
               <div className="w-14 h-14 rounded-2xl bg-emerald-950/40 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="w-8 h-8" />
+                
               </div>
               <h3 className="text-lg font-bold text-white mb-1">Queue is Clear</h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-neutral-400">
                 No reports matching the selected filters.
               </p>
             </div>
@@ -494,7 +468,7 @@ const AdminDashboard = () => {
                             <div className="font-bold text-white">
                               {rep.reportedBy?.name || 'Anonymous'}
                             </div>
-                            <div className="text-[11px] text-slate-400">
+                            <div className="text-[11px] text-neutral-400">
                               {rep.reportedBy?.email}
                             </div>
                           </td>
@@ -532,16 +506,16 @@ const AdminDashboard = () => {
                                     className="inline-flex items-center gap-1 text-[11px] text-white hover:text-indigo-800 font-semibold"
                                   >
                                     <span>View target</span>
-                                    <ExternalLink className="w-3 h-3" />
+                                    
                                   </a>
                                 )}
                               </div>
                             ) : (
-                              <span className="text-slate-400 italic">Content unavailable</span>
+                              <span className="text-neutral-400 italic">Content unavailable</span>
                             )}
 
                             {targetAuthor && (
-                              <div className="mt-1.5 pt-1.5 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-slate-500">
+                              <div className="mt-1.5 pt-1.5 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-neutral-400">
                                 <span>Author:</span>
                                 <span className="font-semibold text-slate-200">
                                   {targetAuthor.name}
@@ -563,7 +537,7 @@ const AdminDashboard = () => {
                                 {rep.description}
                               </p>
                             ) : (
-                              <span className="text-slate-400 italic text-[11px]">
+                              <span className="text-neutral-400 italic text-[11px]">
                                 No description provided
                               </span>
                             )}
@@ -575,7 +549,7 @@ const AdminDashboard = () => {
                           </td>
 
                           {/* Date */}
-                          <td className="py-4 px-4 align-top whitespace-nowrap text-slate-500">
+                          <td className="py-4 px-4 align-top whitespace-nowrap text-neutral-400">
                             {new Date(rep.createdAt).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
@@ -603,7 +577,7 @@ const AdminDashboard = () => {
                                   title="Mark as Resolved"
                                   className="p-1.5 rounded-lg border border-emerald-500/20 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-100 transition cursor-pointer"
                                 >
-                                  <Check className="w-3.5 h-3.5" />
+                                  
                                 </button>
                               )}
 
@@ -615,7 +589,7 @@ const AdminDashboard = () => {
                                   title="Dismiss Report"
                                   className="p-1.5 rounded-lg border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-300 hover:bg-[#202020] transition cursor-pointer"
                                 >
-                                  <X className="w-3.5 h-3.5" />
+                                  
                                 </button>
                               )}
 
@@ -627,7 +601,7 @@ const AdminDashboard = () => {
                                   title="Delete reported content permanently"
                                   className="p-1.5 rounded-lg border border-rose-500/20 bg-rose-950/40 text-rose-300 hover:bg-rose-100 transition cursor-pointer"
                                 >
-                                  <Trash2 className="w-3.5 h-3.5" />
+                                  
                                 </button>
                               )}
 
@@ -648,9 +622,9 @@ const AdminDashboard = () => {
                                   }`}
                                 >
                                   {targetAuthor.isSuspended ? (
-                                    <UserCheck className="w-3.5 h-3.5" />
+                                    
                                   ) : (
-                                    <UserX className="w-3.5 h-3.5" />
+                                    
                                   )}
                                 </button>
                               )}
@@ -673,7 +647,7 @@ const AdminDashboard = () => {
           {/* User Search & Filter */}
           <div className="bg-[#141414]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              
               <input
                 type="text"
                 value={userSearch}
@@ -688,7 +662,7 @@ const AdminDashboard = () => {
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-slate-500">Status:</span>
+                <span className="font-semibold text-neutral-400">Status:</span>
                 <select
                   value={userFilterStatus}
                   onChange={(e) => setUserFilterStatus(e.target.value)}
@@ -701,7 +675,7 @@ const AdminDashboard = () => {
               </div>
 
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-slate-500">Role:</span>
+                <span className="font-semibold text-neutral-400">Role:</span>
                 <select
                   value={userFilterRole}
                   onChange={(e) => setUserFilterRole(e.target.value)}
@@ -717,7 +691,7 @@ const AdminDashboard = () => {
 
           {/* Users Table */}
           {usersLoading ? (
-            <div className="py-20 flex flex-col items-center justify-center text-slate-400 gap-4">
+            <div className="py-20 flex flex-col items-center justify-center text-neutral-400 gap-4">
               <Loader size="md" />
               <span className="text-sm font-medium">Loading users...</span>
             </div>
@@ -744,7 +718,7 @@ const AdminDashboard = () => {
                         <tr key={u._id} className="hover:bg-[#181818] transition-colors">
                           <td className="py-3.5 px-4">
                             <div className="font-bold text-white">{u.name}</div>
-                            <div className="text-[11px] text-slate-400">{u.email}</div>
+                            <div className="text-[11px] text-neutral-400">{u.email}</div>
                           </td>
 
                           <td className="py-3.5 px-4">
@@ -768,7 +742,7 @@ const AdminDashboard = () => {
                             <span>{u.answersCount || 0} answers</span>
                           </td>
 
-                          <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap">
+                          <td className="py-3.5 px-4 text-neutral-400 whitespace-nowrap">
                             {new Date(u.createdAt).toLocaleDateString('en-US', {
                               month: 'short',
                               year: 'numeric',
@@ -778,7 +752,7 @@ const AdminDashboard = () => {
                           <td className="py-3.5 px-4">
                             {u.isSuspended ? (
                               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950/40 text-rose-300 border border-rose-500/20">
-                                🚫 Suspended
+                                � Suspended
                               </span>
                             ) : (
                               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/40 text-emerald-300 border border-emerald-500/20">
@@ -798,7 +772,7 @@ const AdminDashboard = () => {
                                 {u.isSuspended ? 'Unsuspend' : 'Suspend'}
                               </GlassAiButton>
                             ) : (
-                              <span className="text-[11px] text-slate-400 italic">Current user</span>
+                              <span className="text-[11px] text-neutral-400 italic">Current user</span>
                             )}
                           </td>
                         </tr>
@@ -820,7 +794,7 @@ const AdminDashboard = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-12 h-12 rounded-2xl bg-rose-950/40 text-rose-400 flex items-center justify-center mb-4">
-              <Trash2 className="w-6 h-6" />
+              
             </div>
 
             <h3 className="text-lg font-bold text-white mb-1">
@@ -847,7 +821,6 @@ const AdminDashboard = () => {
                 loading={actionLoading}
                 variant="danger"
                 size="sm"
-                icon={Trash2}
               >
                 Yes, Delete Content
               </GlassAiButton>
@@ -864,7 +837,7 @@ const AdminDashboard = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-12 h-12 rounded-2xl bg-rose-950/40 text-rose-400 flex items-center justify-center mb-4">
-              <UserX className="w-6 h-6" />
+              
             </div>
 
             <h3 className="text-lg font-bold text-white mb-1">

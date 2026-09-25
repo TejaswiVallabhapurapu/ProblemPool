@@ -4,18 +4,6 @@ import { getCollaborativeProblems } from '../services/api';
 import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import GlassAiButton from '../components/GlassAiButton';
 import { LoaderContainer } from '../components/Loader';
-import {
-  Users,
-  Search,
-  Sparkles,
-  ArrowRight,
-  PlusCircle,
-  CheckCircle2,
-  Tag,
-  MapPin,
-  Clock,
-  Layers,
-} from 'lucide-react';
 
 const TeamUpDiscovery = () => {
   const [problems, setProblems] = useState([]);
@@ -66,13 +54,13 @@ const TeamUpDiscovery = () => {
         {/* Header Hero */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#181818] border border-white/10 text-xs font-bold text-slate-300 mb-4 shadow-md">
-            <span>🤝</span>
+            
             <span>TEAM UP & COLLABORATE</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4 leading-tight">
             Find Problems to Solve Together
           </h1>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+          <p className="text-sm sm:text-base text-neutral-400 leading-relaxed">
             Form small teams of up to 5 developers, divide tasks in private workspaces, build shared solutions, and earn contribution credit together.
           </p>
         </div>
@@ -81,7 +69,7 @@ const TeamUpDiscovery = () => {
         <div className="p-4 sm:p-6 rounded-3xl bg-[#141414] border border-white/10 shadow-xl mb-8 space-y-4">
           <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[240px]">
-              <Search className="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" />
+              
               <input
                 type="text"
                 value={searchQuery}
@@ -112,7 +100,7 @@ const TeamUpDiscovery = () => {
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                   category === cat
                     ? 'bg-[#262626] text-white border border-white/25 shadow-md'
-                    : 'bg-[#181818] text-slate-400 hover:text-white border border-white/10'
+                    : 'bg-[#181818] text-neutral-400 hover:text-white border border-white/10'
                 }`}
               >
                 {cat}
@@ -136,17 +124,16 @@ const TeamUpDiscovery = () => {
         ) : problems.length === 0 ? (
           <div className="text-center py-20 rounded-3xl bg-[#141414] border border-white/10 p-8 max-w-lg mx-auto">
             <div className="w-16 h-16 rounded-2xl bg-[#1e1e1e] border border-white/10 flex items-center justify-center mx-auto mb-4 text-2xl">
-              🤝
+              
             </div>
             <h3 className="text-xl font-bold text-white mb-2">No collaborative problems found</h3>
-            <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+            <p className="text-xs text-neutral-400 mb-6 leading-relaxed">
               Be the first to post a problem with "Allow Team Up" enabled and invite fellow developers to collaborate.
             </p>
             <GlassAiButton
               to="/create-problem"
               variant="primary"
               size="md"
-              icon={<PlusCircle className="w-4 h-4" />}
             >
               Post a Problem
             </GlassAiButton>
@@ -170,7 +157,7 @@ const TeamUpDiscovery = () => {
                       </span>
 
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#202020] border border-white/15 text-[11px] font-bold text-slate-200">
-                        <span>🤝</span>
+                        
                         <span>{hasActiveTeams ? `${prob.activeTeamsCount} Teams Active` : 'Open for Teams'}</span>
                       </span>
                     </div>
@@ -186,7 +173,7 @@ const TeamUpDiscovery = () => {
                     </Link>
 
                     {/* Description preview */}
-                    <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-4">
+                    <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed mb-4">
                       {prob.description}
                     </p>
 
@@ -194,24 +181,24 @@ const TeamUpDiscovery = () => {
                     <div className="p-3.5 rounded-2xl bg-[#121212] border border-white/10 mb-4 text-xs">
                       <div className="flex items-center justify-between font-bold text-slate-300 mb-1.5">
                         <span className="flex items-center gap-1.5">
-                          <Users className="w-3.5 h-3.5 text-slate-400" />
+                          
                           <span>Collaborators:</span>
                         </span>
                         <span className="text-white font-black">
                           {prob.totalTeamMembers || 0} Members
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-400">
+                      <div className="text-[11px] text-neutral-400">
                         {prob.openTeamsCount > 0
-                          ? `💡 ${prob.openTeamsCount} team(s) currently seeking members`
-                          : '🚀 Be the first to start a team for this problem!'}
+                          ? ` ${prob.openTeamsCount} team(s) currently seeking members`
+                          : ' Be the first to start a team for this problem!'}
                       </div>
                     </div>
                   </div>
 
                   {/* Actions Footer */}
                   <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-2">
-                    <span className="text-[11px] text-slate-500 font-medium">
+                    <span className="text-[11px] text-neutral-400 font-medium">
                       {prob.createdBy?.name ? `By ${prob.createdBy.name}` : 'Community Problem'}
                     </span>
 
@@ -219,7 +206,7 @@ const TeamUpDiscovery = () => {
                       to={`/problems/${prob._id}`}
                       size="xs"
                       variant="primary"
-                      icon={<ArrowRight className="w-3.5 h-3.5" />}
+                      icon={}
                       iconPosition="right"
                     >
                       View & Team Up
