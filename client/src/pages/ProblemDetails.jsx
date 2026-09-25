@@ -442,9 +442,7 @@ const ProblemDetails = () => {
                   size="xs"
                   variant={isSaved ? "primary" : "glass"}
                   title={isSaved ? 'Remove from saved problems' : 'Save problem for later'}
-                  icon={
-                    
-                  }
+                  icon=
                 >
                   {isSaved ? 'Saved' : 'Save'}
                 </GlassAiButton>

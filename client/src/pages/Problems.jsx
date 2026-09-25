@@ -74,7 +74,7 @@ const Problems = () => {
 
   // Sync state to URL search params
   useEffect(() => {
-    const params = {};
+    const params = ;
     if (debouncedSearch) params.q = debouncedSearch;
     if (selectedCategory && selectedCategory !== 'All') params.category = selectedCategory;
     if (selectedTag) params.tag = selectedTag;

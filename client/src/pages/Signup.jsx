@@ -15,7 +15,7 @@ const Signup = () => {
     confirmPassword: '',
   });
 
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState();
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
   const [socialNotice, setSocialNotice] = useState(null);
@@ -31,7 +31,7 @@ const Signup = () => {
   };
 
   const validate = () => {
-    const errors = {};
+    const errors = ;
     if (!formData.name.trim()) {
       errors.name = 'Full name is required';
     }

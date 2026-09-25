@@ -15,7 +15,7 @@ const Login = () => {
     password: '',
   });
 
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState();
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
   const [socialNotice, setSocialNotice] = useState(null);
@@ -35,7 +35,7 @@ const Login = () => {
   };
 
   const validate = () => {
-    const errors = {};
+    const errors = ;
     if (!formData.email.trim()) {
       errors.email = 'Email address is required';
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email.trim())) {

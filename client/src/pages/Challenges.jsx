@@ -266,9 +266,9 @@ const Challenges = () => {
   const [userProgress, setUserProgress] = useState(() => {
     try {
       const saved = localStorage.getItem(progressStorageKey);
-      return saved ? JSON.parse(saved) : {};
+      return saved ? JSON.parse(saved) : ;
     } catch {
-      return {};
+      return ;
     }
   });
 
@@ -286,7 +286,7 @@ const Challenges = () => {
     const fetchDbChallenges = async () => {
       setLoadingDb(true);
       try {
-        const res = await getChallenges({}, token);
+        const res = await getChallenges(, token);
         if (res?.success && Array.isArray(res.challenges)) {
           setDbChallenges(res.challenges);
         }
