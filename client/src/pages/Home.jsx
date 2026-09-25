@@ -12,7 +12,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getProblems, getPersonalizedFeed } from '../services/api';
+import { getProblems, getPersonalizedFeed, getCollaborativeProblems } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
 import AeroShards from '../components/AeroShards';
 import KnowledgeCore3D from '../components/KnowledgeCore3D';

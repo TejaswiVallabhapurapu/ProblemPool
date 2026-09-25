@@ -71,6 +71,9 @@ const Navbar = () => {
             <NavLink to="/problems" className={navLinkClass}>
               Problems
             </NavLink>
+            <NavLink to="/team-up" className={navLinkClass}>
+              🤝 Team Up
+            </NavLink>
             <NavLink to="/challenges" className={navLinkClass}>
               🧩 Challenges
             </NavLink>
@@ -209,6 +212,13 @@ const Navbar = () => {
             className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
           >
             Problems
+          </NavLink>
+          <NavLink
+            to="/team-up"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+          >
+            🤝 Team Up
           </NavLink>
           <NavLink
             to="/challenges"
