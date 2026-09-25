@@ -17,9 +17,9 @@ export const ThreeDFlipCard = ({
   showFlipHint = true,
   frontBadge = null,
   backBadge = null,
-  circleColor1,
-  circleColor2,
-  circleColor3,
+  circleColor1 = 'rgba(255, 255, 255, 0.05)',
+  circleColor2 = 'rgba(255, 255, 255, 0.04)',
+  circleColor3 = 'rgba(80, 80, 80, 0.25)',
   ariaLabel = 'Interactive 3D card',
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);

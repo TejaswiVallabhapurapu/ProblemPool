@@ -65,6 +65,9 @@ const Navbar = () => {
             <NavLink to={isAuthenticated ? '/dashboard' : '/'} end className={navLinkClass}>
               Dashboard
             </NavLink>
+            <NavLink to="/platform" className={navLinkClass}>
+              Platform
+            </NavLink>
             <NavLink to="/problems" className={navLinkClass}>
               Problems
             </NavLink>
@@ -192,6 +195,13 @@ const Navbar = () => {
             className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
           >
             Dashboard
+          </NavLink>
+          <NavLink
+            to="/platform"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+          >
+            Platform
           </NavLink>
           <NavLink
             to="/problems"

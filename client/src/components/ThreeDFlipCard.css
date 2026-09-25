@@ -1,4 +1,4 @@
-/* Uiverse.io ElSombrero2 Inspired 3D Flip Card CSS */
+/* Uiverse.io ElSombrero2 Inspired 3D Flip Card CSS - Dark Monochrome Edition */
 
 .uiverse-3d-card {
   perspective: 1200px;
@@ -44,30 +44,41 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Front Face */
+/* Front Face - Premium Dark Charcoal Glass */
 .uiverse-3d-front {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9));
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
   z-index: 2;
   transform: rotateY(0deg);
 }
 
-/* Back Face */
+.uiverse-3d-card:hover .uiverse-3d-front {
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+
+/* Back Face - Elevated Dark Slate Charcoal */
 .uiverse-3d-back {
-  background: linear-gradient(150deg, #0d0f17 0%, #17152b 50%, #0a0b12 100%);
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.3), inset 0 1px rgba(255, 255, 255, 0.1);
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.65), inset 0 1px rgba(255, 255, 255, 0.08);
   color: #f8fafc;
   transform: rotateY(180deg);
   z-index: 1;
 }
 
-/* Animated Floating Glow Circles Background */
+.uiverse-3d-card:hover .uiverse-3d-back {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* Animated Floating Glow Circles Background - Monochrome Subtle Depth */
 .uiverse-3d-img {
   position: absolute;
   inset: 0;
@@ -84,7 +95,7 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background-color: rgba(168, 85, 247, 0.45);
+  background-color: rgba(255, 255, 255, 0.05);
   top: -40px;
   left: -40px;
   filter: blur(40px);
@@ -97,7 +108,7 @@
   bottom: -35px;
   left: auto;
   right: -35px;
-  background-color: rgba(99, 102, 241, 0.5);
+  background-color: rgba(255, 255, 255, 0.04);
   animation-delay: -2s;
 }
 
@@ -106,9 +117,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(236, 72, 153, 0.35);
-  width: 110px;
-  height: 110px;
+  background-color: rgba(80, 80, 80, 0.25);
+  width: 120px;
+  height: 120px;
   filter: blur(45px);
   animation-delay: -1s;
 }
@@ -138,41 +149,41 @@
   padding: 1.5rem;
 }
 
-/* Flip Badge Indicator */
+/* Flip Badge Indicator - Dark Glass */
 .uiverse-3d-flip-hint {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 999px;
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  background: rgba(241, 245, 249, 0.85);
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  color: #64748b;
+  background: rgba(30, 30, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a0a0a0;
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
 }
 
 .uiverse-3d-flip-hint:hover {
-  background: #6366f1;
+  background: #2a2a2a;
   color: #ffffff;
-  border-color: #6366f1;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
 .uiverse-3d-back .uiverse-3d-flip-hint {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.85);
+  background: rgba(35, 35, 35, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #b0b0b0;
 }
 
 .uiverse-3d-back .uiverse-3d-flip-hint:hover {
-  background: #a855f7;
-  border-color: #a855f7;
+  background: #333333;
+  border-color: rgba(255, 255, 255, 0.35);
   color: #ffffff;
 }
 
