@@ -202,14 +202,14 @@ const Problems = () => {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Real-world Problem Pool</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Explore Problems
           </h1>
-          <p className="text-slate-600 mt-2 text-base max-w-2xl">
+          <p className="text-slate-300 mt-2 text-base max-w-2xl">
             Search across titles, descriptions, categories, tags, and authors to find real-world challenges to solve.
           </p>
         </div>
@@ -228,7 +228,7 @@ const Problems = () => {
       {/* ========================================================= */}
       {/* SEARCH & FILTERS CONTROL BAR */}
       {/* ========================================================= */}
-      <div className="glass-card-3d rounded-3xl p-6 border border-slate-200/90 shadow-sm mb-8 space-y-5">
+      <div className="glass-card-3d rounded-3xl p-6 border border-white/10 shadow-sm mb-8 space-y-5">
         {/* 1. Main Search Bar */}
         <div className="relative flex items-center">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
@@ -237,13 +237,13 @@ const Problems = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search problems by title, description, tags, category, or author username..."
-            className="w-full pl-12 pr-24 py-3.5 rounded-2xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 text-slate-900 placeholder:text-slate-400 text-sm outline-none transition bg-slate-50/50 focus:bg-white"
+            className="w-full pl-12 pr-24 py-3.5 rounded-2xl border border-white/10 focus:border-indigo-500 focus:ring-4 focus:ring-white/10 text-white placeholder:text-slate-400 text-sm outline-none transition bg-[#181818] focus:bg-[#141414]/90 backdrop-blur-md"
           />
           {searchTerm && (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-xl font-medium transition flex items-center gap-1 cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-100 bg-[#202020] hover:bg-slate-200 px-2.5 py-1.5 rounded-xl font-medium transition flex items-center gap-1 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
               <span>Clear</span>
@@ -263,7 +263,7 @@ const Problems = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 cursor-pointer pr-9 transition"
+                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-100 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-white/10 cursor-pointer pr-9 transition"
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option
@@ -291,7 +291,7 @@ const Problems = () => {
               <select
                 value={selectedSort}
                 onChange={(e) => setSelectedSort(e.target.value)}
-                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 cursor-pointer pr-9 transition"
+                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-100 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-white/10 cursor-pointer pr-9 transition"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -316,7 +316,7 @@ const Problems = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedCategory('All')}
-                  className="text-indigo-600 hover:text-indigo-800 text-[10px] font-semibold lowercase underline"
+                  className="text-white hover:text-indigo-800 text-[10px] font-semibold lowercase underline"
                 >
                   Reset category
                 </button>
@@ -326,7 +326,7 @@ const Problems = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 cursor-pointer pr-9 transition"
+                className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#141414]/90 backdrop-blur-md text-slate-100 text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-white/10 cursor-pointer pr-9 transition"
               >
                 <option value="All">🌐 All Categories</option>
                 {POPULAR_CATEGORIES.map((cat) => (
@@ -343,7 +343,7 @@ const Problems = () => {
         </div>
 
         {/* 3. Category Filter Horizontal Scroll Pills */}
-        <div className="pt-2 border-t border-slate-100">
+        <div className="pt-2 border-t border-white/10">
           <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
             <span>Browse by Category</span>
           </div>
@@ -355,7 +355,7 @@ const Problems = () => {
 
         {/* 4. Trending / Popular Tags Ribbon */}
         {popularTags.length > 0 && (
-          <div className="pt-3 border-t border-slate-100 flex items-center gap-2 flex-wrap">
+          <div className="pt-3 border-t border-white/10 flex items-center gap-2 flex-wrap">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 shrink-0">
               <TagIcon className="w-3 h-3" />
               <span>Trending Tags:</span>
@@ -371,7 +371,7 @@ const Problems = () => {
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition border cursor-pointer ${
                       isSelected
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                        : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700'
+                        : 'bg-[#181818] text-slate-300 border-white/10 hover:border-indigo-300 hover:bg-white/10 hover:text-slate-200'
                     }`}
                   >
                     <span>#{item.tag}</span>
@@ -387,17 +387,17 @@ const Problems = () => {
 
         {/* 5. Active Filter Badges Bar */}
         {hasActiveFilters && (
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 flex-wrap bg-slate-50/70 p-3 rounded-2xl">
+          <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap bg-[#181818] p-3 rounded-2xl">
             <div className="flex items-center gap-2 flex-wrap text-xs">
               <span className="font-bold text-slate-500">Active Filters:</span>
 
               {debouncedSearch && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141414]/90 backdrop-blur-md border border-white/10 text-slate-100 font-medium shadow-2xs">
                   <span>Query: "{debouncedSearch}"</span>
                   <button
                     type="button"
                     onClick={handleClearSearch}
-                    className="hover:text-rose-600 cursor-pointer ml-1"
+                    className="hover:text-rose-400 cursor-pointer ml-1"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -405,12 +405,12 @@ const Problems = () => {
               )}
 
               {selectedCategory !== 'All' && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-800 font-medium">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/10 border border-white/20 text-indigo-800 font-medium">
                   <span>Category: {selectedCategory}</span>
                   <button
                     type="button"
                     onClick={() => setSelectedCategory('All')}
-                    className="hover:text-rose-600 cursor-pointer ml-1"
+                    className="hover:text-rose-400 cursor-pointer ml-1"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -431,14 +431,14 @@ const Problems = () => {
               )}
 
               {selectedStatus !== 'all' && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141414]/90 backdrop-blur-md border border-white/10 text-slate-100 font-medium shadow-2xs">
                   <span>
                     Status: {STATUS_OPTIONS.find((s) => s.value === selectedStatus)?.label || selectedStatus}
                   </span>
                   <button
                     type="button"
                     onClick={() => setSelectedStatus('all')}
-                    className="hover:text-rose-600 cursor-pointer ml-1"
+                    className="hover:text-rose-400 cursor-pointer ml-1"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -446,14 +446,14 @@ const Problems = () => {
               )}
 
               {selectedSort !== 'newest' && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 font-medium shadow-2xs">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141414]/90 backdrop-blur-md border border-white/10 text-slate-100 font-medium shadow-2xs">
                   <span>
                     Sort: {SORT_OPTIONS.find((s) => s.value === selectedSort)?.label || selectedSort}
                   </span>
                   <button
                     type="button"
                     onClick={() => setSelectedSort('newest')}
-                    className="hover:text-rose-600 cursor-pointer ml-1"
+                    className="hover:text-rose-400 cursor-pointer ml-1"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -464,7 +464,7 @@ const Problems = () => {
             <button
               type="button"
               onClick={handleClearAllFilters}
-              className="text-xs font-semibold text-rose-600 hover:text-rose-700 underline cursor-pointer ml-auto"
+              className="text-xs font-semibold text-rose-400 hover:text-rose-300 underline cursor-pointer ml-auto"
             >
               Clear All Filters
             </button>
@@ -479,16 +479,16 @@ const Problems = () => {
         <div className="flex items-center gap-2">
           {debouncedSearch ? (
             <span>
-              Search Results for <strong className="text-slate-900">"{debouncedSearch}"</strong>
+              Search Results for <strong className="text-white">"{debouncedSearch}"</strong>
             </span>
           ) : selectedTag ? (
             <span>
-              Problems tagged with <strong className="text-indigo-600">#{selectedTag}</strong>
+              Problems tagged with <strong className="text-white">#{selectedTag}</strong>
             </span>
           ) : (
             <span>Showing all matching problems</span>
           )}
-          <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="px-2 py-0.5 rounded-full bg-[#202020] text-slate-300 border border-white/10">
             {totalCount} {totalCount === 1 ? 'problem found' : 'problems found'}
           </span>
         </div>
@@ -500,12 +500,12 @@ const Problems = () => {
       {loading ? (
         <LoaderContainer minHeight="40vh" message="Loading problems..." />
       ) : error ? (
-        <div className="bg-white rounded-3xl border border-rose-200 p-10 text-center max-w-lg mx-auto shadow-sm">
-          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
+        <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-rose-500/20 p-10 text-center max-w-lg mx-auto shadow-sm">
+          <div className="w-12 h-12 rounded-full bg-rose-950/40 text-rose-400 flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-6 h-6" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 mb-2">Failed to Load Problems</h2>
-          <p className="text-sm text-slate-600 mb-6">{error}</p>
+          <h2 className="text-lg font-bold text-white mb-2">Failed to Load Problems</h2>
+          <p className="text-sm text-slate-300 mb-6">{error}</p>
           <GlassAiButton
             type="button"
             onClick={fetchProblemsList}

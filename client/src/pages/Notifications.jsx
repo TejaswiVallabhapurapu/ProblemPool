@@ -30,16 +30,16 @@ import EmptyState3D from '../components/EmptyState3D';
 import { Loader, LoaderContainer } from '../components/Loader';
 
 const NOTIFICATION_ICONS = {
-  answer: { icon: MessageSquare, color: 'text-indigo-600 bg-indigo-50 border-indigo-200' },
-  best_answer: { icon: Star, color: 'text-amber-600 bg-amber-50 border-amber-200' },
+  answer: { icon: MessageSquare, color: 'text-white bg-white/10 border-white/20' },
+  best_answer: { icon: Star, color: 'text-amber-400 bg-amber-950/40 border-amber-500/20' },
   review: { icon: MessageCircle, color: 'text-sky-600 bg-sky-50 border-sky-200' },
   reply: { icon: MessageSquare, color: 'text-purple-600 bg-purple-50 border-purple-200' },
-  vote: { icon: ThumbsUp, color: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
+  vote: { icon: ThumbsUp, color: 'text-emerald-600 bg-emerald-950/40 border-emerald-500/20' },
   mention: { icon: AtSign, color: 'text-blue-600 bg-blue-50 border-blue-200' },
   follow: { icon: UserPlus, color: 'text-violet-600 bg-violet-50 border-violet-200' },
   badge: { icon: Award, color: 'text-orange-600 bg-orange-50 border-orange-200' },
-  reputation: { icon: Sparkles, color: 'text-amber-600 bg-amber-50 border-amber-200' },
-  system: { icon: Bell, color: 'text-slate-600 bg-slate-50 border-slate-200' },
+  reputation: { icon: Sparkles, color: 'text-amber-400 bg-amber-950/40 border-amber-500/20' },
+  system: { icon: Bell, color: 'text-slate-300 bg-[#181818] border-white/10' },
 };
 
 const formatTimeAgo = (dateString) => {
@@ -179,11 +179,11 @@ const Notifications = () => {
   if (!isAuthenticated) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 text-2xl">
+        <div className="w-16 h-16 rounded-2xl bg-white/10 text-white flex items-center justify-center mx-auto mb-4 text-2xl">
           🔒
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Sign In Required</h2>
-        <p className="text-sm text-slate-600 mb-6">
+        <h2 className="text-2xl font-bold text-white mb-2">Sign In Required</h2>
+        <p className="text-sm text-slate-300 mb-6">
           Please sign in to view and manage your ProblemPool notifications.
         </p>
         <Link
@@ -203,14 +203,14 @@ const Notifications = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold mb-2">
             <Bell className="w-3.5 h-3.5" />
             <span>Community Updates</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">
             Notification Center
           </h1>
-          <p className="text-slate-600 mt-1 text-sm">
+          <p className="text-slate-300 mt-1 text-sm">
             Stay updated with real-time answers, reviews, helpful votes, and community achievements.
           </p>
         </div>
@@ -245,14 +245,14 @@ const Notifications = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 mb-6 border-b border-slate-200 pb-3">
+      <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-3">
         <button
           type="button"
           onClick={() => setFilter('all')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             filter === 'all'
               ? 'bg-indigo-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              : 'text-slate-300 hover:text-white hover:bg-[#202020]'
           }`}
         >
           All Notifications
@@ -264,14 +264,14 @@ const Notifications = () => {
           className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             filter === 'unread'
               ? 'bg-indigo-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              : 'text-slate-300 hover:text-white hover:bg-[#202020]'
           }`}
         >
           <span>Unread</span>
           {unreadCount > 0 && (
             <span
               className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                filter === 'unread' ? 'bg-white/20 text-white' : 'bg-rose-100 text-rose-700'
+                filter === 'unread' ? 'bg-[#141414]/90 backdrop-blur-md/20 text-white' : 'bg-rose-100 text-rose-300'
               }`}
             >
               {unreadCount}
@@ -284,8 +284,8 @@ const Notifications = () => {
       {loading ? (
         <LoaderContainer minHeight="40vh" message="Loading notifications..." />
       ) : error ? (
-        <div className="bg-white rounded-3xl border border-rose-200 p-8 text-center max-w-md mx-auto">
-          <p className="text-sm text-rose-600 font-semibold mb-4">{error}</p>
+        <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-rose-500/20 p-8 text-center max-w-md mx-auto">
+          <p className="text-sm text-rose-400 font-semibold mb-4">{error}</p>
           <GlassAiButton
             type="button"
             onClick={fetchNotificationList}
@@ -296,11 +296,11 @@ const Notifications = () => {
           </GlassAiButton>
         </div>
       ) : notifications.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-md mx-auto shadow-xs">
-          <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4">
+        <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 p-12 text-center max-w-md mx-auto shadow-xs">
+          <div className="w-14 h-14 rounded-2xl bg-white/10 text-white flex items-center justify-center mx-auto mb-4">
             <Inbox className="w-7 h-7" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">
+          <h3 className="text-lg font-bold text-white mb-1">
             {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
           </h3>
           <p className="text-xs text-slate-500 mb-6">
@@ -317,7 +317,7 @@ const Notifications = () => {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs divide-y divide-slate-100 overflow-hidden">
+        <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 shadow-xs divide-y divide-slate-100 overflow-hidden">
           {notifications.map((notif) => {
             const config = NOTIFICATION_ICONS[notif.type] || NOTIFICATION_ICONS.system;
             const Icon = config.icon;
@@ -326,8 +326,8 @@ const Notifications = () => {
               <div
                 key={notif._id}
                 onClick={() => handleNotificationClick(notif)}
-                className={`p-4 sm:p-5 flex items-start justify-between gap-4 hover:bg-slate-50 transition cursor-pointer relative group ${
-                  !notif.read ? 'bg-indigo-50/20' : ''
+                className={`p-4 sm:p-5 flex items-start justify-between gap-4 hover:bg-[#181818] transition cursor-pointer relative group ${
+                  !notif.read ? 'bg-white/10/20' : ''
                 }`}
               >
                 <div className="flex items-start gap-3.5 min-w-0 flex-1">
@@ -342,7 +342,7 @@ const Notifications = () => {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       {notif.title && (
-                        <h4 className="text-sm font-bold text-slate-900">
+                        <h4 className="text-sm font-bold text-white">
                           {notif.title}
                         </h4>
                       )}
@@ -353,14 +353,14 @@ const Notifications = () => {
                       )}
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-2">
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-2">
                       {notif.message}
                     </p>
 
                     <div className="flex items-center gap-3 text-xs text-slate-400 font-medium">
                       <span>{formatTimeAgo(notif.createdAt)}</span>
                       {notif.link && (
-                        <span className="text-indigo-600 group-hover:underline inline-flex items-center gap-1 font-semibold">
+                        <span className="text-white group-hover:underline inline-flex items-center gap-1 font-semibold">
                           <span>View Details</span>
                           <ExternalLink className="w-3 h-3" />
                         </span>
@@ -376,7 +376,7 @@ const Notifications = () => {
                       type="button"
                       onClick={(e) => handleMarkAsRead(e, notif._id)}
                       title="Mark as read"
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
                     >
                       <Check className="w-4 h-4" />
                     </button>
@@ -386,7 +386,7 @@ const Notifications = () => {
                     type="button"
                     onClick={(e) => handleDelete(e, notif._id)}
                     title="Delete notification"
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer opacity-0 group-hover:opacity-100 sm:opacity-0"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 transition cursor-pointer opacity-0 group-hover:opacity-100 sm:opacity-0"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

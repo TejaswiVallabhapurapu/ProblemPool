@@ -46,22 +46,22 @@ import {
 } from 'lucide-react';
 
 const CATEGORY_COLORS = {
-  Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  Programming: 'bg-white/10 text-slate-200 border-white/20',
   'Web Development': 'bg-sky-50 text-sky-700 border-sky-200',
-  Database: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  Database: 'bg-emerald-950/40 text-emerald-300 border-emerald-500/20',
   'AI & ML': 'bg-purple-50 text-purple-700 border-purple-200',
-  DSA: 'bg-rose-50 text-rose-700 border-rose-200',
+  DSA: 'bg-rose-950/40 text-rose-300 border-rose-500/20',
   Technology: 'bg-cyan-50 text-cyan-700 border-cyan-200',
-  Career: 'bg-amber-50 text-amber-700 border-amber-200',
+  Career: 'bg-amber-950/40 text-amber-300 border-amber-500/20',
   College: 'bg-orange-50 text-orange-700 border-orange-200',
   Projects: 'bg-blue-50 text-blue-700 border-blue-200',
   Education: 'bg-teal-50 text-teal-700 border-teal-200',
-  Healthcare: 'bg-rose-50 text-rose-700 border-rose-200',
-  Environment: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  Transportation: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  Healthcare: 'bg-rose-950/40 text-rose-300 border-rose-500/20',
+  Environment: 'bg-emerald-950/40 text-emerald-300 border-emerald-500/20',
+  Transportation: 'bg-white/10 text-slate-200 border-white/20',
   Community: 'bg-violet-50 text-violet-700 border-violet-200',
-  General: 'bg-slate-50 text-slate-700 border-slate-200',
-  Other: 'bg-slate-50 text-slate-700 border-slate-200',
+  General: 'bg-[#181818] text-slate-200 border-white/10',
+  Other: 'bg-[#181818] text-slate-200 border-white/10',
 };
 
 const formatDate = (dateString) => {
@@ -369,7 +369,7 @@ const ProblemDetails = () => {
       <div className="mb-6">
         <Link
           to="/problems"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -385,13 +385,13 @@ const ProblemDetails = () => {
 
       {/* 2. Error / Not Found State */}
       {!loading && error && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-xs">
-          <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-600 mx-auto flex items-center justify-center mb-3">
+        <div className="bg-[#141414]/90 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center shadow-xs">
+          <div className="w-12 h-12 rounded-full bg-rose-950/40 text-rose-400 mx-auto flex items-center justify-center mb-3">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Problem Not Found</h2>
+          <h2 className="text-xl font-bold text-white mb-2">Problem Not Found</h2>
           <p className="text-sm text-slate-500 mb-6">{error}</p>
           <Link
             to="/problems"
@@ -406,9 +406,9 @@ const ProblemDetails = () => {
       {!loading && !error && problem && (
         <div className="space-y-8">
           {/* Problem Card */}
-          <article className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+          <article className="bg-[#141414]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm p-6 sm:p-10">
             {/* Header Metadata */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100 relative">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-white/10 relative">
               {/* Notice popup if unauthenticated */}
               {saveNotice && (
                 <div className="absolute top-0 right-0 z-20 bg-slate-900/95 text-white text-xs font-medium py-1.5 px-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in zoom-in duration-150">
@@ -427,7 +427,7 @@ const ProblemDetails = () => {
               <div className="flex flex-wrap items-center gap-2.5">
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
-                    CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200'
+                    CATEGORY_COLORS[problem.category] || 'bg-[#181818] text-slate-200 border-white/10'
                   }`}
                 >
                   {problem.category}
@@ -439,8 +439,8 @@ const ProblemDetails = () => {
                     problemStatus === 'Solved'
                       ? 'bg-blue-50 text-blue-800 border-blue-200 shadow-xs'
                       : problemStatus === 'Answered'
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                      : 'bg-amber-50 text-amber-800 border-amber-200'
+                      ? 'bg-emerald-950/40 text-emerald-800 border-emerald-500/20'
+                      : 'bg-amber-950/40 text-amber-800 border-amber-500/20'
                   }`}
                 >
                   <span>
@@ -512,13 +512,13 @@ const ProblemDetails = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-snug mb-4">
               {problem.title}
             </h1>
 
             {/* Author & Location Meta Bar */}
             <div className="flex flex-wrap items-center gap-4 mb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold">
                 <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
@@ -526,7 +526,7 @@ const ProblemDetails = () => {
                 {authorEmail && <span className="text-indigo-400 font-normal">({authorEmail})</span>}
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#181818] border border-white/10 text-slate-200 text-xs font-medium">
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -534,7 +534,7 @@ const ProblemDetails = () => {
                 <span>{problem.location}</span>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181818] border border-white/10 text-slate-300 text-xs font-medium">
                 <Eye className="w-3.5 h-3.5 text-slate-400" />
                 <span>{problem.views || 0} views</span>
               </div>
@@ -546,14 +546,14 @@ const ProblemDetails = () => {
                 <Layers className="w-3.5 h-3.5 text-slate-400" />
                 <span>Problem Description</span>
               </h2>
-              <div className="bg-slate-50/60 p-5 sm:p-7 rounded-2xl border border-slate-100">
+              <div className="bg-[#181818] p-5 sm:p-7 rounded-2xl border border-white/10">
                 <MarkdownRenderer content={problem.description} />
               </div>
             </div>
 
             {/* Tags Section */}
             {Array.isArray(problem.tags) && problem.tags.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-slate-100">
+              <div className="mt-6 pt-6 border-t border-white/10">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-slate-400" />
                   <span>Tags</span>
@@ -563,7 +563,7 @@ const ProblemDetails = () => {
                     <Link
                       key={tag}
                       to={`/problems?tag=${encodeURIComponent(tag)}`}
-                      className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-50/80 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-200/80 transition"
+                      className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-white/10/80 text-slate-200 hover:bg-indigo-100 hover:text-indigo-800 border border-white/20/80 transition"
                     >
                       #{tag}
                     </Link>
@@ -782,11 +782,11 @@ const ProblemDetails = () => {
           {/* ========================================================= */}
           {/* ANSWERS SECTION */}
           {/* ========================================================= */}
-          <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+          <section className="bg-[#141414]/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm p-6 sm:p-10">
             {/* Answers Section Header with Sorting Controls */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10 mb-8">
               <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                <h2 className="text-2xl font-extrabold text-white tracking-tight">
                   Answers
                 </h2>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
@@ -816,14 +816,14 @@ const ProblemDetails = () => {
                 {answers.length > 0 && (
                   <div className="flex items-center gap-1.5 text-xs">
                     <span className="text-slate-400 font-semibold hidden sm:inline">Sort:</span>
-                    <div className="inline-flex rounded-xl bg-slate-100 p-1">
+                    <div className="inline-flex rounded-xl bg-[#202020] p-1">
                       <button
                         type="button"
                         onClick={() => setAnswerSort('best_answer')}
                         className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
                           answerSort === 'best_answer'
-                            ? 'bg-white text-indigo-600 shadow-xs'
-                            : 'text-slate-600 hover:text-slate-900'
+                            ? 'bg-[#141414]/90 backdrop-blur-md text-white shadow-xs'
+                            : 'text-slate-300 hover:text-white'
                         }`}
                       >
                         ⭐ Best Answer
@@ -833,8 +833,8 @@ const ProblemDetails = () => {
                         onClick={() => setAnswerSort('most_helpful')}
                         className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
                           answerSort === 'most_helpful'
-                            ? 'bg-white text-indigo-600 shadow-xs'
-                            : 'text-slate-600 hover:text-slate-900'
+                            ? 'bg-[#141414]/90 backdrop-blur-md text-white shadow-xs'
+                            : 'text-slate-300 hover:text-white'
                         }`}
                       >
                         👍 Most Helpful
@@ -844,8 +844,8 @@ const ProblemDetails = () => {
                         onClick={() => setAnswerSort('newest')}
                         className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
                           answerSort === 'newest'
-                            ? 'bg-white text-indigo-600 shadow-xs'
-                            : 'text-slate-600 hover:text-slate-900'
+                            ? 'bg-[#141414]/90 backdrop-blur-md text-white shadow-xs'
+                            : 'text-slate-300 hover:text-white'
                         }`}
                       >
                         🕒 Newest
@@ -855,8 +855,8 @@ const ProblemDetails = () => {
                         onClick={() => setAnswerSort('oldest')}
                         className={`px-3 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
                           answerSort === 'oldest'
-                            ? 'bg-white text-indigo-600 shadow-xs'
-                            : 'text-slate-600 hover:text-slate-900'
+                            ? 'bg-[#141414]/90 backdrop-blur-md text-white shadow-xs'
+                            : 'text-slate-300 hover:text-white'
                         }`}
                       >
                         ⌛ Oldest
@@ -869,16 +869,16 @@ const ProblemDetails = () => {
 
             {/* AI Answer Summary Display Card */}
             {showAiSummaryCard && (
-              <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/70 border border-indigo-200 shadow-sm animate-in fade-in zoom-in-95 duration-200">
-                <div className="flex items-start justify-between gap-3 pb-3 border-b border-indigo-100 mb-3">
+              <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/70 border border-white/20 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/15 mb-3">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xs">
                       <Sparkles className="w-4 h-4" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-slate-900">AI Answer Summary</h4>
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                        <h4 className="text-sm font-bold text-white">AI Answer Summary</h4>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-white/20">
                           ✨ AI-generated summary
                         </span>
                       </div>
@@ -893,7 +893,7 @@ const ProblemDetails = () => {
                       type="button"
                       onClick={handleSummarizeAnswers}
                       disabled={summarizingAi}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-white/80 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
                       title="Re-generate summary"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${summarizingAi ? 'animate-spin' : ''}`} />
@@ -901,7 +901,7 @@ const ProblemDetails = () => {
                     <button
                       type="button"
                       onClick={() => setShowAiSummaryCard(false)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white/80 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
                       title="Close summary"
                     >
                       <X className="w-4 h-4" />
@@ -910,12 +910,12 @@ const ProblemDetails = () => {
                 </div>
 
                 {summarizingAi ? (
-                  <div className="py-6 flex flex-col items-center justify-center gap-2 text-center text-xs text-indigo-700 font-medium">
+                  <div className="py-6 flex flex-col items-center justify-center gap-2 text-center text-xs text-slate-200 font-medium">
                     <Loader size="sm" />
                     <span>Analyzing community solutions and generating summary...</span>
                   </div>
                 ) : aiSummaryError ? (
-                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between">
+                  <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/20 text-rose-800 text-xs flex items-center justify-between">
                     <span>{aiSummaryError}</span>
                     <button
                       type="button"
@@ -927,12 +927,12 @@ const ProblemDetails = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <div className="p-4 rounded-xl bg-white/90 border border-indigo-100/80 shadow-2xs text-xs sm:text-sm text-slate-800 leading-relaxed">
+                    <div className="p-4 rounded-xl bg-[#141414]/90 backdrop-blur-md/90 border border-white/15/80 shadow-2xs text-xs sm:text-sm text-slate-100 leading-relaxed">
                       {aiSummary}
                     </div>
 
                     {aiKeyTakeaways && aiKeyTakeaways.length > 0 && (
-                      <div className="p-3.5 rounded-xl bg-indigo-50/60 border border-indigo-100">
+                      <div className="p-3.5 rounded-xl bg-white/10/60 border border-white/15">
                         <span className="text-xs font-bold text-indigo-950 block mb-1.5">
                           💡 Key Takeaways:
                         </span>
@@ -954,20 +954,20 @@ const ProblemDetails = () => {
 
             {/* Answer Form (If Logged In) */}
             {isAuthenticated ? (
-              <div className="mb-10 p-6 rounded-2xl bg-slate-50/70 border border-slate-200/80">
+              <div className="mb-10 p-6 rounded-2xl bg-[#181818] border border-white/10">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-bold text-slate-900">
+                  <h3 className="text-base font-bold text-white">
                     Your Answer
                   </h3>
                   {user && (
                     <span className="text-xs text-slate-500 font-medium">
-                      Answering as <strong className="text-indigo-600">{user.name}</strong>
+                      Answering as <strong className="text-white">{user.name}</strong>
                     </span>
                   )}
                 </div>
 
                 {answerError && (
-                  <div className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+                  <div className="mb-4 p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/20 text-rose-800 text-xs flex items-start gap-2.5">
                     <svg className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                     </svg>
@@ -976,7 +976,7 @@ const ProblemDetails = () => {
                 )}
 
                 {answerSuccess && (
-                  <div className="mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
+                  <div className="mb-4 p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/20 text-emerald-800 text-xs flex items-start gap-2.5">
                     <svg className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -985,7 +985,7 @@ const ProblemDetails = () => {
                 )}
 
                 <form onSubmit={handleAnswerSubmit} className="space-y-4">
-                  <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+                  <div className="rounded-2xl border border-white/10 bg-[#141414]/90 backdrop-blur-md shadow-xs overflow-hidden focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-white/10 transition-all">
                     <MarkdownToolbar
                       value={answerContent}
                       onChange={(newVal) => {
@@ -1005,10 +1005,10 @@ const ProblemDetails = () => {
                           if (answerError) setAnswerError('');
                         }}
                         placeholder="Explain your solution, steps to resolve, or code examples using Markdown (e.g. ```java ... ```)..."
-                        className="w-full px-4 py-3 bg-white text-slate-900 text-sm placeholder-slate-400 focus:outline-none font-mono text-[13px] leading-relaxed resize-y"
+                        className="w-full px-4 py-3 bg-[#141414]/90 backdrop-blur-md text-white text-sm placeholder-slate-400 focus:outline-none font-mono text-[13px] leading-relaxed resize-y"
                       />
                     ) : (
-                      <div className="p-4 sm:p-5 min-h-[160px] bg-slate-50/40">
+                      <div className="p-4 sm:p-5 min-h-[160px] bg-[#181818]">
                         {answerContent.trim() ? (
                           <MarkdownRenderer content={answerContent} />
                         ) : (
@@ -1022,7 +1022,7 @@ const ProblemDetails = () => {
 
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-[11px] text-slate-400 font-medium">
-                      💡 Tip: Use <code className="bg-slate-100 text-indigo-600 px-1 py-0.5 rounded font-mono">```language</code> for syntax-highlighted code blocks with a copy button.
+                      💡 Tip: Use <code className="bg-[#202020] text-white px-1 py-0.5 rounded font-mono">```language</code> for syntax-highlighted code blocks with a copy button.
                     </span>
                     <GlassAiButton
                       type="submit"
@@ -1038,12 +1038,12 @@ const ProblemDetails = () => {
               </div>
             ) : (
               /* Prompt to Log in (If Not Logged In) */
-              <div className="mb-10 p-6 rounded-2xl bg-indigo-50/60 border border-indigo-100 text-center sm:text-left sm:flex sm:items-center sm:justify-between gap-4">
+              <div className="mb-10 p-6 rounded-2xl bg-white/10/60 border border-white/15 text-center sm:text-left sm:flex sm:items-center sm:justify-between gap-4">
                 <div className="mb-4 sm:mb-0">
-                  <h3 className="text-base font-bold text-slate-900 mb-1">
+                  <h3 className="text-base font-bold text-white mb-1">
                     Have a solution or idea for this problem?
                   </h3>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-xs text-slate-300">
                     Please sign in to answer this problem, vote, and review community solutions.
                   </p>
                 </div>
@@ -1091,10 +1091,10 @@ const ProblemDetails = () => {
           {/* RELATED PROBLEMS SECTION */}
           {/* ========================================================= */}
           {relatedProblems.length > 0 && (
-            <section className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-slate-100">
+            <section className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 shadow-sm p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-white/10">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
                     <span>🔗 Related Problems</span>
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
@@ -1103,7 +1103,7 @@ const ProblemDetails = () => {
                 </div>
                 <Link
                   to={problem.category ? `/problems?category=${encodeURIComponent(problem.category)}` : '/problems'}
-                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 self-start sm:self-auto"
+                  className="text-xs font-semibold text-white hover:text-slate-200 inline-flex items-center gap-1 self-start sm:self-auto"
                 >
                   <span>More in {problem.category || 'this category'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1119,7 +1119,7 @@ const ProblemDetails = () => {
                     <Link
                       key={rel._id}
                       to={`/problems/${rel._id}`}
-                      className="group p-4 rounded-2xl border border-slate-200/90 bg-slate-50/40 hover:bg-white hover:border-indigo-200 transition-all duration-200 shadow-xs flex flex-col justify-between"
+                      className="group p-4 rounded-2xl border border-white/10 bg-[#181818] hover:bg-[#141414]/90 backdrop-blur-md hover:border-white/20 transition-all duration-200 shadow-xs flex flex-col justify-between"
                     >
                       <div>
                         {/* Header: Category + Status */}
@@ -1135,10 +1135,10 @@ const ProblemDetails = () => {
                           <span
                             className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                               isSolved
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                ? 'bg-amber-950/40 text-amber-300 border border-amber-500/20'
                                 : isAnswered
-                                ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                                : 'bg-slate-100 text-slate-600 border border-slate-200'
+                                ? 'bg-white/10 text-slate-200 border border-white/20'
+                                : 'bg-[#202020] text-slate-300 border border-white/10'
                             }`}
                           >
                             {isSolved ? '🏆 Solved' : isAnswered ? '💡 Answered' : '❓ Open'}
@@ -1146,7 +1146,7 @@ const ProblemDetails = () => {
                         </div>
 
                         {/* Title */}
-                        <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2 leading-snug">
+                        <h4 className="font-bold text-sm text-white group-hover:text-white transition-colors line-clamp-2 mb-2 leading-snug">
                           {rel.title}
                         </h4>
 
@@ -1156,7 +1156,7 @@ const ProblemDetails = () => {
                             {rel.tags.slice(0, 3).map((t) => (
                               <span
                                 key={t}
-                                className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-600"
+                                className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#202020] text-slate-300"
                               >
                                 #{t}
                               </span>
@@ -1169,7 +1169,7 @@ const ProblemDetails = () => {
                       </div>
 
                       {/* Footer metrics */}
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                      <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                         <div className="flex items-center gap-3">
                           <span className="flex items-center gap-1">
                             <Eye className="w-3.5 h-3.5 text-slate-400" />
@@ -1180,7 +1180,7 @@ const ProblemDetails = () => {
                             <span>{rel.answersCount || 0}</span>
                           </span>
                         </div>
-                        <span className="text-indigo-600 group-hover:translate-x-0.5 transition-transform font-semibold">
+                        <span className="text-white group-hover:translate-x-0.5 transition-transform font-semibold">
                           View →
                         </span>
                       </div>
@@ -1195,7 +1195,7 @@ const ProblemDetails = () => {
           <div className="pt-2 flex items-center justify-between">
             <Link
               to="/problems"
-              className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1.5"
+              className="text-sm font-semibold text-white hover:text-slate-200 inline-flex items-center gap-1.5"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -1204,7 +1204,7 @@ const ProblemDetails = () => {
             </Link>
             <Link
               to="/create-problem"
-              className="text-sm font-medium text-slate-500 hover:text-slate-900"
+              className="text-sm font-medium text-slate-500 hover:text-white"
             >
               Post another problem →
             </Link>
@@ -1237,30 +1237,30 @@ const ProblemDetails = () => {
               onClick={() => !isDeletingProblem && setShowDeleteProblemModal(false)}
             >
               <div
-                className="bg-white rounded-3xl border border-slate-200/90 shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-200"
+                className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
                   type="button"
                   onClick={() => !isDeletingProblem && setShowDeleteProblemModal(false)}
-                  className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                  className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-300 hover:bg-[#202020] transition"
                   aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
                 </button>
 
                 <div className="flex items-center gap-3.5 mb-4">
-                  <div className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 shadow-xs">
+                  <div className="w-11 h-11 rounded-2xl bg-rose-950/40 text-rose-400 flex items-center justify-center shrink-0 border border-rose-100 shadow-xs">
                     <Trash2 className="w-5 h-5 text-rose-500" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Delete Problem Post?</h3>
+                    <h3 className="text-base font-bold text-white">Delete Problem Post?</h3>
                     <p className="text-xs text-slate-500">This action is permanent and cannot be undone.</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 rounded-2xl p-3.5 mb-4 border border-slate-100">
-                  <p className="text-xs font-semibold text-slate-800 line-clamp-2">
+                <div className="bg-[#181818] rounded-2xl p-3.5 mb-4 border border-white/10">
+                  <p className="text-xs font-semibold text-slate-100 line-clamp-2">
                     "{problem.title}"
                   </p>
                   <p className="text-[11px] text-slate-500 mt-1">
@@ -1269,7 +1269,7 @@ const ProblemDetails = () => {
                 </div>
 
                 {deleteProblemError && (
-                  <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
+                  <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-500/20 text-xs text-rose-300 font-medium">
                     {deleteProblemError}
                   </div>
                 )}

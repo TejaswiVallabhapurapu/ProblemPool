@@ -302,7 +302,7 @@ const CreateProblem = () => {
         <div className="mb-8">
         <Link
           to="/problems"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-white transition-colors mb-4"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -311,15 +311,15 @@ const CreateProblem = () => {
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">
               Post a Problem
             </h1>
-            <p className="mt-2 text-base text-slate-600">
+            <p className="mt-2 text-base text-slate-300">
               Share a challenge, error, or question with the ProblemPool community.
             </p>
           </div>
           {user && (
-            <div className="text-xs bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg self-start sm:self-auto font-medium">
+            <div className="text-xs bg-white/10 border border-white/15 text-slate-200 px-3 py-1.5 rounded-lg self-start sm:self-auto font-medium">
               Posting as <span className="font-bold">{user.name}</span>
             </div>
           )}
@@ -327,9 +327,9 @@ const CreateProblem = () => {
       </div>
 
       {/* Form Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+      <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl border border-white/10 shadow-sm p-6 sm:p-10">
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-3">
+          <div className="mb-6 p-4 rounded-xl bg-rose-950/40 border border-rose-500/20 text-rose-800 text-sm flex items-start gap-3">
             <svg className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
             </svg>
@@ -341,19 +341,19 @@ const CreateProblem = () => {
         )}
 
         {/* AI Problem Assistant Banner / Action Bar */}
-        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-50/80 via-purple-50/60 to-pink-50/40 border border-indigo-100/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-50/80 via-purple-50/60 to-pink-50/40 border border-white/15/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-xs shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <div className="text-xs font-bold text-white flex items-center gap-1.5">
                 <span>AI Problem Assistant</span>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-100 text-slate-200">
                   Powered by AI
                 </span>
               </div>
-              <p className="text-[11px] text-slate-600">
+              <p className="text-[11px] text-slate-300">
                 Draft your question and let AI suggest an improved title, structured description, tags & category.
               </p>
             </div>
@@ -374,15 +374,15 @@ const CreateProblem = () => {
 
         {/* AI Error Notification */}
         {aiError && (
-          <div className="mb-6 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start justify-between gap-2 animate-in fade-in duration-200">
+          <div className="mb-6 p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/20 text-amber-900 text-xs flex items-start justify-between gap-2 animate-in fade-in duration-200">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
               <span>{aiError}</span>
             </div>
             <button
               type="button"
               onClick={() => setAiError(null)}
-              className="text-amber-600 hover:text-amber-900 font-bold ml-2 cursor-pointer"
+              className="text-amber-400 hover:text-amber-900 font-bold ml-2 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -391,12 +391,12 @@ const CreateProblem = () => {
 
         {/* AI Suggestions Review & Action Box */}
         {aiSuggestion && (
-          <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/60 border border-indigo-200 shadow-sm animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-100 mb-4">
+          <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50/60 border border-white/20 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/15 mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-lg">✨</span>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">AI Improvement Suggestions</h4>
+                  <h4 className="text-sm font-bold text-white">AI Improvement Suggestions</h4>
                   <p className="text-[11px] text-slate-500">
                     Review and click the buttons below to selectively apply what you like. Your original input is never changed automatically.
                   </p>
@@ -415,7 +415,7 @@ const CreateProblem = () => {
                 <button
                   type="button"
                   onClick={() => setAiSuggestion(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white/80 transition cursor-pointer"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#141414]/90 backdrop-blur-md/80 transition cursor-pointer"
                   title="Dismiss AI suggestions"
                 >
                   <X className="w-4 h-4" />
@@ -426,9 +426,9 @@ const CreateProblem = () => {
             <div className="space-y-4 text-xs">
               {/* 1. Improved Title */}
               {aiSuggestion.improvedTitle && (
-                <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                <div className="p-3.5 rounded-xl bg-[#141414]/90 backdrop-blur-md border border-white/15 shadow-2xs">
                   <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                    <span className="font-bold text-slate-200 flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                       <span>Suggested Title</span>
                     </span>
@@ -438,21 +438,21 @@ const CreateProblem = () => {
                       className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
                         appliedFields.title
                           ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'
+                          : 'bg-white/10 text-slate-200 hover:bg-indigo-100 border border-white/20'
                       }`}
                     >
                       {appliedFields.title ? '✓ Applied' : 'Use Title'}
                     </button>
                   </div>
-                  <p className="text-slate-900 font-semibold">{aiSuggestion.improvedTitle}</p>
+                  <p className="text-white font-semibold">{aiSuggestion.improvedTitle}</p>
                 </div>
               )}
 
               {/* 2. Missing Information Questions */}
               {aiSuggestion.missingInformation && aiSuggestion.missingInformation.length > 0 && (
-                <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200/80">
+                <div className="p-3.5 rounded-xl bg-amber-950/40/80 border border-amber-500/20/80">
                   <div className="font-bold text-amber-900 mb-1.5 flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
                     <span>Missing Information / Questions to Consider Adding:</span>
                   </div>
                   <ul className="list-disc list-inside space-y-1 text-amber-800/90 pl-1">
@@ -467,10 +467,10 @@ const CreateProblem = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* Category */}
                 {aiSuggestion.suggestedCategory && (
-                  <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs flex items-center justify-between gap-2">
+                  <div className="p-3.5 rounded-xl bg-[#141414]/90 backdrop-blur-md border border-white/15 shadow-2xs flex items-center justify-between gap-2">
                     <div>
-                      <span className="font-bold text-slate-700 block mb-1">Recommended Category</span>
-                      <span className="inline-block px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-bold text-[11px] border border-indigo-100">
+                      <span className="font-bold text-slate-200 block mb-1">Recommended Category</span>
+                      <span className="inline-block px-2.5 py-0.5 rounded-md bg-white/10 text-slate-200 font-bold text-[11px] border border-white/15">
                         {aiSuggestion.suggestedCategory}
                       </span>
                     </div>
@@ -480,7 +480,7 @@ const CreateProblem = () => {
                       className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
                         appliedFields.category
                           ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'
+                          : 'bg-white/10 text-slate-200 hover:bg-indigo-100 border border-white/20'
                       }`}
                     >
                       {appliedFields.category ? '✓ Applied' : 'Use Category'}
@@ -490,16 +490,16 @@ const CreateProblem = () => {
 
                 {/* Tags */}
                 {aiSuggestion.suggestedTags && aiSuggestion.suggestedTags.length > 0 && (
-                  <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs flex flex-col justify-between gap-2">
+                  <div className="p-3.5 rounded-xl bg-[#141414]/90 backdrop-blur-md border border-white/15 shadow-2xs flex flex-col justify-between gap-2">
                     <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="font-bold text-slate-700">Suggested Tags</span>
+                      <span className="font-bold text-slate-200">Suggested Tags</span>
                       <button
                         type="button"
                         onClick={handleApplyTags}
                         className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition cursor-pointer ${
                           appliedFields.tags
                             ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                            : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200'
+                            : 'bg-white/10 text-slate-200 hover:bg-indigo-100 border border-white/20'
                         }`}
                       >
                         {appliedFields.tags ? '✓ Applied' : 'Use Tags'}
@@ -511,7 +511,7 @@ const CreateProblem = () => {
                           key={tag}
                           type="button"
                           onClick={() => handleAddTag(tag)}
-                          className="px-2 py-0.5 rounded bg-slate-50 hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 text-[10px] font-semibold transition cursor-pointer"
+                          className="px-2 py-0.5 rounded bg-[#181818] hover:bg-white/10 text-slate-300 hover:text-slate-200 border border-white/10 hover:border-white/20 text-[10px] font-semibold transition cursor-pointer"
                         >
                           +{tag}
                         </button>
@@ -523,9 +523,9 @@ const CreateProblem = () => {
 
               {/* 4. Improved Description */}
               {aiSuggestion.improvedDescription && (
-                <div className="p-3.5 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                <div className="p-3.5 rounded-xl bg-[#141414]/90 backdrop-blur-md border border-white/15 shadow-2xs">
                   <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                    <span className="font-bold text-slate-200 flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                       <span>Structured Description Template</span>
                     </span>
@@ -541,7 +541,7 @@ const CreateProblem = () => {
                       {appliedFields.description ? '✓ Applied' : 'Use Description'}
                     </button>
                   </div>
-                  <div className="p-3 rounded-lg bg-slate-50/80 border border-slate-200 max-h-48 overflow-y-auto font-mono text-[11px] text-slate-700 whitespace-pre-wrap">
+                  <div className="p-3 rounded-lg bg-[#181818] border border-white/10 max-h-48 overflow-y-auto font-mono text-[11px] text-slate-200 whitespace-pre-wrap">
                     {aiSuggestion.improvedDescription}
                   </div>
                 </div>
@@ -554,11 +554,11 @@ const CreateProblem = () => {
           {/* Problem Title */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="title" className="block text-sm font-semibold text-slate-900">
+              <label htmlFor="title" className="block text-sm font-semibold text-white">
                 Problem Title <span className="text-rose-500">*</span>
               </label>
               {checkingSimilar && (
-                <span className="text-xs text-indigo-600 font-medium flex items-center gap-2">
+                <span className="text-xs text-white font-medium flex items-center gap-2">
                   <Loader size="sm" />
                   <span>Checking for similar questions...</span>
                 </span>
@@ -572,19 +572,19 @@ const CreateProblem = () => {
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., How to connect MongoDB Atlas with Express securely?"
-              className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
+              className={`w-full px-4 py-3 rounded-xl border text-sm text-white placeholder-slate-400 focus:outline-none transition-all ${
                 fieldErrors.title
-                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                  : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-950/40/20'
+                  : 'border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-white/10 bg-[#181818] focus:bg-[#141414]/90 backdrop-blur-md'
               }`}
             />
             {fieldErrors.title && (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.title}</p>
+              <p className="mt-1.5 text-xs text-rose-400 font-medium">{fieldErrors.title}</p>
             )}
 
             {/* Possible Similar Problems Suggestion Box */}
             {similarProblems.length > 0 && !dismissedSimilar && (
-              <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-amber-50/80 to-amber-50/30 border border-amber-200/90 shadow-xs animate-in fade-in zoom-in-95 duration-200">
+              <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-amber-50/80 to-amber-50/30 border border-amber-500/20/90 shadow-xs animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
                     <span className="text-base">🔎</span>
@@ -612,7 +612,7 @@ const CreateProblem = () => {
                     return (
                       <div
                         key={sim._id}
-                        className="p-3.5 rounded-xl bg-white border border-amber-200/70 shadow-2xs hover:border-indigo-300 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                        className="p-3.5 rounded-xl bg-[#141414]/90 backdrop-blur-md border border-amber-500/20/70 shadow-2xs hover:border-indigo-300 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -622,7 +622,7 @@ const CreateProblem = () => {
                                   ? 'bg-amber-100 text-amber-800'
                                   : isAnswered
                                   ? 'bg-indigo-100 text-indigo-800'
-                                  : 'bg-slate-100 text-slate-700'
+                                  : 'bg-[#202020] text-slate-200'
                               }`}
                             >
                               {isSolved ? '🏆 Solved' : isAnswered ? '💡 Answered' : '❓ Open'}
@@ -636,7 +636,7 @@ const CreateProblem = () => {
                               <span>{sim.answersCount || 0} answers</span>
                             </span>
                           </div>
-                          <h5 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                          <h5 className="text-xs sm:text-sm font-bold text-white truncate">
                             {sim.title}
                           </h5>
                         </div>
@@ -646,7 +646,7 @@ const CreateProblem = () => {
                             href={`/problems/${sim._id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-200 bg-white/10 hover:bg-indigo-100 border border-white/20/80 transition"
                           >
                             <span>View Problem</span>
                             <ExternalLink className="w-3 h-3" />
@@ -657,14 +657,14 @@ const CreateProblem = () => {
                   })}
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-amber-200/60 text-xs">
+                <div className="flex items-center justify-between pt-2 border-t border-amber-500/20/60 text-xs">
                   <span className="text-amber-800/80 font-medium">
                     Different problem? You can proceed with posting.
                   </span>
                   <button
                     type="button"
                     onClick={() => setDismissedSimilar(true)}
-                    className="font-bold text-indigo-700 hover:text-indigo-900 cursor-pointer"
+                    className="font-bold text-slate-200 hover:text-indigo-900 cursor-pointer"
                   >
                     Continue Posting →
                   </button>
@@ -675,7 +675,7 @@ const CreateProblem = () => {
 
           {/* Category Dropdown */}
           <div>
-            <label htmlFor="category" className="block text-sm font-semibold text-slate-900 mb-1.5">
+            <label htmlFor="category" className="block text-sm font-semibold text-white mb-1.5">
               Category <span className="text-rose-500">*</span>
             </label>
             <select
@@ -683,10 +683,10 @@ const CreateProblem = () => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 focus:outline-none transition-all cursor-pointer ${
+              className={`w-full px-4 py-3 rounded-xl border text-sm text-white focus:outline-none transition-all cursor-pointer ${
                 fieldErrors.category
-                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                  : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-950/40/20'
+                  : 'border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-white/10 bg-[#181818] focus:bg-[#141414]/90 backdrop-blur-md'
               }`}
             >
               <option value="">Select a category</option>
@@ -697,28 +697,28 @@ const CreateProblem = () => {
               ))}
             </select>
             {fieldErrors.category && (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.category}</p>
+              <p className="mt-1.5 text-xs text-rose-400 font-medium">{fieldErrors.category}</p>
             )}
           </div>
 
           {/* Tags Input with Chips */}
           <div>
-            <label className="block text-sm font-semibold text-slate-900 mb-1.5">
+            <label className="block text-sm font-semibold text-white mb-1.5">
               Tags <span className="text-xs text-slate-400 font-normal">(Add up to 10 tags to help others find your problem)</span>
             </label>
 
-            <div className="p-2.5 rounded-xl border border-slate-200 bg-slate-50/40 focus-within:bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all flex flex-wrap items-center gap-2">
+            <div className="p-2.5 rounded-xl border border-white/10 bg-[#181818] focus-within:bg-[#141414]/90 backdrop-blur-md focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-white/10 transition-all flex flex-wrap items-center gap-2">
               {tags.map((t) => (
                 <span
                   key={t}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 animate-in fade-in zoom-in duration-100"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-white/10 text-slate-200 border border-white/20 animate-in fade-in zoom-in duration-100"
                 >
                   <Tag className="w-3 h-3 text-indigo-500" />
                   <span>#{t}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(t)}
-                    className="p-0.5 text-indigo-400 hover:text-indigo-700 rounded-full cursor-pointer"
+                    className="p-0.5 text-indigo-400 hover:text-slate-200 rounded-full cursor-pointer"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -733,7 +733,7 @@ const CreateProblem = () => {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                     placeholder={tags.length === 0 ? 'Type a tag and press Enter...' : 'Add another tag...'}
-                    className="w-full bg-transparent px-2 py-1 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+                    className="w-full bg-transparent px-2 py-1 text-sm text-white placeholder:text-slate-400 focus:outline-none"
                   />
                   {tagInput.trim() && (
                     <button
@@ -759,7 +759,7 @@ const CreateProblem = () => {
                   key={st}
                   type="button"
                   onClick={() => handleAddTag(st)}
-                  className="text-[11px] font-semibold text-slate-600 hover:text-indigo-600 bg-white hover:bg-indigo-50/50 border border-slate-200 hover:border-indigo-200 px-2 py-0.5 rounded-md transition cursor-pointer"
+                  className="text-[11px] font-semibold text-slate-300 hover:text-white bg-[#141414]/90 backdrop-blur-md hover:bg-white/10/50 border border-white/10 hover:border-white/20 px-2 py-0.5 rounded-md transition cursor-pointer"
                 >
                   +{st}
                 </button>
@@ -769,7 +769,7 @@ const CreateProblem = () => {
 
           {/* Location */}
           <div>
-            <label htmlFor="location" className="block text-sm font-semibold text-slate-900 mb-1.5">
+            <label htmlFor="location" className="block text-sm font-semibold text-white mb-1.5">
               Location / Context <span className="text-rose-500">*</span>
             </label>
             <input
@@ -779,31 +779,31 @@ const CreateProblem = () => {
               value={formData.location}
               onChange={handleChange}
               placeholder="e.g., Global / Remote / Hyderabad, India"
-              className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
+              className={`w-full px-4 py-3 rounded-xl border text-sm text-white placeholder-slate-400 focus:outline-none transition-all ${
                 fieldErrors.location
-                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
-                  : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-950/40/20'
+                  : 'border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-white/10 bg-[#181818] focus:bg-[#141414]/90 backdrop-blur-md'
               }`}
             />
             {fieldErrors.location && (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.location}</p>
+              <p className="mt-1.5 text-xs text-rose-400 font-medium">{fieldErrors.location}</p>
             )}
           </div>
 
           {/* Description */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="description" className="block text-sm font-semibold text-slate-900">
+              <label htmlFor="description" className="block text-sm font-semibold text-white">
                 Description <span className="text-rose-500">*</span>
               </label>
               <span className="text-xs text-slate-400 font-medium">Markdown & code blocks supported</span>
             </div>
 
             <div
-              className={`rounded-2xl border transition-all overflow-hidden bg-white shadow-xs ${
+              className={`rounded-2xl border transition-all overflow-hidden bg-[#141414]/90 backdrop-blur-md shadow-xs ${
                 fieldErrors.description
                   ? 'border-rose-300 ring-2 ring-rose-100'
-                  : 'border-slate-200 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100'
+                  : 'border-white/10 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-white/10'
               }`}
             >
               <MarkdownToolbar
@@ -828,10 +828,10 @@ const CreateProblem = () => {
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Describe the problem in detail: error messages, code context (e.g. ```java ... ```), environment setup, and what you have already tried..."
-                  className="w-full px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent font-mono"
+                  className="w-full px-4 py-3.5 text-sm text-white placeholder-slate-400 focus:outline-none bg-transparent font-mono"
                 />
               ) : (
-                <div className="p-4 min-h-[200px] max-h-[450px] overflow-y-auto bg-slate-50/50">
+                <div className="p-4 min-h-[200px] max-h-[450px] overflow-y-auto bg-[#181818]">
                   {formData.description.trim() ? (
                     <MarkdownRenderer content={formData.description} />
                   ) : (
@@ -844,7 +844,7 @@ const CreateProblem = () => {
             </div>
 
             {fieldErrors.description && (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.description}</p>
+              <p className="mt-1.5 text-xs text-rose-400 font-medium">{fieldErrors.description}</p>
             )}
           </div>
 
