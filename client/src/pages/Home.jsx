@@ -177,67 +177,92 @@ const Home = () => {
       {/* DASHBOARD CONTENT (Above AeroShards) */}
       {/* ========================================================= */}
       <div className="relative z-10 flex flex-col flex-grow">
-        {/* 1. HERO SECTION WITH 3D KNOWLEDGE CORE */}
-        <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28 min-h-[600px] flex items-center justify-center">
+        {/* 1. AUTHENTICATED DASHBOARD APPLICATION HEADER */}
+        <section className="relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16 border-b border-white/10">
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* Left Column: Typography & CTAs */}
-              <div className="lg:col-span-7 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181818] backdrop-blur-md border border-white/15 text-slate-300 text-xs sm:text-sm font-bold mb-6 shadow-xs">
-                  <Sparkles className="w-4 h-4 text-slate-400 animate-pulse" />
-                  <span>Problem-First Innovation Platform</span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Greeting, User Summary & Quick Action Buttons */}
+              <div className="lg:col-span-8 text-left">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-4 shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Problem Solver Dashboard</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.12] mb-6">
-                  Turn Real Problems Into{' '}
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-3">
+                  Welcome back,{' '}
                   <span className="shimmer-text">
-                    Real Solutions
+                    {authUser?.name || 'Problem Solver'}
                   </span>
                 </h1>
 
-                <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed font-medium">
-                  Discover authentic challenges, collaborate with expert solvers, exchange code and insights, and build verified solutions together.
+                <p className="text-sm sm:text-base text-slate-300 max-w-2xl mb-6 font-medium leading-relaxed">
+                  Track your personalized feed, collaborate with squads on difficult technical hurdles, and discover community questions matched to your stack.
                 </p>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-6">
-                  <GlassAiButton
-                    to="/problems"
-                    size="lg"
-                    variant="primary"
-                    icon={<Search className="w-5 h-5" />}
-                  >
-                    Explore Problems
-                  </GlassAiButton>
-
+                {/* Dashboard Action Toolbar */}
+                <div className="flex flex-wrap items-center gap-3 mb-6">
                   <GlassAiButton
                     to="/create-problem"
-                    size="lg"
-                    variant="glass"
-                    icon={<PlusCircle className="w-5 h-5 text-slate-400" />}
+                    size="md"
+                    variant="primary"
+                    icon={<PlusCircle className="w-4 h-4" />}
                   >
                     Post a Problem
                   </GlassAiButton>
+
+                  <GlassAiButton
+                    to="/problems"
+                    size="md"
+                    variant="glass"
+                    icon={<Search className="w-4 h-4 text-slate-400" />}
+                  >
+                    Browse Problems
+                  </GlassAiButton>
+
+                  <GlassAiButton
+                    to="/team-up"
+                    size="md"
+                    variant="glass"
+                    icon={<Users className="w-4 h-4 text-slate-400" />}
+                  >
+                    🤝 Team Up
+                  </GlassAiButton>
+
+                  <GlassAiButton
+                    to="/challenges"
+                    size="md"
+                    variant="glass"
+                  >
+                    🧩 Challenges
+                  </GlassAiButton>
+
+                  <GlassAiButton
+                    to="/saved-problems"
+                    size="md"
+                    variant="glass"
+                  >
+                    🔖 Saved
+                  </GlassAiButton>
                 </div>
 
-                <div className="flex items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-slate-400">
+                <div className="flex flex-wrap items-center gap-5 text-xs font-semibold text-slate-400 pt-2 border-t border-white/5">
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-white" />
-                    <span>Verified Solutions</span>
+                    <span>Verified Peer Answers</span>
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-slate-300" />
-                    <span>Reputation-Backed</span>
+                    <span>Squad Collaboration</span>
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-slate-400" />
-                    <span>Open Community</span>
+                    <span>Reputation Ranking</span>
                   </span>
                 </div>
               </div>
 
-              {/* Right Column: Floating 3D Knowledge Core */}
-              <div className="lg:col-span-5 flex items-center justify-center">
+              {/* Right Column: Floating 3D Knowledge Core Visual */}
+              <div className="lg:col-span-4 flex items-center justify-center">
                 <KnowledgeCore3D />
               </div>
             </div>

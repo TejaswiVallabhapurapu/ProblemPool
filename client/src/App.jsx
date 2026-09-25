@@ -29,7 +29,7 @@ function App() {
           <main className="flex-grow">
             <Routes>
               {/* Public Landing & Authentication */}
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Platform />} />
               <Route path="/platform" element={<Platform />} />
               <Route path="/home" element={<Navigate to="/dashboard" replace />} />
               <Route
