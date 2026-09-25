@@ -584,8 +584,8 @@ const Profile = () => {
                 <div className="text-slate-400 text-xs font-semibold mb-1">
                   Reputation
                 </div>
-                <div className="text-2xl font-black text-white">{stats.reputation}</div>
-                <div className="text-[11px] text-slate-300 font-semibold mt-1">{level.name}</div>
+                <div className="text-2xl font-black text-white">{stats.reputation || 0}</div>
+                <div className="text-[11px] text-slate-300 font-semibold mt-1">{level?.name || 'Initiate'}</div>
               </div>
 
               <div className="bg-[#141414]/80 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-sm hover:border-white/20 transition">
