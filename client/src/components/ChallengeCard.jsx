@@ -53,7 +53,6 @@ export const ChallengeCard = ({
           <span
             className="uiverse-3d-flip-hint"
             title="Flip card for challenge roadmap"
-            data-no-flip="true"
           >
             <RotateCw className="w-2.5 h-2.5" />
             <span>3D</span>
@@ -150,7 +149,6 @@ export const ChallengeCard = ({
           <span
             className="uiverse-3d-flip-hint"
             title="Flip back to front view"
-            data-no-flip="true"
           >
             <RotateCw className="w-2.5 h-2.5" />
             <span>Flip Back</span>
