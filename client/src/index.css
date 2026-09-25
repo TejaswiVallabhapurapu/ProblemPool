@@ -116,3 +116,90 @@
     transform: none !important;
   }
 }
+
+/* ========================================================= */
+/* DesignCode ThreeUI AnimatedTopDock Sable Styling */
+/* ========================================================= */
+.shader-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.animated-top-dock-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.animated-top-dock__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 9999px;
+  box-shadow: 
+    0 4px 16px -2px rgba(15, 23, 42, 0.05),
+    0 1px 3px rgba(15, 23, 42, 0.03),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+.animated-top-dock__nav:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 
+    0 8px 24px -4px rgba(99, 102, 241, 0.12),
+    0 2px 6px rgba(15, 23, 42, 0.04),
+    inset 0 1px 1px #ffffff;
+}
+
+.animated-top-dock__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  transform-origin: center top;
+  user-select: none;
+  transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  box-sizing: border-box;
+}
+
+.animated-top-dock__item:hover {
+  color: #4338ca;
+  background: rgba(241, 245, 249, 0.9);
+}
+
+.animated-top-dock__item[data-dock-active="true"],
+.animated-top-dock__item.active {
+  color: #4338ca;
+  background: linear-gradient(135deg, rgba(238, 242, 255, 0.95) 0%, rgba(224, 231, 255, 0.9) 100%);
+  border: 1px solid rgba(199, 210, 254, 0.95);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+}
+
+.animated-top-dock__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
