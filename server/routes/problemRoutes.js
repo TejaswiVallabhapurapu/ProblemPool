@@ -2,10 +2,14 @@ const express = require('express');
 const router = express.Router();
 const {
   getProblems,
+  searchProblems,
   getProblemById,
   createProblem,
+  updateProblem,
   deleteProblem,
   getProblemsByCategory,
+  getProblemsByTag,
+  getPopularTags,
   setBestAnswer,
   removeBestAnswer,
 } = require('../controllers/problemController');
@@ -20,16 +24,20 @@ const {
 } = require('../controllers/savedProblemController');
 const { protect, optionalProtect } = require('../middleware/authMiddleware');
 
+// Search & Tags endpoints (must come before /:id)
+router.get('/search', optionalProtect, searchProblems);
+router.get('/tags', getPopularTags);
+router.get('/tag/:tag', optionalProtect, getProblemsByTag);
+router.get('/category/:category', optionalProtect, getProblemsByCategory);
+
 // Problem CRUD
 router.route('/')
-  .get(getProblems)
+  .get(optionalProtect, getProblems)
   .post(protect, createProblem);
-
-router.route('/category/:category')
-  .get(getProblemsByCategory);
 
 router.route('/:id')
   .get(getProblemById)
+  .put(protect, updateProblem)
   .delete(protect, deleteProblem);
 
 // Save / Unsave Problem (Protected)

@@ -23,6 +23,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/problems" element={<Problems />} />
+              <Route path="/problems/tag/:tag" element={<Problems />} />
+              <Route path="/problems/category/:category" element={<Problems />} />
               <Route
                 path="/create-problem"
                 element={

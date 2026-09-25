@@ -2,15 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createProblem } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
+import { Tag, Plus, X, Sparkles } from 'lucide-react';
 
-const CATEGORIES = [
-  'Education',
-  'Technology',
-  'Healthcare',
-  'Environment',
-  'Transportation',
-  'Community',
-  'Other',
+const SUGGESTED_TAGS = [
+  'React',
+  'Node.js',
+  'MongoDB',
+  'JavaScript',
+  'Python',
+  'Java',
+  'Express',
+  'SQL',
+  'DSA',
+  'AI/ML',
+  'Web Development',
+  'Career',
 ];
 
 const CreateProblem = () => {
@@ -24,6 +31,9 @@ const CreateProblem = () => {
     location: '',
   });
 
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -34,6 +44,30 @@ const CreateProblem = () => {
     if (fieldErrors[name]) {
       setFieldErrors((prev) => ({ ...prev, [name]: null }));
     }
+  };
+
+  const handleAddTag = (rawTag) => {
+    const clean = rawTag.trim().toLowerCase().replace(/[^a-z0-9+#.-]/g, '');
+    if (!clean) return;
+    if (clean.length > 30) return;
+    if (tags.includes(clean)) return;
+    if (tags.length >= 10) return;
+
+    setTags((prev) => [...prev, clean]);
+    setTagInput('');
+  };
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      handleAddTag(tagInput);
+    } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+      setTags((prev) => prev.slice(0, prev.length - 1));
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setTags((prev) => prev.filter((t) => t !== tagToRemove));
   };
 
   const validate = () => {
@@ -78,6 +112,7 @@ const CreateProblem = () => {
           description: formData.description.trim(),
           category: formData.category,
           location: formData.location.trim(),
+          tags,
         },
         token
       );
@@ -89,6 +124,8 @@ const CreateProblem = () => {
       setLoading(false);
     }
   };
+
+  const availableCategories = POPULAR_CATEGORIES.filter((c) => c !== 'All');
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
@@ -109,7 +146,7 @@ const CreateProblem = () => {
               Post a Problem
             </h1>
             <p className="mt-2 text-base text-slate-600">
-              Share a real-world problem with the ProblemPool community.
+              Share a challenge, error, or question with the ProblemPool community.
             </p>
           </div>
           {user && (
@@ -121,7 +158,7 @@ const CreateProblem = () => {
       </div>
 
       {/* Form Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
         {error && (
           <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-3">
             <svg className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -146,7 +183,7 @@ const CreateProblem = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="e.g., Lack of clean drinking water filtration in local schools"
+              placeholder="e.g., How to connect MongoDB Atlas with Express securely?"
               className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
                 fieldErrors.title
                   ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
@@ -168,14 +205,14 @@ const CreateProblem = () => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 focus:outline-none transition-all ${
+              className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 focus:outline-none transition-all cursor-pointer ${
                 fieldErrors.category
                   ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
                   : 'border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-slate-50/40 focus:bg-white'
               }`}
             >
               <option value="">Select a category</option>
-              {CATEGORIES.map((cat) => (
+              {availableCategories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
                 </option>
@@ -186,10 +223,76 @@ const CreateProblem = () => {
             )}
           </div>
 
+          {/* Tags Input with Chips */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-900 mb-1.5">
+              Tags <span className="text-xs text-slate-400 font-normal">(Add up to 10 tags to help others find your problem)</span>
+            </label>
+
+            <div className="p-2.5 rounded-xl border border-slate-200 bg-slate-50/40 focus-within:bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all flex flex-wrap items-center gap-2">
+              {tags.map((t) => (
+                <span
+                  key={t}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 animate-in fade-in zoom-in duration-100"
+                >
+                  <Tag className="w-3 h-3 text-indigo-500" />
+                  <span>#{t}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTag(t)}
+                    className="p-0.5 text-indigo-400 hover:text-indigo-700 rounded-full cursor-pointer"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+
+              {tags.length < 10 && (
+                <div className="flex items-center gap-1 flex-1 min-w-[140px]">
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    placeholder={tags.length === 0 ? 'Type a tag and press Enter...' : 'Add another tag...'}
+                    className="w-full bg-transparent px-2 py-1 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+                  />
+                  {tagInput.trim() && (
+                    <button
+                      type="button"
+                      onClick={() => handleAddTag(tagInput)}
+                      className="px-2 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white cursor-pointer hover:bg-indigo-700 shrink-0"
+                    >
+                      Add
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Popular Tag Suggestions */}
+            <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+              <span className="text-xs text-slate-400 font-medium flex items-center gap-1 mr-1">
+                <Sparkles className="w-3 h-3 text-indigo-500" />
+                <span>Suggestions:</span>
+              </span>
+              {SUGGESTED_TAGS.filter((st) => !tags.includes(st.toLowerCase())).slice(0, 6).map((st) => (
+                <button
+                  key={st}
+                  type="button"
+                  onClick={() => handleAddTag(st)}
+                  className="text-[11px] font-semibold text-slate-600 hover:text-indigo-600 bg-white hover:bg-indigo-50/50 border border-slate-200 hover:border-indigo-200 px-2 py-0.5 rounded-md transition cursor-pointer"
+                >
+                  +{st}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Location */}
           <div>
             <label htmlFor="location" className="block text-sm font-semibold text-slate-900 mb-1.5">
-              Location <span className="text-rose-500">*</span>
+              Location / Context <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -197,7 +300,7 @@ const CreateProblem = () => {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              placeholder="e.g., Vijayawada, Andhra Pradesh"
+              placeholder="e.g., Global / Remote / Hyderabad, India"
               className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
                 fieldErrors.location
                   ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'
@@ -220,7 +323,7 @@ const CreateProblem = () => {
               rows={6}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Describe the problem in detail: what happens, who is affected, and how severe it is..."
+              placeholder="Describe the problem in detail: error messages, code context, environment setup, and what you have already tried..."
               className={`w-full px-4 py-3 rounded-xl border text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all ${
                 fieldErrors.description
                   ? 'border-rose-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 bg-rose-50/20'

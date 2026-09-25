@@ -146,10 +146,50 @@ export const getCurrentUser = async (token) => {
 };
 
 /**
- * Fetch all problems (newest first)
+ * Fetch / Search all problems with advanced filters & sorting
+ * @param {Object} [params] - { q, category, tag, status, sort }
+ * @param {string} [token] - Optional JWT Token
  */
-export const getProblems = async () => {
-  return await safeFetch('/problems');
+export const getProblems = async (params = {}, token = null) => {
+  const queryParts = [];
+  if (params && typeof params === 'object') {
+    Object.entries(params).forEach(([key, val]) => {
+      if (val !== undefined && val !== null && val !== '') {
+        queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+      }
+    });
+  }
+
+  const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems${queryString}`, { headers });
+};
+
+export const searchProblems = getProblems;
+
+/**
+ * Fetch popular tags across problems
+ */
+export const getPopularTags = async () => {
+  return await safeFetch('/problems/tags');
+};
+
+/**
+ * Fetch problems by tag
+ * @param {string} tag
+ * @param {string} [token]
+ */
+export const getProblemsByTag = async (tag, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/tag/${encodeURIComponent(tag)}`, { headers });
 };
 
 /**
@@ -161,8 +201,8 @@ export const getProblem = async (id) => {
 };
 
 /**
- * Create a new problem (Protected)
- * @param {Object} problemData - { title, description, category, location }
+ * Create a new problem with tags & category (Protected)
+ * @param {Object} problemData - { title, description, category, location, tags }
  * @param {string} token - JWT Token
  */
 export const createProblem = async (problemData, token) => {
@@ -175,6 +215,27 @@ export const createProblem = async (problemData, token) => {
 
   return await safeFetch('/problems', {
     method: 'POST',
+    headers,
+    body: JSON.stringify(problemData),
+  });
+};
+
+/**
+ * Update an existing problem (Protected - Problem Creator Only)
+ * @param {string} id
+ * @param {Object} problemData
+ * @param {string} token
+ */
+export const updateProblem = async (id, problemData, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/${id}`, {
+    method: 'PUT',
     headers,
     body: JSON.stringify(problemData),
   });

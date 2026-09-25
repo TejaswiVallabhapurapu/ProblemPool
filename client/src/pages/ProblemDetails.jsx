@@ -12,15 +12,24 @@ import {
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
-import { Bookmark, Loader2 } from 'lucide-react';
+import { Bookmark, Loader2, Eye, Tag } from 'lucide-react';
 
 const CATEGORY_COLORS = {
-  Education: 'bg-amber-50 text-amber-700 border-amber-200',
-  Technology: 'bg-sky-50 text-sky-700 border-sky-200',
+  Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  'Web Development': 'bg-sky-50 text-sky-700 border-sky-200',
+  Database: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  'AI & ML': 'bg-purple-50 text-purple-700 border-purple-200',
+  DSA: 'bg-rose-50 text-rose-700 border-rose-200',
+  Technology: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+  Career: 'bg-amber-50 text-amber-700 border-amber-200',
+  College: 'bg-orange-50 text-orange-700 border-orange-200',
+  Projects: 'bg-blue-50 text-blue-700 border-blue-200',
+  Education: 'bg-teal-50 text-teal-700 border-teal-200',
   Healthcare: 'bg-rose-50 text-rose-700 border-rose-200',
   Environment: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   Transportation: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  Community: 'bg-purple-50 text-purple-700 border-purple-200',
+  Community: 'bg-violet-50 text-violet-700 border-violet-200',
+  General: 'bg-slate-50 text-slate-700 border-slate-200',
   Other: 'bg-slate-50 text-slate-700 border-slate-200',
 };
 
@@ -387,6 +396,11 @@ const ProblemDetails = () => {
                 </svg>
                 <span>{problem.location}</span>
               </div>
+
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium">
+                <Eye className="w-3.5 h-3.5 text-slate-400" />
+                <span>{problem.views || 0} views</span>
+              </div>
             </div>
 
             {/* Full Description */}
@@ -398,6 +412,27 @@ const ProblemDetails = () => {
                 {problem.description}
               </div>
             </div>
+
+            {/* Tags Section */}
+            {Array.isArray(problem.tags) && problem.tags.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-slate-100">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Tags</span>
+                </h3>
+                <div className="flex flex-wrap items-center gap-2">
+                  {problem.tags.map((tag) => (
+                    <Link
+                      key={tag}
+                      to={`/problems?tag=${encodeURIComponent(tag)}`}
+                      className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-50/80 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-200/80 transition"
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </article>
 
           {/* ========================================================= */}

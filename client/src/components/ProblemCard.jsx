@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Check, Loader2 } from 'lucide-react';
+import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Eye, Tag, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { saveProblem, unsaveProblem } from '../services/api';
 
 const CATEGORY_COLORS = {
-  Education: 'bg-amber-50 text-amber-700 border-amber-200',
-  Technology: 'bg-sky-50 text-sky-700 border-sky-200',
+  Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  'Web Development': 'bg-sky-50 text-sky-700 border-sky-200',
+  Database: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  'AI & ML': 'bg-purple-50 text-purple-700 border-purple-200',
+  DSA: 'bg-rose-50 text-rose-700 border-rose-200',
+  Technology: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+  Career: 'bg-amber-50 text-amber-700 border-amber-200',
+  College: 'bg-orange-50 text-orange-700 border-orange-200',
+  Projects: 'bg-blue-50 text-blue-700 border-blue-200',
+  Education: 'bg-teal-50 text-teal-700 border-teal-200',
   Healthcare: 'bg-rose-50 text-rose-700 border-rose-200',
   Environment: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   Transportation: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  Community: 'bg-purple-50 text-purple-700 border-purple-200',
+  Community: 'bg-violet-50 text-violet-700 border-violet-200',
+  General: 'bg-slate-50 text-slate-700 border-slate-200',
   Other: 'bg-slate-50 text-slate-700 border-slate-200',
 };
 
@@ -28,6 +37,7 @@ const ProblemCard = ({
   problem,
   isSaved: initialIsSaved = null,
   onToggleSave = null,
+  onTagClick = null,
 }) => {
   const { token, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -51,6 +61,8 @@ const ProblemCard = ({
   const answersCount = problem.answersCount || (Array.isArray(problem.answers) ? problem.answers.length : 0);
   const hasBestAnswer = Boolean(problem.bestAnswer);
   const totalHelpfulVotes = problem.totalHelpfulVotes || 0;
+  const viewsCount = problem.views || 0;
+  const tagsList = Array.isArray(problem.tags) ? problem.tags : [];
 
   const status =
     problem.status ||
@@ -113,8 +125,18 @@ const ProblemCard = ({
     }
   };
 
+  const handleTagClickInternal = (e, t) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onTagClick) {
+      onTagClick(t);
+    } else {
+      navigate(`/problems?tag=${encodeURIComponent(t)}`);
+    }
+  };
+
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between p-6 relative">
+    <div className="group bg-white rounded-3xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between p-6 relative">
       {/* Toast / Notice notification */}
       {notice && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-slate-900/95 text-white text-xs font-medium py-1.5 px-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in zoom-in duration-150 whitespace-nowrap">
@@ -154,9 +176,30 @@ const ProblemCard = ({
         </Link>
 
         {/* Short Description */}
-        <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed mb-4">
+        <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed mb-3.5">
           {problem.description}
         </p>
+
+        {/* Tags Row */}
+        {tagsList.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 mb-4">
+            {tagsList.slice(0, 4).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={(e) => handleTagClickInternal(e, t)}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition border border-slate-200/80 cursor-pointer"
+              >
+                <span>#{t}</span>
+              </button>
+            ))}
+            {tagsList.length > 4 && (
+              <span className="text-[11px] font-medium text-slate-400 px-1">
+                +{tagsList.length - 4} more
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Author attribution & Location */}
         <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-4 gap-2">
@@ -173,19 +216,24 @@ const ProblemCard = ({
           )}
         </div>
 
-        {/* Engagement stats (Answers, Helpful votes, Best Answer) */}
+        {/* Engagement stats (Answers, Helpful votes, Views, Best Answer) */}
         <div className="flex items-center gap-3 py-2 px-3 bg-slate-50/80 rounded-xl text-xs font-medium text-slate-600 mb-4 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 text-slate-700">
+          <span className="inline-flex items-center gap-1 text-slate-700">
             <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
-            <span>💬 {answersCount} {answersCount === 1 ? 'Answer' : 'Answers'}</span>
+            <span>💬 {answersCount}</span>
           </span>
 
           {totalHelpfulVotes > 0 && (
-            <span className="inline-flex items-center gap-1 text-emerald-700">
+            <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
               <ThumbsUp className="w-3.5 h-3.5 text-emerald-500" />
-              <span>👍 {totalHelpfulVotes} Helpful</span>
+              <span>👍 {totalHelpfulVotes}</span>
             </span>
           )}
+
+          <span className="inline-flex items-center gap-1 text-slate-500">
+            <Eye className="w-3.5 h-3.5 text-slate-400" />
+            <span>👀 {viewsCount}</span>
+          </span>
 
           {hasBestAnswer && (
             <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 font-bold ml-auto text-[11px]">
@@ -203,7 +251,7 @@ const ProblemCard = ({
           onClick={handleSaveToggle}
           disabled={saving}
           title={saved ? 'Remove from saved problems' : 'Save for later'}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border cursor-pointer ${
             saved
               ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
               : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
