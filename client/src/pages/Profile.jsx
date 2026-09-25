@@ -205,7 +205,7 @@ const Profile = () => {
 
   // Load Tab-specific data on-demand
   const fetchTabData = async () => {
-    if (!profileData) return;
+    if (!profileData?.user?._id) return;
     try {
       setTabLoading(true);
       const userId = profileData.user._id;

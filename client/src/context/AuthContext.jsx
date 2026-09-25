@@ -5,15 +5,22 @@ const AuthContext = createContext();
 
 export const normalizeUser = (raw) => {
   if (!raw || typeof raw !== 'object') return null;
-  const target = raw.user && typeof raw.user === 'object' ? raw.user : raw;
+  let target = raw;
+  if (target.data && typeof target.data === 'object') {
+    target = target.data;
+  }
+  if (target.user && typeof target.user === 'object') {
+    target = target.user;
+  }
+  if (!target || typeof target !== 'object') return null;
   if (!target._id && !target.name && !target.email && !target.username) return null;
   return {
-    _id: target._id || '',
-    name: target.name || '',
-    email: target.email || '',
-    username: target.username || '',
-    role: target.role || 'user',
-    avatar: target.avatar || '',
+    _id: target._id ? String(target._id) : '',
+    name: target.name ? String(target.name) : '',
+    email: target.email ? String(target.email) : '',
+    username: target.username ? String(target.username) : '',
+    role: target.role ? String(target.role) : 'user',
+    avatar: target.avatar ? String(target.avatar) : '',
     reputation: typeof target.reputation === 'number' ? target.reputation : (Number(target.reputation) || 0),
   };
 };
