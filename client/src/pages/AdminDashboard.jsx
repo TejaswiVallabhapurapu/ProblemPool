@@ -26,7 +26,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import GlassAiButton from '../components/GlassAiButton';
-import ParticlesBackground from '../components/ParticlesBackground';
 import { Loader } from '../components/Loader';
 import {
   getAdminStats,
@@ -261,7 +260,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="relative min-h-screen">
-      <ParticlesBackground />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Toast Notice */}
       {toastMsg && (
