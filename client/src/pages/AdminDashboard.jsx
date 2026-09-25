@@ -28,6 +28,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import GlassAiButton from '../components/GlassAiButton';
 import ParticlesBackground from '../components/ParticlesBackground';
+import { Loader } from '../components/Loader';
 import {
   getAdminStats,
   getAdminReports,
@@ -456,8 +457,8 @@ const AdminDashboard = () => {
 
           {/* Reports Table / List */}
           {reportsLoading ? (
-            <div className="py-20 flex flex-col items-center justify-center text-slate-400 gap-2">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+            <div className="py-20 flex flex-col items-center justify-center text-slate-400 gap-4">
+              <Loader size="md" />
               <span className="text-sm font-medium">Loading reports...</span>
             </div>
           ) : reports.length === 0 ? (
@@ -719,8 +720,8 @@ const AdminDashboard = () => {
 
           {/* Users Table */}
           {usersLoading ? (
-            <div className="py-20 flex flex-col items-center justify-center text-slate-400 gap-2">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+            <div className="py-20 flex flex-col items-center justify-center text-slate-400 gap-4">
+              <Loader size="md" />
               <span className="text-sm font-medium">Loading users...</span>
             </div>
           ) : (
