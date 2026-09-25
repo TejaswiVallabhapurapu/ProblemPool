@@ -1,42 +1,13 @@
 /**
  * ProblemPool API Client
- * Automatically normalizes and selects API_BASE_URL for both localhost and production deployments (Vercel / Render)
+ * Normalizes and selects API_BASE_URL for both local development and production deployments
  */
 export const getApiBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL;
-
-  // Determine if running locally
-  const isLocalhost =
-    typeof window !== 'undefined' &&
-    (window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname === '0.0.0.0' ||
-      window.location.hostname === '');
-
-  // If in browser on a production domain (e.g., *.vercel.app, custom domain)
-  if (typeof window !== 'undefined' && !isLocalhost) {
-    // If VITE_API_URL is missing or incorrectly set to localhost, fallback to live Render backend
-    if (
-      !envUrl ||
-      typeof envUrl !== 'string' ||
-      envUrl.trim() === '' ||
-      envUrl.includes('localhost') ||
-      envUrl.includes('127.0.0.1')
-    ) {
-      return 'https://problempool.onrender.com/api';
-    }
-  }
-
-  // Fallback for local development if VITE_API_URL is not provided
-  let url = envUrl;
-  if (!url || typeof url !== 'string' || url.trim() === '') {
+  if (!envUrl || typeof envUrl !== 'string' || envUrl.trim() === '') {
     return 'http://localhost:5000/api';
   }
-
-  // Trim whitespace and trailing slashes
-  url = url.trim().replace(/\/+$/, '');
-
-  // If the user provided the base URL without /api (e.g. https://problempool.onrender.com)
+  let url = envUrl.trim().replace(/\/+$/, '');
   if (!url.endsWith('/api')) {
     url = `${url}/api`;
   }
