@@ -1,24 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Bookmark,
-  MessageSquare,
-  ThumbsUp,
-  Star,
-  MapPin,
-  User,
-  Eye,
-  Tag,
-  FolderPlus,
-  Trash2,
-  AlertTriangle,
-  X,
-  Sparkles,
-  ArrowRight,
-  RotateCw,
-  HelpCircle,
-  CheckCircle2,
-} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { saveProblem, unsaveProblem, deleteProblem } from '../services/api';
 import GlassAiButton from './GlassAiButton';
@@ -83,7 +64,6 @@ const ProblemCard = ({
 
   const authorName = problem.createdBy?.name || 'Community Member';
 
-  // Compute status & engagement metrics
   const answersCount = problem.answersCount || (Array.isArray(problem.answers) ? problem.answers.length : 0);
   const savesCount = problem.savesCount || 0;
   const hasBestAnswer = Boolean(problem.bestAnswer);
@@ -97,18 +77,15 @@ const ProblemCard = ({
 
   const statusBadge =
     status === 'Solved' ? (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/20">
-        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-white border border-white/20">
         Solved
       </span>
     ) : status === 'Answered' ? (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#181818] text-slate-300 border border-white/10">
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#181818] text-slate-300 border border-white/10">
         Answered
       </span>
     ) : (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#141414] text-slate-400 border border-white/10">
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#141414] text-slate-400 border border-white/10">
         Unanswered
       </span>
     );
@@ -128,8 +105,6 @@ const ProblemCard = ({
     const nextState = !saved;
     setSaving(true);
     setNotice(null);
-
-    // Optimistic UI update
     setSaved(nextState);
 
     try {
@@ -143,7 +118,6 @@ const ProblemCard = ({
       }
     } catch (err) {
       console.error('Save toggle error:', err);
-      // Revert optimistic update on error
       setSaved(!nextState);
       setNotice(err.message || 'Failed to update saved status');
       setTimeout(() => setNotice(null), 3000);
@@ -208,7 +182,7 @@ const ProblemCard = ({
     }
   };
 
-  // ================= 3D CARD FRONT CONTENT =================
+  // ================= 3D CARD FRONT CONTENT (Text Only) =================
   const frontContent = (
     <>
       <div>
@@ -222,16 +196,12 @@ const ProblemCard = ({
             </span>
             {statusBadge}
           </div>
-          <div className="flex items-center gap-1.5 ml-auto">
+          <div className="flex items-center gap-2 ml-auto">
             <span className="text-[11px] text-slate-400 font-medium">
               {formatDate(problem.createdAt)}
             </span>
-            <span
-              className="uiverse-3d-flip-hint"
-              title="Flip card for full 3D analytics"
-            >
-              <RotateCw className="w-2.5 h-2.5" />
-              <span>3D</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+              3D
             </span>
           </div>
         </div>
@@ -261,7 +231,7 @@ const ProblemCard = ({
                 type="button"
                 data-no-flip="true"
                 onClick={(e) => handleTagClickInternal(e, t)}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#181818] hover:bg-[#242424] text-slate-300 hover:text-white transition border border-[#2a2a2a] cursor-pointer"
+                className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#181818] hover:bg-[#242424] text-slate-300 hover:text-white transition border border-[#2a2a2a] cursor-pointer"
               >
                 <span>#{t}</span>
               </button>
@@ -276,55 +246,48 @@ const ProblemCard = ({
 
         {/* Author attribution & Location */}
         <div className="flex items-center justify-between text-xs text-slate-400 font-medium mb-3 gap-2">
-          <div className="flex items-center gap-1.5 text-slate-300 font-medium truncate">
-            <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="truncate">{authorName}</span>
+          <div className="text-slate-300 font-medium truncate">
+            {authorName}
           </div>
 
           {problem.location && (
-            <div className="flex items-center gap-1 text-slate-500 truncate text-[11px]">
-              <MapPin className="w-3 h-3 shrink-0" />
-              <span className="truncate">{problem.location}</span>
+            <div className="text-slate-500 truncate text-[11px]">
+              {problem.location}
             </div>
           )}
         </div>
 
-        {/* Engagement stats */}
-        <div className="flex items-center gap-2.5 py-1.5 px-3 bg-[#121212] rounded-xl text-xs font-medium text-slate-400 mb-3 flex-wrap border border-white/5">
-          <span className="inline-flex items-center gap-1 text-slate-300" title="Answers">
-            <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
-            <span>{answersCount}</span>
+        {/* Engagement stats (Text Only) */}
+        <div className="flex items-center gap-3 py-1.5 px-3 bg-[#121212] rounded-xl text-xs font-medium text-slate-400 mb-3 flex-wrap border border-white/5">
+          <span className="text-slate-300">
+            {answersCount} Answers
           </span>
 
-          <span className="inline-flex items-center gap-1 text-slate-400" title="Views">
-            <Eye className="w-3.5 h-3.5 text-slate-500" />
-            <span>{viewsCount}</span>
+          <span>
+            {viewsCount} Views
           </span>
 
           {savesCount > 0 && (
-            <span className="inline-flex items-center gap-1 text-slate-200 font-semibold" title="Saves">
-              <Bookmark className="w-3.5 h-3.5 text-slate-400" />
-              <span>{savesCount}</span>
+            <span className="text-slate-200 font-semibold">
+              {savesCount} Saved
             </span>
           )}
 
           {totalHelpfulVotes > 0 && (
-            <span className="inline-flex items-center gap-1 text-slate-200 font-semibold" title="Helpful Votes">
-              <ThumbsUp className="w-3.5 h-3.5 text-slate-400" />
-              <span>{totalHelpfulVotes}</span>
+            <span className="text-slate-200 font-semibold">
+              +{totalHelpfulVotes} Helpful
             </span>
           )}
 
           {hasBestAnswer && (
-            <span className="inline-flex items-center gap-1 text-slate-200 bg-[#222222] px-2 py-0.5 rounded-md border border-white/20 font-bold ml-auto text-[10px]">
-              <Star className="w-3 h-3 text-white fill-white" />
-              <span>Best Answer</span>
+            <span className="text-slate-200 bg-[#222222] px-2 py-0.5 rounded-md border border-white/20 font-bold ml-auto text-[10px]">
+              Best Answer
             </span>
           )}
         </div>
       </div>
 
-      {/* Footer Info: Save, Collections, Delete & View */}
+      {/* Footer Info: Save, Collections, Delete & View (Text Only) */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
         <div className="flex items-center gap-1.5" data-no-flip="true">
           <GlassAiButton
@@ -334,14 +297,6 @@ const ProblemCard = ({
             loading={saving}
             size="xs"
             variant={saved ? "primary" : "glass"}
-            title={saved ? 'Remove from saved problems' : 'Save for later'}
-            icon={
-              <Bookmark
-                className={`w-3.5 h-3.5 ${
-                  saved ? 'fill-white text-white' : 'text-slate-400'
-                }`}
-              />
-            }
           >
             {saved ? 'Saved' : 'Save'}
           </GlassAiButton>
@@ -356,9 +311,9 @@ const ProblemCard = ({
               }}
               size="xs"
               variant="glass"
-              title="Add or remove from custom collections"
-              icon={<FolderPlus className="w-3.5 h-3.5" />}
-            />
+            >
+              Collection
+            </GlassAiButton>
           )}
 
           {isOwner && (
@@ -368,9 +323,9 @@ const ProblemCard = ({
               disabled={isDeleting}
               size="xs"
               variant="danger"
-              title="Delete your problem post"
-              icon={<Trash2 className="w-3.5 h-3.5" />}
-            />
+            >
+              Delete
+            </GlassAiButton>
           )}
         </div>
 
@@ -379,8 +334,6 @@ const ProblemCard = ({
             to={`/problems/${problem._id}`}
             size="xs"
             variant="secondary"
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            iconPosition="right"
           >
             View
           </GlassAiButton>
@@ -389,35 +342,27 @@ const ProblemCard = ({
     </>
   );
 
-  // ================= 3D CARD BACK CONTENT =================
+  // ================= 3D CARD BACK CONTENT (Text Only) =================
   const backContent = (
     <>
       <div className="space-y-4">
         {/* Top Header of Back */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
-            <Sparkles className="w-3 h-3 text-slate-400" />
-            <span>{problem.category}</span>
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+            {problem.category}
           </span>
 
-          <span
-            className="uiverse-3d-flip-hint"
-            title="Flip back to problem post"
-          >
-            <RotateCw className="w-2.5 h-2.5" />
-            <span>Flip Back</span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+            Flip Back
           </span>
         </div>
 
-        {/* Center Visual Badge */}
+        {/* Center Title & Author */}
         <div className="text-center py-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#1c1c1c] border border-white/15 text-white flex items-center justify-center mx-auto mb-2 shadow-lg">
-            <HelpCircle className="w-6 h-6 text-slate-300" />
-          </div>
-          <h4 className="text-sm font-bold text-white line-clamp-1">
+          <h4 className="text-sm font-bold text-white line-clamp-2">
             {problem.title}
           </h4>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-slate-400 mt-1">
             Asked by <strong className="text-slate-200">{authorName}</strong>
           </p>
         </div>
@@ -426,36 +371,30 @@ const ProblemCard = ({
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{answersCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">💬 Solutions</div>
+            <div className="text-[10px] text-slate-400 font-medium">Solutions</div>
           </div>
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{viewsCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">👀 Total Views</div>
+            <div className="text-[10px] text-slate-400 font-medium">Total Views</div>
           </div>
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-slate-200">+{totalHelpfulVotes}</div>
-            <div className="text-[10px] text-slate-400 font-medium">👍 Helpful Score</div>
+            <div className="text-[10px] text-slate-400 font-medium">Helpful Score</div>
           </div>
           <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-slate-200">{savesCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">🔖 Bookmarks</div>
+            <div className="text-[10px] text-slate-400 font-medium">Bookmarks</div>
           </div>
         </div>
 
         {/* Status Indicator */}
         <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium">Resolution Status</span>
-          <span className="font-bold text-white flex items-center gap-1">
+          <span className="font-bold text-white">
             {hasBestAnswer ? (
-              <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                <span className="text-white">Best Answer Selected</span>
-              </>
+              <span className="text-white">Best Answer Selected</span>
             ) : answersCount > 0 ? (
-              <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-300" />
-                <span className="text-slate-300">Open Community Answers</span>
-              </>
+              <span className="text-slate-300">Open Community Answers</span>
             ) : (
               <span className="text-slate-400">Awaiting First Answer</span>
             )}
@@ -472,7 +411,6 @@ const ProblemCard = ({
             disabled={saving}
             size="xs"
             variant="glass"
-            icon={<Bookmark className="w-3.5 h-3.5" />}
           >
             {saved ? 'Saved' : 'Bookmark'}
           </GlassAiButton>
@@ -483,8 +421,6 @@ const ProblemCard = ({
             to={`/problems/${problem._id}`}
             size="xs"
             variant="primary"
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            iconPosition="right"
           >
             Open Problem
           </GlassAiButton>
@@ -495,14 +431,14 @@ const ProblemCard = ({
 
   return (
     <div className="relative w-full">
-      {/* Toast / Notice notification */}
+      {/* Toast notice */}
       {notice && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 bg-slate-900/95 text-white text-xs font-medium py-1.5 px-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in zoom-in duration-150 whitespace-nowrap">
           <span>{notice}</span>
           {!isAuthenticated && (
             <button
               onClick={() => navigate('/login')}
-              className="text-indigo-400 hover:text-indigo-300 underline font-semibold ml-1"
+              className="text-white hover:text-slate-300 underline font-semibold ml-1"
             >
               Sign In
             </button>
@@ -510,41 +446,33 @@ const ProblemCard = ({
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal (Text Only) */}
       {showDeleteModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-200"
           onClick={handleDeleteCancel}
         >
           <div
-            className="bg-white rounded-3xl border border-slate-200/90 shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-200"
+            className="bg-[#121212] rounded-3xl border border-white/15 shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-200 text-white"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              type="button"
-              onClick={handleDeleteCancel}
-              className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3.5 mb-4">
-              <div className="w-11 h-11 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 shadow-xs">
-                <AlertTriangle className="w-5 h-5 text-rose-500" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Delete Problem Post?</h3>
-                <p className="text-xs text-slate-500">This action is permanent and cannot be undone.</p>
-              </div>
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
+              <h3 className="text-base font-bold text-white">Delete Problem Post</h3>
+              <button
+                type="button"
+                onClick={handleDeleteCancel}
+                className="px-2 py-0.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5 border border-white/10"
+              >
+                Close
+              </button>
             </div>
 
-            <div className="bg-slate-50 rounded-2xl p-3.5 mb-5 border border-slate-100">
-              <p className="text-xs font-semibold text-slate-800 line-clamp-2">
+            <div className="bg-[#181818] rounded-2xl p-4 mb-5 border border-white/10">
+              <p className="text-xs font-semibold text-slate-200 line-clamp-2">
                 "{problem.title}"
               </p>
-              <p className="text-[11px] text-slate-500 mt-1">
-                All associated answers, reviews, and community votes on this post will be removed.
+              <p className="text-[11px] text-slate-400 mt-1">
+                All associated answers and community votes on this post will be permanently removed.
               </p>
             </div>
 
@@ -566,7 +494,6 @@ const ProblemCard = ({
                 loading={isDeleting}
                 size="sm"
                 variant="danger"
-                icon={<Trash2 className="w-4 h-4" />}
               >
                 {isDeleting ? 'Deleting...' : 'Delete Post'}
               </GlassAiButton>
