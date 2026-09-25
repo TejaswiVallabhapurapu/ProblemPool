@@ -14,7 +14,6 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { getProblems, getPersonalizedFeed, getCollaborativeProblems } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
-import AeroShards from '../components/AeroShards';
 import KnowledgeCore3D from '../components/KnowledgeCore3D';
 import KnowledgeFlowVisual from '../components/KnowledgeFlowVisual';
 import EmptyState3D from '../components/EmptyState3D';
@@ -135,47 +134,7 @@ const Home = () => {
       : feedData.recent;
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-x-hidden bg-[#080808]">
-      {/* ========================================================= */}
-      {/* DASHBOARD AEROSHARDS BACKGROUND LAYER */}
-      {/* ========================================================= */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <AeroShards
-          backgroundColor="#080808"
-          shardColor="#2e2e2e"
-          accentColor="#666666"
-          placement="full"
-          flow="stream"
-          material="pearl"
-          detail="balanced"
-          effect="none"
-          scale={1}
-          spread={1}
-          depth={1}
-          speed={1}
-          spin={1}
-          interaction="repel"
-          density={1.5}
-          shardSize={1.1}
-          stretch={1}
-          turbulence={1}
-          glow={1}
-          edgeSoftness={2}
-          bloom={0.5}
-          grain={0.05}
-          chromaticAberration={0.0075}
-          transitionDuration={1}
-          interactionRadius={1.5}
-          interactionStrength={0.5}
-          rippleIntensity={1}
-          holdToGather
-          paused={false}
-        />
-      </div>
-
-      {/* ========================================================= */}
-      {/* DASHBOARD CONTENT (Above AeroShards) */}
-      {/* ========================================================= */}
+    <div className="flex flex-col min-h-screen relative overflow-x-hidden">
       <div className="relative z-10 flex flex-col flex-grow">
         {/* 1. AUTHENTICATED DASHBOARD APPLICATION HEADER */}
         <section className="relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16 border-b border-white/10">
