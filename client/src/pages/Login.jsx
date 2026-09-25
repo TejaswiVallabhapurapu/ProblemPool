@@ -104,39 +104,39 @@ const Login = () => {
           {/* Centered Large "Sign In" Heading */}
           <div className="text-center">
             <h1 className="uiverse-heading">Sign In</h1>
-            <p className="mt-1.5 text-xs text-slate-500 font-medium">
-              Welcome back to <span className="font-bold text-indigo-600">ProblemPool</span>
+            <p className="mt-1.5 text-xs text-slate-400 font-medium">
+              Welcome back to <span className="font-bold text-white">ProblemPool</span>
             </p>
           </div>
 
           {/* Success Flash Notice (e.g. from Signup) */}
           {successNotice && (
-            <div className="mt-4 p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="mt-4 p-3.5 rounded-2xl bg-[#161616] border border-white/20 text-slate-200 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
+              <CheckCircle2 className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
               <span className="font-medium">{successNotice}</span>
             </div>
           )}
 
           {/* Protected Route Notice */}
           {redirectNotice && !successNotice && (
-            <div className="mt-4 p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-800 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
-              <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <div className="mt-4 p-3.5 rounded-2xl bg-[#161616] border border-white/15 text-slate-300 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
+              <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
               <span className="font-medium">{redirectNotice}</span>
             </div>
           )}
 
           {/* Server / Auth Error Notice */}
           {serverError && (
-            <div className="mt-4 p-3.5 rounded-2xl bg-rose-50/90 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
-              <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+            <div className="mt-4 p-3.5 rounded-2xl bg-[#201414] border border-red-500/30 text-rose-200 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <span className="font-medium">{serverError}</span>
             </div>
           )}
 
           {/* Social Provider Notice */}
           {socialNotice && (
-            <div className="mt-4 p-3.5 rounded-2xl bg-indigo-50/95 border border-indigo-200 text-indigo-800 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
-              <Info className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+            <div className="mt-4 p-3.5 rounded-2xl bg-[#181818] border border-white/15 text-slate-300 text-xs flex items-start gap-2.5 animate-in fade-in zoom-in-95 duration-200">
+              <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
               <span className="font-medium">{socialNotice}</span>
             </div>
           )}
