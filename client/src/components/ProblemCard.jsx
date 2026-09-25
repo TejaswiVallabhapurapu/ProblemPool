@@ -139,7 +139,7 @@ const ProblemCard = ({
   };
 
   return (
-    <div className="group bg-white rounded-3xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between p-6 relative">
+    <div className="group glass-card-3d rounded-3xl border border-slate-200/90 shadow-xs hover:shadow-xl hover:border-indigo-300 transition-all duration-300 flex flex-col justify-between p-6 relative">
       {/* Toast / Notice notification */}
       {notice && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-slate-900/95 text-white text-xs font-medium py-1.5 px-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in zoom-in duration-150 whitespace-nowrap">

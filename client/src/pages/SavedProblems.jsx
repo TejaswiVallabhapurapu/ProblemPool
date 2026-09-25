@@ -33,6 +33,8 @@ import {
 import ProblemCard from '../components/ProblemCard';
 import AddToCollectionModal from '../components/AddToCollectionModal';
 import GlassAiButton from '../components/GlassAiButton';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import EmptyState3D from '../components/EmptyState3D';
 
 // Helper to safely extract the problem entity from various API response shapes
 const getProblemObj = (item) => {
@@ -389,7 +391,9 @@ const SavedProblems = () => {
   }, [currentProblemsList, searchTerm, sortOrder]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div className="relative min-h-screen">
+      <KnowledgeNetworkBackground variant="constellation" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Toast Notice */}
       {toastNotice && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 text-white text-xs font-semibold py-2.5 px-4 rounded-2xl shadow-xl border border-slate-700/60 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
@@ -1069,6 +1073,7 @@ const SavedProblems = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

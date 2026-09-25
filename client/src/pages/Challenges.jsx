@@ -42,6 +42,8 @@ import {
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import EmptyState3D from '../components/EmptyState3D';
 
 // 6 Core Standard Challenges
 const CORE_CHALLENGES = [
@@ -445,7 +447,9 @@ const Challenges = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div className="relative min-h-screen">
+      <KnowledgeNetworkBackground variant="constellation" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* ========================================================= */}
       {/* 1. HEADER SECTION */}
       {/* ========================================================= */}
@@ -593,23 +597,15 @@ const Challenges = () => {
       {/* 3. CHALLENGES GRID */}
       {/* ========================================================= */}
       {filteredChallenges.length === 0 ? (
-        /* Empty State */
-        <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-12 text-center max-w-md mx-auto shadow-xs">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4">
-            <Search className="w-6 h-6" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">No challenges found</h3>
-          <p className="text-xs text-slate-500 mb-6">
-            We couldn't find any challenges matching your current search and filters.
-          </p>
-          <GlassAiButton
-            type="button"
-            onClick={clearAllFilters}
-            variant="primary"
-            size="sm"
-          >
-            Reset Search & Filters
-          </GlassAiButton>
+        /* 3D Animated Empty State */
+        <div className="py-8">
+          <EmptyState3D
+            type="challenges"
+            title="No Challenges Found"
+            description="We couldn't find any coding challenges matching your current search and difficulty filters."
+            actionLabel="Reset Search & Filters"
+            actionOnClick={clearAllFilters}
+          />
         </div>
       ) : (
         /* Cards Grid */
@@ -623,7 +619,7 @@ const Challenges = () => {
             return (
               <div
                 key={challenge.id}
-                className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
+                className="glass-card-3d rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-200 flex flex-col justify-between overflow-hidden group"
               >
                 <div className="p-6 sm:p-7 space-y-4">
                   {/* Top Metadata: Category & Difficulty */}
@@ -904,6 +900,7 @@ const Challenges = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

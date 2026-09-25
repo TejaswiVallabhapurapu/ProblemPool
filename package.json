@@ -1,0 +1,27 @@
+{
+  "name": "problempool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ProblemPool — Turn Real Problems Into Real Solutions",
+  "scripts": {
+    "sync": "node scripts/git-auto-sync.js",
+    "sync:once": "node scripts/git-auto-sync.js --once",
+    "sync:status": "node scripts/git-auto-sync.js --status",
+    "sync:pause": "node scripts/git-auto-sync.js --pause",
+    "sync:resume": "node scripts/git-auto-sync.js --resume",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [
+    "problempool",
+    "community",
+    "solutions",
+    "react",
+    "threejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "Tejaswi Vallabhapurapu",
+  "license": "ISC"
+}

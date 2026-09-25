@@ -27,6 +27,8 @@ import {
   clearAllNotifications,
 } from '../services/api';
 import GlassAiButton from '../components/GlassAiButton';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import EmptyState3D from '../components/EmptyState3D';
 
 const NOTIFICATION_ICONS = {
   answer: { icon: MessageSquare, color: 'text-indigo-600 bg-indigo-50 border-indigo-200' },
@@ -197,7 +199,9 @@ const Notifications = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div className="relative min-h-screen">
+      <KnowledgeNetworkBackground variant="constellation" />
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
@@ -407,6 +411,7 @@ const Notifications = () => {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 };

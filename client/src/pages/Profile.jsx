@@ -51,6 +51,8 @@ import {
   followUser,
 } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import EmptyState3D from '../components/EmptyState3D';
 
 // Available pre-defined interests list
 export const AVAILABLE_INTERESTS = [
@@ -394,11 +396,13 @@ const Profile = () => {
   const { user, stats, level, achievements, profileCompletion } = profileData;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="relative min-h-screen">
+      <KnowledgeNetworkBackground variant="constellation" />
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* ========================================================= */}
       {/* 1. PROFILE HEADER CARD */}
       {/* ========================================================= */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 mb-8 relative overflow-hidden">
+      <div className="glass-card-3d rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 mb-8 relative overflow-hidden">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           {/* User Info Left */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6">
@@ -1486,6 +1490,7 @@ const Profile = () => {
           contentTitle={`User Profile: ${user.name}`}
         />
       )}
+      </div>
     </div>
   );
 };

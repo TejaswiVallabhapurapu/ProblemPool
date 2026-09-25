@@ -18,6 +18,8 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { getLeaderboard } from '../services/api';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import EmptyState3D from '../components/EmptyState3D';
 
 const CATEGORIES = [
   { id: 'reputation', label: 'Reputation', icon: Trophy, desc: 'Overall community points' },
@@ -66,7 +68,9 @@ const Leaderboard = () => {
   const remainingLeaders = leaders.slice(3);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div className="relative min-h-screen">
+      <KnowledgeNetworkBackground variant="constellation" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-800 text-xs font-bold mb-3 shadow-xs">
@@ -148,14 +152,14 @@ const Leaderboard = () => {
           </button>
         </div>
       ) : leaders.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
-          <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 text-3xl">
-            🏆
-          </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">No Activity Yet</h3>
-          <p className="text-xs text-slate-500">
-            Be the first to answer problems and climb the leaderboard this period!
-          </p>
+        <div className="py-8">
+          <EmptyState3D
+            type="challenges"
+            title="No Activity Yet"
+            description="Be the first to answer problems, receive helpful upvotes, and climb the leaderboard this period!"
+            actionLabel="Explore Problems"
+            actionTo="/problems"
+          />
         </div>
       ) : (
         <div className="space-y-10">
@@ -324,6 +328,7 @@ const Leaderboard = () => {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 };

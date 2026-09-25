@@ -5,5 +5,114 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #1e293b;
+    background-color: #f8fafc;
+    overflow-x: hidden;
+  }
+}
+
+/* 3D Glassmorphism & Micro-interaction Utilities */
+@layer components {
+  /* 3D Glass Cards */
+  .glass-card-3d {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 
+      0 4px 16px rgba(15, 23, 42, 0.04),
+      0 1px 2px rgba(15, 23, 42, 0.02),
+      inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    transform-style: preserve-3d;
+  }
+
+  .glass-card-3d:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 16px 36px rgba(99, 102, 241, 0.09),
+      0 4px 12px rgba(15, 23, 42, 0.04),
+      inset 0 1px 1px #ffffff;
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+
+  /* Shimmer gradient text */
+  .shimmer-text {
+    background: linear-gradient(
+      90deg,
+      #4f46e5 0%,
+      #8b5cf6 25%,
+      #38bdf8 50%,
+      #8b5cf6 75%,
+      #4f46e5 100%
+    );
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shimmer-text-flow 6s linear infinite;
+  }
+
+  /* Subtle 3D tilt perspective container */
+  .perspective-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  /* Best Answer Gold Glowing Border */
+  .best-answer-glow {
+    position: relative;
+    border: 1.5px solid #f59e0b !important;
+    box-shadow: 
+      0 0 24px rgba(245, 158, 11, 0.16),
+      0 4px 16px rgba(15, 23, 42, 0.04),
+      inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  }
+}
+
+@keyframes shimmer-text-flow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes float-subtle {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+/* Reduced motion accessibility overrides */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .glass-card-3d:hover {
+    transform: none !important;
   }
 }

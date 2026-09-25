@@ -4,25 +4,21 @@ import {
   Search,
   PlusCircle,
   ArrowRight,
-  Lightbulb,
-  Compass,
   Sparkles,
-  Flame,
-  TrendingUp,
-  Clock,
   Layers,
   Users,
   HelpCircle,
-  Tag,
   CheckCircle2,
-  ChevronRight,
-  Loader2,
-  Filter,
+  TrendingUp,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getProblems, getPersonalizedFeed } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
 import AnimatedBackground from '../components/AnimatedBackground';
+import KnowledgeCore3D from '../components/KnowledgeCore3D';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import KnowledgeFlowVisual from '../components/KnowledgeFlowVisual';
+import EmptyState3D from '../components/EmptyState3D';
 import GlassAiButton from '../components/GlassAiButton';
 
 const Home = () => {
@@ -52,7 +48,9 @@ const Home = () => {
   const [loadingFeed, setLoadingFeed] = useState(true);
 
   useEffect(() => {
-    document.title = isAuthenticated ? 'Dashboard - ProblemPool' : 'ProblemPool - Turn Real Problems Into Real Solutions';
+    document.title = isAuthenticated
+      ? 'Dashboard - ProblemPool'
+      : 'ProblemPool - Turn Real Problems Into Real Solutions';
     let isMounted = true;
 
     // 1. Fetch Platform General Stats
@@ -118,10 +116,10 @@ const Home = () => {
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden">
       {/* ========================================================= */}
-      {/* 1. HERO SECTION WITH 3D ANIMATED ENERGY ORB */}
+      {/* 1. HERO SECTION WITH 3D KNOWLEDGE CORE & ENERGY ORB */}
       {/* ========================================================= */}
-      <section className="relative overflow-hidden pt-20 pb-24 md:pt-28 md:pb-32 bg-gradient-to-b from-indigo-50/40 via-white/80 to-slate-50 min-h-[580px] flex items-center justify-center">
-        {/* Dynamic 3D Energy Orb Globe Background */}
+      <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28 bg-gradient-to-b from-indigo-50/50 via-white/80 to-slate-50 min-h-[640px] flex items-center justify-center">
+        {/* Dynamic 3D Energy Orb Canvas Background */}
         <AnimatedBackground
           variant="energy-orb"
           speed={1.00}
@@ -139,76 +137,111 @@ const Home = () => {
           opacity={1.00}
         />
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pointer-events-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-indigo-200/80 text-indigo-700 text-xs sm:text-sm font-semibold mb-8 shadow-xs animate-fadeIn">
-            <Sparkles className="w-4 h-4 text-indigo-600 animate-pulse" />
-            <span>Problem-First Innovation Platform</span>
-          </div>
+        {/* Interactive Constellation Nodes Background */}
+        <KnowledgeNetworkBackground variant="constellation" />
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-6 drop-shadow-xs">
-            Turn Real Problems Into{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-700">
-              Real Solutions
-            </span>
-          </h1>
+        {/* Hero Container */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Column: Typography & CTAs */}
+            <div className="lg:col-span-7 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-indigo-200/90 text-indigo-700 text-xs sm:text-sm font-bold mb-6 shadow-xs">
+                <Sparkles className="w-4 h-4 text-indigo-600 animate-pulse" />
+                <span>Problem-First Innovation Platform</span>
+              </div>
 
-          <p className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-            Discover real-world problems, share challenges, follow expert solvers, and collaborate on meaningful solutions.
-          </p>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-6">
+                Turn Real Problems Into{' '}
+                <span className="shimmer-text">
+                  Real Solutions
+                </span>
+              </h1>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <GlassAiButton
-              to="/problems"
-              size="lg"
-              variant="primary"
-              icon={<Search className="w-5 h-5" />}
-            >
-              Explore Problems
-            </GlassAiButton>
+              <p className="text-base sm:text-lg md:text-xl text-slate-700 max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed font-medium">
+                Discover authentic challenges, collaborate with expert solvers, exchange code and insights, and build verified solutions together.
+              </p>
 
-            <GlassAiButton
-              to="/create-problem"
-              size="lg"
-              variant="glass"
-              icon={<PlusCircle className="w-5 h-5 text-indigo-600" />}
-            >
-              Post a Problem
-            </GlassAiButton>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-6">
+                <GlassAiButton
+                  to="/problems"
+                  size="lg"
+                  variant="primary"
+                  icon={<Search className="w-5 h-5" />}
+                >
+                  Explore Problems
+                </GlassAiButton>
+
+                <GlassAiButton
+                  to="/create-problem"
+                  size="lg"
+                  variant="glass"
+                  icon={<PlusCircle className="w-5 h-5 text-indigo-600" />}
+                >
+                  Post a Problem
+                </GlassAiButton>
+              </div>
+
+              <div className="flex items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>Verified Solutions</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-indigo-500" />
+                  <span>Reputation-Backed</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-violet-500" />
+                  <span>Open Community</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Right Column: Floating 3D Knowledge Core */}
+            <div className="lg:col-span-5 flex items-center justify-center">
+              <KnowledgeCore3D />
+            </div>
           </div>
         </div>
       </section>
 
       {/* ========================================================= */}
-      {/* 2. STATS SECTION */}
+      {/* 2. STATS SECTION (3D Glass Cards) */}
       {/* ========================================================= */}
       <section className="relative z-10 py-12 bg-white/95 backdrop-blur-sm border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
-            <div className="pt-4 md:pt-0">
-              <div className="text-4xl sm:text-5xl font-extrabold text-indigo-600 mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            {/* Stat 1 */}
+            <div className="glass-card-3d p-6 rounded-3xl border border-slate-200/80">
+              <div className="text-4xl sm:text-5xl font-black text-indigo-600 mb-2">
                 {stats.problemsCount}
               </div>
-              <div className="text-sm font-semibold uppercase tracking-wider text-slate-500">
-                Problems Posted
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center justify-center gap-1.5">
+                <HelpCircle className="w-4 h-4 text-indigo-500" />
+                <span>Problems Posted</span>
               </div>
             </div>
 
-            <div className="pt-6 md:pt-0">
-              <div className="text-4xl sm:text-5xl font-extrabold text-violet-600 mb-2">
+            {/* Stat 2 */}
+            <div className="glass-card-3d p-6 rounded-3xl border border-slate-200/80">
+              <div className="text-4xl sm:text-5xl font-black text-violet-600 mb-2">
                 {stats.categoriesCount}
               </div>
-              <div className="text-sm font-semibold uppercase tracking-wider text-slate-500">
-                Categories
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center justify-center gap-1.5">
+                <Layers className="w-4 h-4 text-violet-500" />
+                <span>Categories</span>
               </div>
             </div>
 
-            <div className="pt-6 md:pt-0">
-              <div className="text-4xl sm:text-5xl font-extrabold text-slate-800 mb-2">
+            {/* Stat 3 */}
+            <div className="glass-card-3d p-6 rounded-3xl border border-slate-200/80">
+              <div className="text-4xl sm:text-5xl font-black text-slate-800 mb-2">
                 {stats.communitiesCount}
               </div>
-              <div className="text-sm font-semibold uppercase tracking-wider text-slate-500">
-                Communities
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center justify-center gap-1.5">
+                <Users className="w-4 h-4 text-sky-500" />
+                <span>Communities</span>
               </div>
             </div>
           </div>
@@ -219,7 +252,10 @@ const Home = () => {
       {/* 3. PERSONALIZED COMMUNITY HOME FEED SECTION */}
       {/* ========================================================= */}
       <section className="relative z-10 py-16 sm:py-20 bg-gradient-to-b from-slate-50/80 via-white to-slate-50/50 border-b border-slate-200/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Subtle Constellation Background */}
+        <KnowledgeNetworkBackground variant="subtle" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Feed Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
             <div>
@@ -335,7 +371,7 @@ const Home = () => {
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <div
                   key={n}
-                  className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 animate-pulse shadow-xs"
+                  className="glass-card-3d rounded-3xl border border-slate-200 p-6 space-y-4 animate-pulse"
                 >
                   <div className="flex justify-between items-center">
                     <div className="h-5 w-24 bg-slate-200 rounded-full" />
@@ -351,57 +387,32 @@ const Home = () => {
               ))}
             </div>
           ) : activeProblems.length === 0 ? (
-            /* Empty State */
-            <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-12 text-center max-w-lg mx-auto shadow-xs">
+            /* 3D Animated Empty State */
+            <div className="py-8">
               {activeFeedTab === 'following' ? (
-                <>
-                  <div className="text-4xl mb-3">👥</div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">
-                    No problems from followed solvers yet
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-6 max-w-sm mx-auto">
-                    Follow other problem solvers and developers to see their latest challenges right here in your stream.
-                  </p>
-                  <GlassAiButton
-                    to="/problems"
-                    size="sm"
-                    variant="primary"
-                  >
-                    Discover People & Problems
-                  </GlassAiButton>
-                </>
+                <EmptyState3D
+                  type="following"
+                  title="No problems from followed solvers yet"
+                  description="Follow other problem solvers and developers to see their latest challenges right here in your stream."
+                  actionLabel="Discover People & Problems"
+                  actionTo="/problems"
+                />
               ) : activeFeedTab === 'unanswered' ? (
-                <>
-                  <div className="text-4xl mb-3">🎉</div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">
-                    All questions currently have answers!
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-6">
-                    Check out recent submissions or post a new challenging problem for the community.
-                  </p>
-                  <GlassAiButton
-                    to="/create-problem"
-                    size="sm"
-                    variant="primary"
-                  >
-                    Post a Problem
-                  </GlassAiButton>
-                </>
+                <EmptyState3D
+                  type="unanswered"
+                  title="All questions currently have answers!"
+                  description="Check out recent submissions or post a new challenging problem for the community."
+                  actionLabel="Post a Problem"
+                  actionTo="/create-problem"
+                />
               ) : (
-                <>
-                  <div className="text-4xl mb-3">💡</div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">No problems found</h3>
-                  <p className="text-xs text-slate-500 mb-6">
-                    Be the pioneer to post a problem in this category and kick off the solution process!
-                  </p>
-                  <GlassAiButton
-                    to="/create-problem"
-                    size="sm"
-                    variant="primary"
-                  >
-                    Post a Problem
-                  </GlassAiButton>
-                </>
+                <EmptyState3D
+                  type="problems"
+                  title="No problems found in this feed"
+                  description="Be the pioneer to post a problem in this category and kick off the solution process!"
+                  actionLabel="Post a Problem"
+                  actionTo="/create-problem"
+                />
               )}
             </div>
           ) : (
@@ -416,62 +427,11 @@ const Home = () => {
       </section>
 
       {/* ========================================================= */}
-      {/* 4. HOW PROBLEMMPOOL WORKS */}
+      {/* 4. HOW PROBLEMMPOOL WORKS — INTERACTIVE KNOWLEDGE FLOW */}
       {/* ========================================================= */}
       <section className="relative z-10 py-20 md:py-24 bg-white backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-              How ProblemPool Works
-            </h2>
-            <p className="text-slate-600 text-base sm:text-lg">
-              A transparent, community-centric pathway to identify authentic pain points and spark impact.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1: Identify */}
-            <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
-              <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                <Compass className="w-6 h-6" />
-              </div>
-              <div className="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">
-                Step 1
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Identify & Ask</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Share real problems, specify technical tags and problem categories experienced in work, projects, or daily life.
-              </p>
-            </div>
-
-            {/* Card 2: Discover */}
-            <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
-              <div className="w-12 h-12 rounded-xl bg-violet-50 border border-violet-100 text-violet-600 flex items-center justify-center font-bold text-lg mb-6 group-hover:bg-violet-600 group-hover:text-white transition-colors">
-                <Search className="w-6 h-6" />
-              </div>
-              <div className="text-xs font-bold uppercase tracking-wider text-violet-600 mb-2">
-                Step 2
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Discover & Connect</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Follow top contributors, customize your domain interests, and explore curated feeds matching your focus.
-              </p>
-            </div>
-
-            {/* Card 3: Solve */}
-            <div className="bg-slate-50/70 rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow relative group">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                <Lightbulb className="w-6 h-6" />
-              </div>
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">
-                Step 3
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Solve & Earn Reputation</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Provide helpful solutions, get awarded Accepted Best Answer, unlock badges, and grow your developer reputation.
-              </p>
-            </div>
-          </div>
+          <KnowledgeFlowVisual />
         </div>
       </section>
     </div>

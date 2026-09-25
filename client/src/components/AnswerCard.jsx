@@ -145,10 +145,10 @@ const AnswerCard = ({
 
   return (
     <div
-      className={`rounded-2xl border transition-all p-6 sm:p-7 space-y-4 ${
+      className={`rounded-3xl border transition-all p-6 sm:p-7 space-y-4 ${
         isBestAnswer
-          ? 'bg-gradient-to-r from-amber-50/40 via-white to-indigo-50/30 border-amber-300 shadow-md ring-1 ring-amber-200'
-          : 'bg-white border-slate-200/90 shadow-xs hover:border-slate-300'
+          ? 'bg-gradient-to-r from-amber-50/60 via-white to-amber-50/30 border-amber-300 shadow-xl ring-2 ring-amber-300/60 best-answer-glow'
+          : 'glass-card-3d border-slate-200/90 shadow-xs hover:border-slate-300'
       }`}
     >
       {/* Best Answer Header Badge if marked */}

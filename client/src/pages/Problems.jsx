@@ -23,6 +23,8 @@ import { useAuth } from '../context/AuthContext';
 import ProblemCard from '../components/ProblemCard';
 import CategoryFilter, { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import GlassAiButton from '../components/GlassAiButton';
+import KnowledgeNetworkBackground from '../components/KnowledgeNetworkBackground';
+import EmptyState3D from '../components/EmptyState3D';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All Problems', icon: Layers },
@@ -195,7 +197,9 @@ const Problems = () => {
     selectedSort !== 'newest';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div className="relative min-h-screen">
+      <KnowledgeNetworkBackground variant="constellation" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
@@ -225,7 +229,7 @@ const Problems = () => {
       {/* ========================================================= */}
       {/* SEARCH & FILTERS CONTROL BAR */}
       {/* ========================================================= */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm mb-8 space-y-5">
+      <div className="glass-card-3d rounded-3xl p-6 border border-slate-200/90 shadow-sm mb-8 space-y-5">
         {/* 1. Main Search Bar */}
         <div className="relative flex items-center">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
@@ -536,36 +540,19 @@ const Problems = () => {
           </GlassAiButton>
         </div>
       ) : problems.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
-          <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4">
-            <FolderSearch className="w-7 h-7" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">No Problems Found</h2>
-          <p className="text-sm text-slate-600 mb-6">
-            {hasActiveFilters
-              ? 'No problems match your current search criteria or active filters. Try clearing your filters or searching for different keywords.'
-              : 'There are currently no problems posted. Be the first to share a real-world problem!'}
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {hasActiveFilters && (
-              <GlassAiButton
-                type="button"
-                onClick={handleClearAllFilters}
-                variant="glass"
-                size="md"
-              >
-                Clear All Filters
-              </GlassAiButton>
-            )}
-            <GlassAiButton
-              to="/create-problem"
-              variant="primary"
-              size="md"
-            >
-              Post a Problem
-            </GlassAiButton>
-          </div>
+        <div className="py-8">
+          <EmptyState3D
+            type="problems"
+            title="No Problems Found"
+            description={
+              hasActiveFilters
+                ? 'No problems match your current search criteria or active filters. Try clearing your filters or searching for different keywords.'
+                : 'There are currently no problems posted. Be the first to share a real-world problem!'
+            }
+            actionLabel={hasActiveFilters ? 'Clear All Filters' : 'Post a Problem'}
+            actionOnClick={hasActiveFilters ? handleClearAllFilters : undefined}
+            actionTo={hasActiveFilters ? undefined : '/create-problem'}
+          />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -580,6 +567,7 @@ const Problems = () => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };
