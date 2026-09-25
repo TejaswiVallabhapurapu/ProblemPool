@@ -152,109 +152,115 @@
 }
 
 /* ========================================================= */
-/* THEME & COLOR VARIANTS                                    */
+/* THEME & COLOR VARIANTS - Monochrome Dark Edition          */
 /* ========================================================= */
 
-/* 1. Primary (Electric Indigo / Violet Glass) */
+/* 1. Primary (Solid Dark Charcoal with Silver Accent) */
 .glass-ai-variant-primary .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.92) 0%, rgba(124, 58, 237, 0.88) 100%);
+  background: #1a1a1a;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 4px 14px -2px rgba(79, 70, 229, 0.35),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+  border: 1px solid #3a3a3a;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.5),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
 }
 .glass-ai-variant-primary:hover:not(:disabled) .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(67, 56, 202, 0.96) 0%, rgba(109, 40, 217, 0.94) 100%);
-  box-shadow: 0 6px 20px -2px rgba(79, 70, 229, 0.5),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.5);
+  background: #262626;
+  border-color: #555555;
+  box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.6),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
 }
 .glass-ai-variant-primary .glass-ai-aura {
-  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(100, 100, 100, 0.15));
 }
 
-/* 2. Glass / Frosted Neutral */
+/* 2. Glass / Frosted Dark Glass */
 .glass-ai-variant-glass .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.75) 100%);
-  color: #1e293b;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.05),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  background: rgba(22, 22, 22, 0.85);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.3),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
 }
 .glass-ai-variant-glass:hover:not(:disabled) .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 245, 249, 0.92) 100%);
-  color: #4f46e5;
-  border-color: rgba(199, 210, 254, 0.85);
-  box-shadow: 0 4px 14px -1px rgba(79, 70, 229, 0.12),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 1);
-}
-.glass-ai-variant-glass .glass-ai-aura {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3));
-}
-
-/* 3. Secondary / Indigo Tinted Glass */
-.glass-ai-variant-secondary .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(238, 242, 255, 0.85) 0%, rgba(224, 231, 255, 0.7) 100%);
-  color: #4338ca;
-  border: 1px solid rgba(199, 210, 254, 0.8);
-  box-shadow: 0 2px 6px -1px rgba(79, 70, 229, 0.08),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
-}
-.glass-ai-variant-secondary:hover:not(:disabled) .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(224, 231, 255, 0.95) 0%, rgba(199, 210, 254, 0.85) 100%);
-  color: #3730a3;
-  border-color: rgba(165, 180, 252, 0.9);
-  box-shadow: 0 4px 12px -1px rgba(79, 70, 229, 0.16);
-}
-.glass-ai-variant-secondary .glass-ai-aura {
-  background: linear-gradient(135deg, #818cf8, #c084fc);
-}
-
-/* 4. Danger / Rose Glass */
-.glass-ai-variant-danger .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(225, 29, 72, 0.9) 0%, rgba(244, 63, 94, 0.85) 100%);
+  background: rgba(35, 35, 35, 0.95);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 4px 14px -2px rgba(225, 29, 72, 0.3),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
-}
-.glass-ai-variant-danger:hover:not(:disabled) .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(190, 18, 60, 0.95) 0%, rgba(225, 29, 72, 0.9) 100%);
-  box-shadow: 0 6px 18px -2px rgba(225, 29, 72, 0.45);
-}
-.glass-ai-variant-danger .glass-ai-aura {
-  background: linear-gradient(135deg, #e11d48, #f43f5e);
-}
-
-/* 5. Success / Emerald Glass */
-.glass-ai-variant-success .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.9) 0%, rgba(16, 185, 129, 0.85) 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 4px 14px -2px rgba(5, 150, 105, 0.3),
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
-}
-.glass-ai-variant-success:hover:not(:disabled) .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(4, 120, 87, 0.95) 0%, rgba(5, 150, 105, 0.9) 100%);
-  box-shadow: 0 6px 18px -2px rgba(5, 150, 105, 0.45);
-}
-.glass-ai-variant-success .glass-ai-aura {
-  background: linear-gradient(135deg, #059669, #34d399);
-}
-
-/* 6. Dark / Onyx Glass */
-.glass-ai-variant-dark .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.88) 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.35),
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 14px -1px rgba(0, 0, 0, 0.45),
               inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
-.glass-ai-variant-dark:hover:not(:disabled) .glass-ai-surface {
-  background: linear-gradient(135deg, rgba(2, 6, 23, 0.98) 0%, rgba(15, 23, 42, 0.95) 100%);
+.glass-ai-variant-glass .glass-ai-aura {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(80, 80, 80, 0.1));
+}
+
+/* 3. Secondary / Elevated Charcoal */
+.glass-ai-variant-secondary .glass-ai-surface {
+  background: #151515;
+  color: #d1d5db;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.3),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+}
+.glass-ai-variant-secondary:hover:not(:disabled) .glass-ai-surface {
+  background: #222222;
+  color: #ffffff;
+  border-color: #444444;
+  box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.45);
+}
+.glass-ai-variant-secondary .glass-ai-aura {
+  background: linear-gradient(135deg, #444444, #222222);
+}
+
+/* 4. Danger / Subtle Dark Crimson Glass */
+.glass-ai-variant-danger .glass-ai-surface {
+  background: #241414;
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+}
+.glass-ai-variant-danger:hover:not(:disabled) .glass-ai-surface {
+  background: #331818;
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #ffffff;
   box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.5);
 }
+.glass-ai-variant-danger .glass-ai-aura {
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.3), rgba(120, 20, 40, 0.3));
+}
+
+/* 5. Success / Muted Dark Emerald */
+.glass-ai-variant-success .glass-ai-surface {
+  background: #14241c;
+  color: #86efac;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+}
+.glass-ai-variant-success:hover:not(:disabled) .glass-ai-surface {
+  background: #193325;
+  border-color: rgba(74, 222, 128, 0.5);
+  color: #ffffff;
+  box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.5);
+}
+.glass-ai-variant-success .glass-ai-aura {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.3), rgba(20, 80, 50, 0.3));
+}
+
+/* 6. Dark / Deep Onyx Glass */
+.glass-ai-variant-dark .glass-ai-surface {
+  background: #111111;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.5),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+}
+.glass-ai-variant-dark:hover:not(:disabled) .glass-ai-surface {
+  background: #1c1c1c;
+  border-color: #444444;
+  box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.6);
+}
 .glass-ai-variant-dark .glass-ai-aura {
-  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  background: linear-gradient(135deg, #333333, #111111);
 }
 
 /* Full Width Utility */
