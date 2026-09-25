@@ -46,8 +46,8 @@ const AnswerCard = ({
     setReviewCount(answer.reviewCount || 0);
   }, [answer]);
 
-  const answerAuthorName = answer.user?.name || 'Community Member';
-  const answerAuthorInitial = answerAuthorName.charAt(0).toUpperCase() || 'U';
+  const answerAuthorName = answer.user?.name || answer.user?.username || 'Community Member';
+  const answerAuthorInitial = answerAuthorName?.charAt?.(0)?.toUpperCase() || 'U';
   const isAnswerAuthor =
     currentUser &&
     answer.user &&

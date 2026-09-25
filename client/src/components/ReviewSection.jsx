@@ -400,8 +400,8 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
       ) : (
         <div className="space-y-3.5">
           {reviews.map((review) => {
-            const reviewerName = review.user?.name || 'Community Member';
-            const reviewerInitial = reviewerName.charAt(0).toUpperCase() || 'U';
+            const reviewerName = review.user?.name || review.user?.username || 'Community Member';
+            const reviewerInitial = reviewerName?.charAt?.(0)?.toUpperCase() || 'U';
             const isReviewOwner =
               currentUser && review.user && (currentUser._id === review.user._id || currentUser._id === review.user);
             const isEditing = editingReviewId === review._id;
@@ -561,8 +561,8 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                 {review.replies && review.replies.length > 0 && (
                   <div className="ml-8 mt-2 space-y-2 border-l border-white/10 pl-3.5 pt-1">
                     {review.replies.map((reply) => {
-                      const replyAuthorName = reply.user?.name || 'Community Member';
-                      const replyAuthorInitial = replyAuthorName.charAt(0).toUpperCase() || 'U';
+                      const replyAuthorName = reply.user?.name || reply.user?.username || 'Community Member';
+                      const replyAuthorInitial = replyAuthorName?.charAt?.(0)?.toUpperCase() || 'U';
                       const isReplyOwner =
                         currentUser &&
                         reply.user &&
