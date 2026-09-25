@@ -34,6 +34,7 @@ const CreateProblem = () => {
     description: '',
     category: '',
     location: '',
+    allowTeamUp: false,
   });
 
   const [descTab, setDescTab] = useState('write');
@@ -280,6 +281,7 @@ const CreateProblem = () => {
           category: formData.category,
           location: formData.location.trim(),
           tags,
+          allowTeamUp: Boolean(formData.allowTeamUp),
         },
         token
       );
@@ -846,6 +848,34 @@ const CreateProblem = () => {
             {fieldErrors.description && (
               <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.description}</p>
             )}
+          </div>
+
+          {/* 🤝 Allow Team Up Toggle Setting */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#141414] border border-white/10 flex items-start gap-3.5 shadow-sm transition-all hover:border-white/20">
+            <div className="pt-0.5">
+              <input
+                type="checkbox"
+                id="allowTeamUp"
+                name="allowTeamUp"
+                checked={formData.allowTeamUp}
+                onChange={(e) => setFormData((prev) => ({ ...prev, allowTeamUp: e.target.checked }))}
+                className="w-5 h-5 rounded-md accent-white bg-[#1e1e1e] border-white/20 text-white cursor-pointer"
+              />
+            </div>
+            <label htmlFor="allowTeamUp" className="cursor-pointer select-none">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                  <span>🤝</span>
+                  <span>Allow Team Up</span>
+                </span>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#222222] text-slate-300 border border-white/10">
+                  Collaborative Solving
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                Allow a small group of users (up to 5 members) to collaborate on this problem in a dedicated workspace, create shared tasks, and submit a joint answer.
+              </p>
+            </label>
           </div>
 
           {/* Submit Button */}
