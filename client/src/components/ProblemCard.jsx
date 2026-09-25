@@ -243,13 +243,13 @@ const ProblemCard = ({
           className="block group/title"
           data-no-flip="true"
         >
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover/title:text-indigo-600 transition-colors line-clamp-2 mb-2 leading-snug">
+          <h3 className="text-base sm:text-lg font-bold text-white group-hover/title:text-slate-300 transition-colors line-clamp-2 mb-2 leading-snug">
             {problem.title}
           </h3>
         </Link>
 
         {/* Short Description */}
-        <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3.5">
+        <p className="text-slate-400 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3.5">
           {problem.description}
         </p>
 
@@ -262,13 +262,13 @@ const ProblemCard = ({
                 type="button"
                 data-no-flip="true"
                 onClick={(e) => handleTagClickInternal(e, t)}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition border border-slate-200/80 cursor-pointer"
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#181818] hover:bg-[#242424] text-slate-300 hover:text-white transition border border-[#2a2a2a] cursor-pointer"
               >
                 <span>#{t}</span>
               </button>
             ))}
             {tagsList.length > 3 && (
-              <span className="text-[11px] font-medium text-slate-400 px-1">
+              <span className="text-[11px] font-medium text-slate-500 px-1">
                 +{tagsList.length - 3} more
               </span>
             )}
@@ -276,14 +276,14 @@ const ProblemCard = ({
         )}
 
         {/* Author attribution & Location */}
-        <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-3 gap-2">
-          <div className="flex items-center gap-1.5 text-indigo-600 font-medium truncate">
-            <User className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+        <div className="flex items-center justify-between text-xs text-slate-400 font-medium mb-3 gap-2">
+          <div className="flex items-center gap-1.5 text-slate-300 font-medium truncate">
+            <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span className="truncate">{authorName}</span>
           </div>
 
           {problem.location && (
-            <div className="flex items-center gap-1 text-slate-400 truncate text-[11px]">
+            <div className="flex items-center gap-1 text-slate-500 truncate text-[11px]">
               <MapPin className="w-3 h-3 shrink-0" />
               <span className="truncate">{problem.location}</span>
             </div>
@@ -291,34 +291,34 @@ const ProblemCard = ({
         </div>
 
         {/* Engagement stats */}
-        <div className="flex items-center gap-2.5 py-1.5 px-3 bg-slate-50/90 rounded-xl text-xs font-medium text-slate-600 mb-3 flex-wrap">
-          <span className="inline-flex items-center gap-1 text-slate-700" title="Answers">
-            <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
+        <div className="flex items-center gap-2.5 py-1.5 px-3 bg-[#121212] rounded-xl text-xs font-medium text-slate-400 mb-3 flex-wrap border border-white/5">
+          <span className="inline-flex items-center gap-1 text-slate-300" title="Answers">
+            <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
             <span>{answersCount}</span>
           </span>
 
-          <span className="inline-flex items-center gap-1 text-slate-600" title="Views">
-            <Eye className="w-3.5 h-3.5 text-slate-400" />
+          <span className="inline-flex items-center gap-1 text-slate-400" title="Views">
+            <Eye className="w-3.5 h-3.5 text-slate-500" />
             <span>{viewsCount}</span>
           </span>
 
           {savesCount > 0 && (
-            <span className="inline-flex items-center gap-1 text-indigo-700 font-semibold" title="Saves">
-              <Bookmark className="w-3.5 h-3.5 text-indigo-500" />
+            <span className="inline-flex items-center gap-1 text-slate-200 font-semibold" title="Saves">
+              <Bookmark className="w-3.5 h-3.5 text-slate-400" />
               <span>{savesCount}</span>
             </span>
           )}
 
           {totalHelpfulVotes > 0 && (
-            <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold" title="Helpful Votes">
-              <ThumbsUp className="w-3.5 h-3.5 text-emerald-500" />
+            <span className="inline-flex items-center gap-1 text-slate-200 font-semibold" title="Helpful Votes">
+              <ThumbsUp className="w-3.5 h-3.5 text-slate-400" />
               <span>{totalHelpfulVotes}</span>
             </span>
           )}
 
           {hasBestAnswer && (
-            <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 font-bold ml-auto text-[10px]">
-              <Star className="w-3 h-3 text-amber-500 fill-amber-400" />
+            <span className="inline-flex items-center gap-1 text-slate-200 bg-[#222222] px-2 py-0.5 rounded-md border border-white/20 font-bold ml-auto text-[10px]">
+              <Star className="w-3 h-3 text-white fill-white" />
               <span>Best Answer</span>
             </span>
           )}
@@ -326,7 +326,7 @@ const ProblemCard = ({
       </div>
 
       {/* Footer Info: Save, Collections, Delete & View */}
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+      <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
         <div className="flex items-center gap-1.5" data-no-flip="true">
           <GlassAiButton
             type="button"
@@ -396,8 +396,8 @@ const ProblemCard = ({
       <div className="space-y-4">
         {/* Top Header of Back */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-950/80 text-purple-300 border border-purple-500/30">
-            <Sparkles className="w-3 h-3 text-purple-400" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+            <Sparkles className="w-3 h-3 text-slate-400" />
             <span>{problem.category}</span>
           </span>
 
@@ -413,60 +413,60 @@ const ProblemCard = ({
 
         {/* Center Visual Badge */}
         <div className="text-center py-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 text-white flex items-center justify-center mx-auto mb-2 shadow-lg shadow-purple-950/50">
-            <HelpCircle className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#1c1c1c] border border-white/15 text-white flex items-center justify-center mx-auto mb-2 shadow-lg">
+            <HelpCircle className="w-6 h-6 text-slate-300" />
           </div>
           <h4 className="text-sm font-bold text-white line-clamp-1">
             {problem.title}
           </h4>
-          <p className="text-[11px] text-purple-200/70 mt-0.5">
-            Asked by <strong className="text-purple-300">{authorName}</strong>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            Asked by <strong className="text-slate-200">{authorName}</strong>
           </p>
         </div>
 
         {/* Detailed 3D Metrics Grid */}
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-purple-500/20 text-center">
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{answersCount}</div>
-            <div className="text-[10px] text-purple-300/80 font-medium">💬 Solutions</div>
+            <div className="text-[10px] text-slate-400 font-medium">💬 Solutions</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-purple-500/20 text-center">
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
             <div className="text-base font-black text-white">{viewsCount}</div>
-            <div className="text-[10px] text-purple-300/80 font-medium">👀 Total Views</div>
+            <div className="text-[10px] text-slate-400 font-medium">👀 Total Views</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-purple-500/20 text-center">
-            <div className="text-base font-black text-emerald-400">+{totalHelpfulVotes}</div>
-            <div className="text-[10px] text-purple-300/80 font-medium">👍 Helpful Score</div>
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-base font-black text-slate-200">+{totalHelpfulVotes}</div>
+            <div className="text-[10px] text-slate-400 font-medium">👍 Helpful Score</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-purple-500/20 text-center">
-            <div className="text-base font-black text-indigo-300">{savesCount}</div>
-            <div className="text-[10px] text-purple-300/80 font-medium">🔖 Bookmarks</div>
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-base font-black text-slate-200">{savesCount}</div>
+            <div className="text-[10px] text-slate-400 font-medium">🔖 Bookmarks</div>
           </div>
         </div>
 
         {/* Status Indicator */}
-        <div className="p-2.5 rounded-xl bg-purple-950/50 border border-purple-500/30 flex items-center justify-between text-xs">
-          <span className="text-purple-200 font-medium">Resolution Status</span>
+        <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
+          <span className="text-slate-400 font-medium">Resolution Status</span>
           <span className="font-bold text-white flex items-center gap-1">
             {hasBestAnswer ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-amber-300">Best Answer Selected</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                <span className="text-white">Best Answer Selected</span>
               </>
             ) : answersCount > 0 ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-300">Open Community Answers</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-slate-300" />
+                <span className="text-slate-300">Open Community Answers</span>
               </>
             ) : (
-              <span className="text-amber-300">Awaiting First Answer</span>
+              <span className="text-slate-400">Awaiting First Answer</span>
             )}
           </span>
         </div>
       </div>
 
       {/* Back Actions Footer */}
-      <div className="pt-3 border-t border-purple-500/20 flex items-center justify-between gap-2 mt-auto">
+      <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
         <div data-no-flip="true">
           <GlassAiButton
             type="button"
