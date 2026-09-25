@@ -35,7 +35,7 @@ const Login = () => {
   };
 
   const validate = () => {
-    const errors = ;
+    const errors = {};
     if (!formData.email.trim()) {
       errors.email = 'Email address is required';
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email.trim())) {

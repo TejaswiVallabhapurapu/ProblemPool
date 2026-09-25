@@ -238,7 +238,7 @@ const CreateProblem = () => {
   };
 
   const validate = () => {
-    const errors = ;
+    const errors = {};
     if (!formData.title.trim()) {
       errors.title = 'Problem title is required';
     } else if (formData.title.trim().length < 5) {
