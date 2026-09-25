@@ -456,7 +456,6 @@ const ProblemDetails = () => {
                     size="xs"
                     variant="glass"
                     title="Organize into collections"
-                    icon={}
                   >
                     Collections
                   </GlassAiButton>
@@ -481,7 +480,6 @@ const ProblemDetails = () => {
                     size="xs"
                     variant="glass"
                     title="Report inappropriate problem"
-                    icon={}
                   />
                 )}
               </div>           </div>
@@ -585,7 +583,6 @@ const ProblemDetails = () => {
                     }}
                     size="sm"
                     variant="primary"
-                    icon={}
                   >
                     Start a Team
                   </GlassAiButton>
@@ -698,7 +695,6 @@ const ProblemDetails = () => {
                               to={`/problems/${problem._id}/team/${team._id}`}
                               size="xs"
                               variant="primary"
-                              icon={}
                               iconPosition="right"
                             >
                               Open Workspace
@@ -782,7 +778,6 @@ const ProblemDetails = () => {
                     size="xs"
                     variant="primary"
                     title="Generate an AI-powered overview of all community solutions"
-                    icon={}
                   >
                     Summarize Answers
                   </GlassAiButton>

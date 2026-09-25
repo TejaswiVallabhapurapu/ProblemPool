@@ -330,7 +330,6 @@ const TeamWorkspace = () => {
             to={problemId ? `/problems/${problemId}` : '/problems'}
             variant="primary"
             size="md"
-            icon={}
           >
             Back to Problem
           </GlassAiButton>
@@ -374,7 +373,6 @@ const TeamWorkspace = () => {
                 onClick={() => setShowLeaveModal(true)}
                 size="xs"
                 variant="glass"
-                icon={}
               >
                 Leave Team
               </GlassAiButton>
@@ -437,7 +435,6 @@ const TeamWorkspace = () => {
                   onClick={() => setShowSubmitModal(true)}
                   size="md"
                   variant="primary"
-                  icon={}
                 >
                   Submit Team Answer
                 </GlassAiButton>
@@ -644,7 +641,6 @@ const TeamWorkspace = () => {
                 loading={sendingMsg}
                 size="sm"
                 variant="primary"
-                icon={}
               >
                 Send
               </GlassAiButton>
@@ -677,7 +673,6 @@ const TeamWorkspace = () => {
                       onClick={() => setShowNewTaskForm(true)}
                       size="xs"
                       variant="primary"
-                      icon={}
                     >
                       New Task
                     </GlassAiButton>
@@ -948,7 +943,6 @@ const TeamWorkspace = () => {
                     disabled={!solutionDraft.trim()}
                     size="md"
                     variant="primary"
-                    icon={}
                   >
                     Submit Team Answer
                   </GlassAiButton>

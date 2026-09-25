@@ -209,7 +209,6 @@ const Notifications = () => {
               loading={actionLoading}
               size="xs"
               variant="glass"
-              icon={}
             >
               Mark All as Read
             </GlassAiButton>
@@ -221,7 +220,6 @@ const Notifications = () => {
             disabled={actionLoading}
             size="xs"
             variant="glass"
-            icon={}
           >
             Clear Read
           </GlassAiButton>

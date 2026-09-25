@@ -206,7 +206,6 @@ const TeamUpDiscovery = () => {
                       to={`/problems/${prob._id}`}
                       size="xs"
                       variant="primary"
-                      icon={}
                       iconPosition="right"
                     >
                       View & Team Up

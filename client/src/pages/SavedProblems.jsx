@@ -412,7 +412,6 @@ const SavedProblems = () => {
             }}
             variant="primary"
             size="md"
-            icon={}
           >
             New Collection
           </GlassAiButton>
@@ -524,7 +523,6 @@ const SavedProblems = () => {
                 }}
                 size="xs"
                 variant="glass"
-                icon={}
               >
                 Rename / Edit
               </GlassAiButton>
@@ -534,7 +532,6 @@ const SavedProblems = () => {
                 onClick={() => setShowDeleteModal(true)}
                 size="xs"
                 variant="danger"
-                icon={}
               >
                 Delete Collection
               </GlassAiButton>
@@ -600,7 +597,6 @@ const SavedProblems = () => {
             onClick={fetchData}
             variant="primary"
             size="md"
-            icon={}
           >
             Try Again
           </GlassAiButton>
@@ -852,7 +848,6 @@ const SavedProblems = () => {
                   loading={submittingCol}
                   size="xs"
                   variant="primary"
-                  icon={}
                 >
                   Create Collection
                 </GlassAiButton>
@@ -980,7 +975,6 @@ const SavedProblems = () => {
                   loading={submittingCol}
                   size="xs"
                   variant="primary"
-                  icon={}
                 >
                   Save Changes
                 </GlassAiButton>
@@ -1027,7 +1021,6 @@ const SavedProblems = () => {
                 loading={submittingCol}
                 size="xs"
                 variant="danger"
-                icon={}
               >
                 Yes, Delete Collection
               </GlassAiButton>
