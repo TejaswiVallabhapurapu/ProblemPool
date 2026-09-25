@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { getCollaborativeProblems } from '../services/api';
 import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
 import GlassAiButton from '../components/GlassAiButton';
-import ParticlesBackground from '../components/ParticlesBackground';
 import { LoaderContainer } from '../components/Loader';
 import {
   Users,
@@ -62,9 +61,7 @@ const TeamUpDiscovery = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#080808] text-white">
-      <ParticlesBackground />
-
+    <div className="relative min-h-screen text-white">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         {/* Header Hero */}
         <div className="text-center max-w-3xl mx-auto mb-10">

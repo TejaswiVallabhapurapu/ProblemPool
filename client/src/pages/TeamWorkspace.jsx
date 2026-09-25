@@ -18,7 +18,6 @@ import {
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import MarkdownToolbar from '../components/MarkdownToolbar';
 import GlassAiButton from '../components/GlassAiButton';
-import ParticlesBackground from '../components/ParticlesBackground';
 import { Loader, LoaderContainer } from '../components/Loader';
 import {
   Users,
@@ -335,8 +334,7 @@ const TeamWorkspace = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center bg-[#080808]">
-        <ParticlesBackground />
+      <div className="min-h-screen relative flex items-center justify-center">
         <LoaderContainer text="Loading Team Workspace..." />
       </div>
     );
@@ -344,8 +342,7 @@ const TeamWorkspace = () => {
 
   if (error || !team) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center px-4 bg-[#080808]">
-        <ParticlesBackground />
+      <div className="min-h-screen relative flex items-center justify-center px-4">
         <div className="relative z-10 max-w-md w-full p-8 rounded-3xl bg-[#141414] border border-white/10 text-center shadow-2xl">
           <div className="w-16 h-16 rounded-2xl bg-[#1e1e1e] border border-white/10 flex items-center justify-center mx-auto mb-4 text-white">
             <Shield className="w-8 h-8 text-slate-300" />
@@ -373,9 +370,7 @@ const TeamWorkspace = () => {
   const problemData = team.problemId || {};
 
   return (
-    <div className="relative min-h-screen bg-[#080808] text-white">
-      <ParticlesBackground />
-
+    <div className="relative min-h-screen text-white">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
         {/* Top Back Navigation Bar */}
         <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
