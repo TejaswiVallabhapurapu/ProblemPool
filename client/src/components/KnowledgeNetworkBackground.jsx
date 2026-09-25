@@ -3,21 +3,19 @@ import './KnowledgeNetworkBackground.css';
 
 /**
  * KnowledgeNetworkBackground
- * Lightweight, high-performance interactive constellation / knowledge network background.
- * Inspired by Vanta.js & ReactBits.
+ * Lightweight, high-performance dark interactive constellation & grid background.
+ * Optimized for ProblemPool Dark Premium Aesthetic.
  * 
  * Features:
- * - Floating interconnected knowledge nodes representing ProblemPool threads.
- * - Dynamic mouse attraction / ripple effect.
- * - Dynamic line opacity based on node proximity.
- * - Auto-throttles and pauses offscreen.
- * - Reduced density on mobile screens (max 28 nodes on mobile vs 60 on desktop).
- * - Full prefers-reduced-motion support.
- * - pointer-events: none so it never obstructs UI clicks or form inputs.
+ * - Floating interconnected knowledge nodes in monochrome silver, white, and charcoal.
+ * - Dynamic mouse attraction / gentle ripple.
+ * - Proximity-based connection lines.
+ * - Soft ambient radial glow and faint tech grid.
+ * - Auto-throttles offscreen.
+ * - pointer-events: none to prevent any UI blocking.
  */
 const KnowledgeNetworkBackground = ({
   variant = 'constellation', // 'constellation' | 'particles' | 'subtle'
-  color = '#6366f1',
   nodeCount,
   className = '',
 }) => {
@@ -34,37 +32,37 @@ const KnowledgeNetworkBackground = ({
     const isMobile = window.innerWidth < 768;
 
     // Node count defaults
-    const maxNodes = nodeCount || (isMobile ? 24 : variant === 'subtle' ? 36 : 54);
-    const maxDistance = isMobile ? 90 : 130;
+    const maxNodes = nodeCount || (isMobile ? 22 : variant === 'subtle' ? 32 : 48);
+    const maxDistance = isMobile ? 85 : 125;
 
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
-    // Initialize Nodes
+    // Initialize Monochrome Nodes
     const nodes = [];
     const colors = [
-      'rgba(99, 102, 241, ', // indigo
-      'rgba(139, 92, 246, ', // violet
-      'rgba(56, 189, 248, ', // sky
-      'rgba(16, 185, 129, ', // emerald
+      'rgba(255, 255, 255, ',   // pure white
+      'rgba(215, 215, 215, ',   // silver
+      'rgba(165, 165, 165, ',   // medium gray
+      'rgba(110, 110, 110, ',   // charcoal
     ];
 
     for (let i = 0; i < maxNodes; i++) {
       nodes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.4),
-        vy: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.4),
-        radius: Math.random() * 2 + 1.2,
+        vx: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.35),
+        vy: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.35),
+        radius: Math.random() * 1.8 + 1.0,
         baseColor: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.4 + 0.3,
+        alpha: Math.random() * 0.35 + 0.25,
         pulseSpeed: Math.random() * 0.02 + 0.01,
         pulseOffset: Math.random() * Math.PI * 2,
       });
     }
 
     // Mouse Tracking
-    let mouse = { x: -1000, y: -1000, radius: 140 };
+    let mouse = { x: -1000, y: -1000, radius: 130 };
 
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
@@ -126,16 +124,16 @@ const KnowledgeNetworkBackground = ({
 
           if (dist < mouse.radius && dist > 0) {
             const force = (mouse.radius - dist) / mouse.radius;
-            node.x -= (dx / dist) * force * 1.5;
-            node.y -= (dy / dist) * force * 1.5;
+            node.x -= (dx / dist) * force * 1.2;
+            node.y -= (dy / dist) * force * 1.2;
           }
         }
 
         // Draw node
-        const currentAlpha = node.alpha + Math.sin(time * node.pulseSpeed + node.pulseOffset) * 0.15;
+        const currentAlpha = node.alpha + Math.sin(time * node.pulseSpeed + node.pulseOffset) * 0.12;
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `${node.baseColor}${Math.max(0.1, currentAlpha)})`;
+        ctx.fillStyle = `${node.baseColor}${Math.max(0.08, currentAlpha)})`;
         ctx.fill();
 
         // 2. Draw Connection Lines
@@ -147,12 +145,12 @@ const KnowledgeNetworkBackground = ({
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < maxDistance) {
-              const lineAlpha = (1 - dist / maxDistance) * 0.18;
+              const lineAlpha = (1 - dist / maxDistance) * 0.15;
               ctx.beginPath();
               ctx.moveTo(node.x, node.y);
               ctx.lineTo(nodeB.x, nodeB.y);
-              ctx.strokeStyle = `rgba(99, 102, 241, ${lineAlpha})`;
-              ctx.lineWidth = 0.75;
+              ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
+              ctx.lineWidth = 0.65;
               ctx.stroke();
             }
           }
@@ -173,6 +171,8 @@ const KnowledgeNetworkBackground = ({
 
   return (
     <div className={`knowledge-network-bg-wrapper ${className}`} aria-hidden="true">
+      <div className="knowledge-network-grid" />
+      <div className="knowledge-network-glow" />
       <canvas ref={canvasRef} className="knowledge-network-canvas" />
       <div className="knowledge-network-vignette" />
     </div>
