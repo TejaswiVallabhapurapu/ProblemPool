@@ -1074,7 +1074,11 @@ const Profile = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myProblems.map((prob) => (
-                <ProblemCard key={prob._id} problem={prob} />
+                <ProblemCard
+                  key={prob._id}
+                  problem={prob}
+                  onDelete={(deletedId) => setMyProblems((prev) => prev.filter((p) => p._id !== deletedId))}
+                />
               ))}
             </div>
           )}
