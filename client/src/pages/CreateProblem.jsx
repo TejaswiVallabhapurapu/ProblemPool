@@ -297,7 +297,6 @@ const CreateProblem = () => {
 
   return (
     <div className="relative min-h-screen">
-      <ParticlesBackground />
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         {/* Header */}
         <div className="mb-8">
