@@ -25,22 +25,22 @@ import GlassAiButton from './GlassAiButton';
 import ThreeDFlipCard from './ThreeDFlipCard';
 
 const CATEGORY_COLORS = {
-  Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  'Web Development': 'bg-sky-50 text-sky-700 border-sky-200',
-  Database: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  'AI & ML': 'bg-purple-50 text-purple-700 border-purple-200',
-  DSA: 'bg-rose-50 text-rose-700 border-rose-200',
-  Technology: 'bg-cyan-50 text-cyan-700 border-cyan-200',
-  Career: 'bg-amber-50 text-amber-700 border-amber-200',
-  College: 'bg-orange-50 text-orange-700 border-orange-200',
-  Projects: 'bg-blue-50 text-blue-700 border-blue-200',
-  Education: 'bg-teal-50 text-teal-700 border-teal-200',
-  Healthcare: 'bg-rose-50 text-rose-700 border-rose-200',
-  Environment: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  Transportation: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  Community: 'bg-violet-50 text-violet-700 border-violet-200',
-  General: 'bg-slate-50 text-slate-700 border-slate-200',
-  Other: 'bg-slate-50 text-slate-700 border-slate-200',
+  Programming: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  'Web Development': 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Database: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  'AI & ML': 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  DSA: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Technology: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Career: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  College: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Projects: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Education: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Healthcare: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Environment: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Transportation: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Community: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  General: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
+  Other: 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]',
 };
 
 const formatDate = (dateString) => {
@@ -79,7 +79,7 @@ const ProblemCard = ({
   if (!problem) return null;
 
   const categoryBadgeClass =
-    CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200';
+    CATEGORY_COLORS[problem.category] || 'bg-[#1a1a1a] text-slate-300 border-[#2e2e2e]';
 
   const authorName = problem.createdBy?.name || 'Community Member';
 
@@ -97,19 +97,19 @@ const ProblemCard = ({
 
   const statusBadge =
     status === 'Solved' ? (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-        🔵 Solved
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/20">
+        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+        Solved
       </span>
     ) : status === 'Answered' ? (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <span className="w-2 h-2 rounded-full bg-emerald-500" />
-        🟢 Answered
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#181818] text-slate-300 border border-white/10">
+        <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+        Answered
       </span>
     ) : (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
-        <span className="w-2 h-2 rounded-full bg-amber-500" />
-        🟡 Unanswered
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#141414] text-slate-400 border border-white/10">
+        <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+        Unanswered
       </span>
     );
 
