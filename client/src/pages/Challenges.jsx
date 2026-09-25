@@ -286,7 +286,7 @@ const Challenges = () => {
     const fetchDbChallenges = async () => {
       setLoadingDb(true);
       try {
-        const res = await getChallenges(, token);
+        const res = await getChallenges({}, token);
         if (res?.success && Array.isArray(res.challenges)) {
           setDbChallenges(res.challenges);
         }
@@ -700,18 +700,15 @@ const Challenges = () => {
                         }`}
                       >
                         <div className="flex items-start gap-3 flex-1 min-w-0">
-                          <button
-                            type="button"
-                            className={`mt-0.5 shrink-0 rounded-md transition ${
-                              isDone ? 'text-emerald-600' : 'text-neutral-400 hover:text-white'
+                          <span
+                            className={`mt-0.5 shrink-0 px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider border ${
+                              isDone
+                                ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/20'
+                                : 'bg-white/5 text-neutral-400 border-white/10'
                             }`}
                           >
-                            {isDone ? (
-                              
-                            ) : (
-                              
-                            )}
-                          </button>
+                            {isDone ? 'Completed' : 'Pending'}
+                          </span>
                           <div className="flex-1 min-w-0">
                             <span
                               className={`text-xs sm:text-sm font-bold block ${

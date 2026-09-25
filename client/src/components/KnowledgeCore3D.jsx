@@ -17,12 +17,12 @@ const KnowledgeCore3D = ({ className = '' }) => {
 
   // Orbiting Knowledge node definitions
   const knowledgeNodes = [
-    { id: 'problem', label: 'Real Problems', icon: '🧩', color: '#6366f1', angle: 0, radius: 150 },
-    { id: 'question', label: 'Questions', icon: '❓', color: '#ec4899', angle: 60, radius: 165 },
-    { id: 'community', label: 'Solvers & Experts', icon: '👥', color: '#8b5cf6', angle: 120, radius: 145 },
-    { id: 'answers', label: 'Collaborative Answers', icon: '💬', color: '#3b82f6', angle: 180, radius: 160 },
-    { id: 'best', label: 'Accepted Best Answer', icon: '⭐', color: '#f59e0b', angle: 240, radius: 155 },
-    { id: 'solved', label: 'Verified Solutions', icon: '🎯', color: '#10b981', angle: 300, radius: 170 },
+    { id: 'problem', label: 'Real Problems', color: '#6366f1', angle: 0, radius: 150 },
+    { id: 'question', label: 'Questions', color: '#ec4899', angle: 60, radius: 165 },
+    { id: 'community', label: 'Solvers & Experts', color: '#8b5cf6', angle: 120, radius: 145 },
+    { id: 'answers', label: 'Collaborative Answers', color: '#3b82f6', angle: 180, radius: 160 },
+    { id: 'best', label: 'Accepted Best Answer', color: '#f59e0b', angle: 240, radius: 155 },
+    { id: 'solved', label: 'Verified Solutions', color: '#10b981', angle: 300, radius: 170 },
   ];
 
   useEffect(() => {
@@ -323,7 +323,6 @@ const KnowledgeCore3D = ({ className = '' }) => {
             onMouseLeave={() => setActiveBadge(null)}
           >
             <div className="badge-glass-pill">
-              <span className="badge-icon">{node.icon}</span>
               <span className="badge-text">{node.label}</span>
             </div>
           </div>
