@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Search,
-  PlusCircle,
-  ArrowRight,
-  Sparkles,
-  Layers,
-  Users,
-  HelpCircle,
-  CheckCircle2,
-  TrendingUp,
-} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getProblems, getPersonalizedFeed, getCollaborativeProblems } from '../services/api';
 import ProblemCard from '../components/ProblemCard';
@@ -18,6 +7,8 @@ import KnowledgeFlowVisual from '../components/KnowledgeFlowVisual';
 import EmptyState3D from '../components/EmptyState3D';
 import GlassAiButton from '../components/GlassAiButton';
 import { LoaderContainer } from '../components/Loader';
+import { WireframeForms } from '@designcodeio/threeui';
+import '@designcodeio/threeui/style.css';
 
 const Home = () => {
   const { user: authUser, token, isAuthenticated } = useAuth();
@@ -138,88 +129,96 @@ const Home = () => {
         {/* 1. AUTHENTICATED DASHBOARD APPLICATION HEADER */}
         <section className="relative overflow-hidden pt-10 pb-12 md:pt-14 md:pb-16 border-b border-white/10">
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div className="max-w-4xl text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-4 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Problem Solver Dashboard</span>
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Greeting, User Summary & Quick Action Buttons */}
+              <div className="lg:col-span-7 text-left">
+                <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-4 shadow-xs">
+                  <span>Problem Solver Dashboard</span>
+                </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-3">
-                Welcome back,{' '}
-                <span className="shimmer-text">
-                  {authUser?.name || 'Problem Solver'}
-                </span>
-              </h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-3">
+                  Welcome back,{' '}
+                  <span className="shimmer-text">
+                    {authUser?.name || 'Problem Solver'}
+                  </span>
+                </h1>
 
-              <p className="text-sm sm:text-base text-slate-300 max-w-2xl mb-6 font-medium leading-relaxed">
-                Track your personalized feed, collaborate with others on difficult technical hurdles, and discover community questions matched to your interests.
-              </p>
+                <p className="text-sm sm:text-base text-slate-300 max-w-xl mb-6 font-medium leading-relaxed">
+                  Track your personalized feed, collaborate with others, and discover community questions matched to your interests.
+                </p>
 
-              {/* Dashboard Action Toolbar */}
-              <div className="flex flex-wrap items-center gap-3 mb-6">
-                <GlassAiButton
-                  to="/create-problem"
-                  size="md"
-                  variant="primary"
-                  icon={<PlusCircle className="w-4 h-4" />}
-                >
-                  Post a Problem
-                </GlassAiButton>
+                {/* Dashboard Action Toolbar (Text Only) */}
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <GlassAiButton
+                    to="/create-problem"
+                    size="md"
+                    variant="primary"
+                  >
+                    Post a Problem
+                  </GlassAiButton>
 
-                <GlassAiButton
-                  to="/problems"
-                  size="md"
-                  variant="glass"
-                  icon={<Search className="w-4 h-4 text-slate-400" />}
-                >
-                  Browse Problems
-                </GlassAiButton>
+                  <GlassAiButton
+                    to="/problems"
+                    size="md"
+                    variant="glass"
+                  >
+                    Browse Problems
+                  </GlassAiButton>
 
-                <GlassAiButton
-                  to="/team-up"
-                  size="md"
-                  variant="glass"
-                  icon={<Users className="w-4 h-4 text-slate-400" />}
-                >
-                  🤝 Team Up
-                </GlassAiButton>
+                  <GlassAiButton
+                    to="/team-up"
+                    size="md"
+                    variant="glass"
+                  >
+                    Team Up
+                  </GlassAiButton>
 
-                <GlassAiButton
-                  to="/challenges"
-                  size="md"
-                  variant="glass"
-                >
-                  🧩 Challenges
-                </GlassAiButton>
+                  <GlassAiButton
+                    to="/challenges"
+                    size="md"
+                    variant="glass"
+                  >
+                    Challenges
+                  </GlassAiButton>
 
-                <GlassAiButton
-                  to="/saved-problems"
-                  size="md"
-                  variant="glass"
-                >
-                  🔖 Saved
-                </GlassAiButton>
-              </div>
+                  <GlassAiButton
+                    to="/saved-problems"
+                    size="md"
+                    variant="glass"
+                  >
+                    Saved
+                  </GlassAiButton>
+                </div>
 
-              <div className="flex flex-wrap items-center gap-5 text-xs font-semibold text-slate-400 pt-2 border-t border-white/5">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-white" />
+                <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400 pt-2 border-t border-white/5">
                   <span>Verified Peer Answers</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-slate-300" />
+                  <span>•</span>
                   <span>Squad Collaboration</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-slate-400" />
+                  <span>•</span>
                   <span>Reputation Ranking</span>
-                </span>
+                </div>
+              </div>
+
+              {/* Right Column: WireframeForms Cube */}
+              <div className="lg:col-span-5 flex items-center justify-center dashboard-wireframe w-full h-72 sm:h-80 lg:h-96 relative overflow-hidden pointer-events-none">
+                <WireframeForms
+                  variant="cube"
+                  mode="dark"
+                  speed={3.00}
+                  size={1.00}
+                  length={1.00}
+                  density={1.00}
+                  opacity={0.35}
+                  hue={0}
+                  saturation={1.00}
+                  brightness={1.00}
+                />
               </div>
             </div>
           </div>
         </section>
 
-        {/* 2. STATS SECTION (3D Glass Cards) */}
+        {/* 2. STATS SECTION (Text Only 3D Glass Cards) */}
         <section className="relative z-10 py-12 bg-[#0d0d0d] backdrop-blur-md border-y border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
@@ -228,9 +227,8 @@ const Home = () => {
                 <div className="text-4xl sm:text-5xl font-black text-white mb-2">
                   {stats.problemsCount}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-1.5">
-                  <HelpCircle className="w-4 h-4 text-slate-400" />
-                  <span>Problems Posted</span>
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Problems Posted
                 </div>
               </div>
 
@@ -239,9 +237,8 @@ const Home = () => {
                 <div className="text-4xl sm:text-5xl font-black text-white mb-2">
                   {stats.categoriesCount}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-1.5">
-                  <Layers className="w-4 h-4 text-slate-400" />
-                  <span>Categories</span>
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Categories
                 </div>
               </div>
 
@@ -250,9 +247,8 @@ const Home = () => {
                 <div className="text-4xl sm:text-5xl font-black text-slate-200 mb-2">
                   {stats.communitiesCount}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-1.5">
-                  <Users className="w-4 h-4 text-slate-400" />
-                  <span>Communities</span>
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Communities
                 </div>
               </div>
             </div>
@@ -265,8 +261,7 @@ const Home = () => {
             {/* Feed Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
-                  <Sparkles className="w-3.5 h-3.5 text-slate-400" />
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
                   <span>Smart Community Feed</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
@@ -281,39 +276,37 @@ const Home = () => {
                 to="/problems"
                 size="sm"
                 variant="secondary"
-                icon={<ArrowRight className="w-4 h-4" />}
-                iconPosition="right"
               >
                 Explore All Problems
               </GlassAiButton>
             </div>
 
-            {/* Feed Navigation Tabs */}
+            {/* Feed Navigation Tabs (Text Only) */}
             <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar border-b border-white/10">
               {[
                 {
                   id: 'recommended',
-                  label: '✨ Recommended for You',
+                  label: 'Recommended for You',
                   badge: feedMeta.hasInterests ? `${feedMeta.userInterests.length} Topics` : null,
                 },
                 {
                   id: 'following',
-                  label: '👥 People You Follow',
+                  label: 'People You Follow',
                   badge: feedData.following.length > 0 ? `${feedData.following.length}` : null,
                 },
                 {
                   id: 'trending',
-                  label: '🔥 Trending Problems',
+                  label: 'Trending Problems',
                   badge: feedData.trending.length > 0 ? `${feedData.trending.length}` : null,
                 },
                 {
                   id: 'unanswered',
-                  label: '❓ Unanswered Problems',
+                  label: 'Unanswered Problems',
                   badge: feedData.unanswered.length > 0 ? `${feedData.unanswered.length}` : null,
                 },
                 {
                   id: 'recent',
-                  label: '🕒 Recently Asked',
+                  label: 'Recently Asked',
                   badge: feedData.recent.length > 0 ? `${feedData.recent.length}` : null,
                 },
               ].map((tab) => {
@@ -349,7 +342,7 @@ const Home = () => {
             {activeFeedTab === 'recommended' && feedMeta.hasInterests && (
               <div className="mb-6 p-3.5 rounded-2xl bg-[#141414] border border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div className="flex flex-wrap items-center gap-1.5 text-slate-300">
-                  <span className="font-bold text-white">🎯 Curated for your interests:</span>
+                  <span className="font-bold text-white">Curated for your interests:</span>
                   {feedMeta.userInterests.slice(0, 5).map((interest) => (
                     <span
                       key={interest}
@@ -366,7 +359,7 @@ const Home = () => {
                   to="/profile?tab=overview"
                   className="text-slate-300 hover:text-white font-bold underline shrink-0"
                 >
-                  Manage Interests →
+                  Manage Interests
                 </Link>
               </div>
             )}
@@ -422,12 +415,11 @@ const Home = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
-                  <Users className="w-3.5 h-3.5 text-slate-300" />
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#181818] border border-white/15 text-slate-300 text-xs font-bold mb-2.5">
                   <span>Team Up & Solve Together</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
-                  🤝 Collaborative Problems
+                  Collaborative Problems
                 </h2>
                 <p className="text-slate-400 text-sm sm:text-base mt-1.5 max-w-2xl">
                   Form a team with other problem solvers to tackle complex engineering, algorithmic, and domain challenges together.
@@ -438,8 +430,6 @@ const Home = () => {
                 to="/team-up"
                 size="sm"
                 variant="primary"
-                icon={<ArrowRight className="w-4 h-4" />}
-                iconPosition="right"
               >
                 Browse All Teams
               </GlassAiButton>
@@ -448,10 +438,10 @@ const Home = () => {
             {/* Filter Tabs */}
             <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar">
               {[
-                { id: 'recent', label: '🕒 Most Recent' },
-                { id: 'members_needed', label: '👥 Most Members Needed' },
-                { id: 'unanswered', label: '❓ Unanswered' },
-                { id: 'popular', label: '🔥 Popular' },
+                { id: 'recent', label: 'Most Recent' },
+                { id: 'members_needed', label: 'Most Members Needed' },
+                { id: 'unanswered', label: 'Unanswered' },
+                { id: 'popular', label: 'Popular' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -522,10 +512,7 @@ const Home = () => {
 
                       <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                         <div className="flex items-center justify-between text-xs text-slate-300 font-semibold">
-                          <div className="flex items-center gap-1.5">
-                            <Users className="w-3.5 h-3.5 text-slate-400" />
-                            <span>{activeTeamCount} {activeTeamCount === 1 ? 'Team' : 'Teams'} Active</span>
-                          </div>
+                          <span>{activeTeamCount} {activeTeamCount === 1 ? 'Team' : 'Teams'} Active</span>
                           <span className="text-slate-400">
                             {membersNeeded > 0 ? `${membersNeeded} slots available` : 'Form new team'}
                           </span>
@@ -539,8 +526,6 @@ const Home = () => {
                             to={`/problems/${problem._id}`}
                             size="xs"
                             variant="primary"
-                            icon={<ArrowRight className="w-3 h-3" />}
-                            iconPosition="right"
                           >
                             View Problem
                           </GlassAiButton>
