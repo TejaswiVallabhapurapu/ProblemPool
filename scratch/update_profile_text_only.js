@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+const path = require('path');
+
+const profileContent = `import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ReportModal from '../components/ReportModal';
 import GlassAiButton from '../components/GlassAiButton';
@@ -478,13 +481,13 @@ const Profile = () => {
           {[
             { id: 'overview', label: 'Overview', show: true },
             { id: 'activity', label: 'Activity', show: isViewingSelf },
-            { id: 'problems', label: `Problems (${stats.problemsCount || 0})`, show: true },
-            { id: 'answers', label: `Answers (${stats.answersCount || 0})`, show: isViewingSelf },
-            { id: 'achievements', label: `Achievements (${achievements.filter((a) => a.isUnlocked).length}/${achievements.length})`, show: true },
-            { id: 'followers', label: `Followers (${stats.followersCount || 0})`, show: true },
-            { id: 'following', label: `Following (${stats.followingCount || 0})`, show: true },
+            { id: 'problems', label: \`Problems (\${stats.problemsCount || 0})\`, show: true },
+            { id: 'answers', label: \`Answers (\${stats.answersCount || 0})\`, show: isViewingSelf },
+            { id: 'achievements', label: \`Achievements (\${achievements.filter((a) => a.isUnlocked).length}/\${achievements.length})\`, show: true },
+            { id: 'followers', label: \`Followers (\${stats.followersCount || 0})\`, show: true },
+            { id: 'following', label: \`Following (\${stats.followingCount || 0})\`, show: true },
             { id: 'history', label: 'Reputation History', show: isViewingSelf },
-            { id: 'saved', label: `Saved (${stats.savedCount || 0})`, show: isViewingSelf },
+            { id: 'saved', label: \`Saved (\${stats.savedCount || 0})\`, show: isViewingSelf },
           ]
             .filter((t) => t.show)
             .map((tab) => {
@@ -493,11 +496,11 @@ const Profile = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex items-center px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                  className={\`inline-flex items-center px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer \${
                     isActive
                       ? 'bg-white/10 text-white border border-white/20 font-bold shadow-xs'
                       : 'text-[#D1D5DB] hover:text-white hover:bg-white/5'
-                  }`}
+                  }\`}
                 >
                   <span>{tab.label}</span>
                 </button>
@@ -637,7 +640,7 @@ const Profile = () => {
                 <div className="w-full bg-[#0e0e0e] rounded-full h-3 p-0.5 overflow-hidden border border-white/10">
                   <div
                     className="bg-white h-full rounded-full transition-all duration-500"
-                    style={{ width: `${level.progress}%` }}
+                    style={{ width: \`\${level.progress}%\` }}
                   />
                 </div>
               )}
@@ -665,11 +668,11 @@ const Profile = () => {
                   <div
                     key={badge.type}
                     onClick={() => setSelectedBadge(badge)}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center ${
+                    className={\`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center \${
                       badge.isUnlocked
                         ? 'bg-[#181818] border-white/15 shadow-xs hover:border-white/30 hover:scale-[1.02]'
                         : 'bg-[#121212]/60 border-white/5 opacity-50 grayscale hover:opacity-75'
-                    }`}
+                    }\`}
                   >
                     <div className="font-bold text-xs text-white mb-1">{badge.title}</div>
                     <div className="text-[11px] text-slate-400 mt-1 line-clamp-2">
@@ -698,7 +701,7 @@ const Profile = () => {
                   Followers ({followersList.length})
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Community members following {isViewingSelf ? 'your' : `${user.name}'s`} problem-solving journey.
+                  Community members following {isViewingSelf ? 'your' : \`\${user.name}'s\`} problem-solving journey.
                 </p>
               </div>
             </div>
@@ -719,7 +722,7 @@ const Profile = () => {
                     className="p-4 rounded-2xl border border-white/10 bg-[#181818] hover:border-white/20 transition-all shadow-xs flex items-center justify-between gap-4"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <Link to={`/profile/${f.username || f._id}`} className="shrink-0">
+                      <Link to={\`/profile/\${f.username || f._id}\`} className="shrink-0">
                         {f.avatar ? (
                           <img
                             src={f.avatar}
@@ -734,7 +737,7 @@ const Profile = () => {
                       </Link>
                       <div className="min-w-0">
                         <Link
-                          to={`/profile/${f.username || f._id}`}
+                          to={\`/profile/\${f.username || f._id}\`}
                           className="font-bold text-sm text-white hover:text-slate-300 transition truncate block"
                         >
                           {f.name}
@@ -776,7 +779,7 @@ const Profile = () => {
                   Following ({followingList.length})
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Community members and problem solvers {isViewingSelf ? 'you follow' : `${user.name} follows`}.
+                  Community members and problem solvers {isViewingSelf ? 'you follow' : \`\${user.name} follows\`}.
                 </p>
               </div>
             </div>
@@ -797,7 +800,7 @@ const Profile = () => {
                     className="p-4 rounded-2xl border border-white/10 bg-[#181818] hover:border-white/20 transition-all shadow-xs flex items-center justify-between gap-4"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <Link to={`/profile/${f.username || f._id}`} className="shrink-0">
+                      <Link to={\`/profile/\${f.username || f._id}\`} className="shrink-0">
                         {f.avatar ? (
                           <img
                             src={f.avatar}
@@ -812,7 +815,7 @@ const Profile = () => {
                       </Link>
                       <div className="min-w-0">
                         <Link
-                          to={`/profile/${f.username || f._id}`}
+                          to={\`/profile/\${f.username || f._id}\`}
                           className="font-bold text-sm text-white hover:text-slate-300 transition truncate block"
                         >
                           {f.name}
@@ -994,7 +997,7 @@ const Profile = () => {
                           </span>
                         </div>
                         <Link
-                          to={`/problems/${ans.problem._id}`}
+                          to={\`/problems/\${ans.problem._id}\`}
                           className="font-bold text-white hover:text-slate-300 text-sm line-clamp-1"
                         >
                           {ans.problem.title}
@@ -1038,11 +1041,11 @@ const Profile = () => {
                 <div
                   key={badge.type}
                   onClick={() => setSelectedBadge(badge)}
-                  className={`p-5 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center ${
+                  className={\`p-5 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center \${
                     badge.isUnlocked
                       ? 'bg-[#181818] border-white/15 shadow-xs hover:border-white/30 hover:shadow-md hover:scale-[1.02]'
                       : 'bg-[#121212]/60 border-white/5 opacity-50 grayscale hover:opacity-75'
-                  }`}
+                  }\`}
                 >
                   <div className="font-extrabold text-sm text-white mb-1">{badge.title}</div>
                   <div className="text-xs text-slate-400 leading-relaxed line-clamp-2">
@@ -1094,13 +1097,13 @@ const Profile = () => {
                   <div key={item._id} className="py-3.5 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`inline-flex items-center justify-center w-10 h-7 rounded-lg text-xs font-extrabold ${
+                        className={\`inline-flex items-center justify-center w-10 h-7 rounded-lg text-xs font-extrabold \${
                           item.points > 0
                             ? 'bg-emerald-950/40 text-emerald-300 border border-emerald-500/20'
                             : 'bg-rose-950/40 text-rose-300 border border-rose-500/20'
-                        }`}
+                        }\`}
                       >
-                        {item.points > 0 ? `+${item.points}` : item.points}
+                        {item.points > 0 ? \`+\${item.points}\` : item.points}
                       </span>
                       <span className="text-xs font-medium text-slate-200">{item.reason}</span>
                     </div>
@@ -1244,11 +1247,11 @@ const Profile = () => {
                           key={topic}
                           type="button"
                           onClick={() => handleInterestToggle(topic)}
-                          className={`inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                          className={\`inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer \${
                             isSelected
                               ? 'bg-white text-black font-bold shadow-xs'
                               : 'bg-[#222222] text-slate-300 border border-white/10 hover:border-white/25'
-                          }`}
+                          }\`}
                         >
                           <span>{topic}</span>
                         </button>
@@ -1354,7 +1357,7 @@ const Profile = () => {
             onClose={() => setShowReportUserModal(false)}
             contentType="user"
             contentId={user._id}
-            contentTitle={`User Profile: ${user.name}`}
+            contentTitle={\`User Profile: \${user.name}\`}
           />
         )}
       </div>
@@ -1363,3 +1366,7 @@ const Profile = () => {
 };
 
 export default Profile;
+`;
+
+fs.writeFileSync(path.join(__dirname, '../client/src/pages/Profile.jsx'), profileContent, 'utf8');
+console.log('Successfully updated Profile.jsx to be completely text-only!');
