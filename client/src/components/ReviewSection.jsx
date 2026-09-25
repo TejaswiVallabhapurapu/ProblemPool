@@ -294,27 +294,27 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
   };
 
   return (
-    <div className="mt-4 pt-4 border-t border-slate-100 bg-slate-50/50 rounded-xl p-4 sm:p-5 space-y-4">
+    <div className="mt-4 pt-4 border-t border-white/10 bg-white/5 rounded-2xl p-4 sm:p-5 space-y-4">
       {/* Header & Sorting */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-slate-900">⭐ Reviews & Feedback</span>
-          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-200 text-slate-700">
+          <span className="text-sm font-bold text-white">Reviews & Feedback</span>
+          <span className="px-2 py-0.5 text-xs font-mono font-semibold rounded-full bg-white/10 text-neutral-300">
             {reviews.length}
           </span>
         </div>
 
         {/* Sort Controls */}
         <div className="flex items-center gap-1.5 text-xs">
-          <span className="text-slate-400 font-medium">Sort:</span>
-          <div className="inline-flex rounded-lg bg-slate-200/70 p-0.5">
+          <span className="text-neutral-400 font-medium">Sort:</span>
+          <div className="inline-flex rounded-lg bg-white/5 border border-white/10 p-0.5">
             <button
               type="button"
               onClick={() => setSort('most_helpful')}
-              className={`px-2.5 py-1 rounded-md font-semibold transition-all ${
+              className={`px-2.5 py-1 rounded-md font-medium transition-all ${
                 sort === 'most_helpful'
-                  ? 'bg-white text-indigo-600 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white text-black font-semibold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               Most Helpful
@@ -322,10 +322,10 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
             <button
               type="button"
               onClick={() => setSort('newest')}
-              className={`px-2.5 py-1 rounded-md font-semibold transition-all ${
+              className={`px-2.5 py-1 rounded-md font-medium transition-all ${
                 sort === 'newest'
-                  ? 'bg-white text-indigo-600 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white text-black font-semibold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               Newest
@@ -333,10 +333,10 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
             <button
               type="button"
               onClick={() => setSort('oldest')}
-              className={`px-2.5 py-1 rounded-md font-semibold transition-all ${
+              className={`px-2.5 py-1 rounded-md font-medium transition-all ${
                 sort === 'oldest'
-                  ? 'bg-white text-indigo-600 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white text-black font-semibold shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               Oldest
@@ -347,9 +347,9 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
 
       {/* Review Submission Form */}
       {isAuthenticated && !isAnswerAuthor && (
-        <form onSubmit={handleReviewSubmit} className="space-y-2.5 bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+        <form onSubmit={handleReviewSubmit} className="space-y-2.5 bg-white/5 p-3.5 rounded-xl border border-white/10 shadow-xs">
           {formError && (
-            <p className="text-xs text-rose-600 font-medium">{formError}</p>
+            <p className="text-xs text-red-400 font-medium">{formError}</p>
           )}
           <textarea
             rows={2}
@@ -360,10 +360,10 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
             }}
             maxLength={1000}
             placeholder="Share feedback or ask a clarifying question about this solution..."
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-all resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-white/10 text-xs sm:text-sm text-white placeholder-neutral-500 bg-black/40 focus:outline-none focus:border-white/30 transition-all resize-none"
           />
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400">
+            <span className="text-neutral-400">
               {reviewContent.length}/1000 characters
             </span>
             <GlassAiButton
@@ -380,8 +380,8 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
       )}
 
       {isAnswerAuthor && (
-        <div className="text-xs text-slate-500 italic bg-white/60 px-3 py-2 rounded-lg border border-slate-200/60">
-          💡 You are the author of this answer. You can reply to community reviews below.
+        <div className="text-xs text-neutral-400 italic bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+          You are the author of this answer. You can reply to community reviews below.
         </div>
       )}
 
@@ -389,12 +389,12 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
       {loading ? (
         <div className="py-6 flex flex-col items-center justify-center gap-2">
           <Loader size="sm" />
-          <span className="text-xs text-slate-400">Loading reviews...</span>
+          <span className="text-xs text-neutral-400">Loading reviews...</span>
         </div>
       ) : error ? (
-        <div className="text-xs text-rose-600 text-center py-4">{error}</div>
+        <div className="text-xs text-red-400 text-center py-4">{error}</div>
       ) : reviews.length === 0 ? (
-        <div className="py-6 text-center text-xs text-slate-500 italic">
+        <div className="py-6 text-center text-xs text-neutral-400 italic">
           No reviews yet. Share your feedback about this answer.
         </div>
       ) : (
@@ -410,19 +410,19 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
             return (
               <div
                 key={review._id}
-                className="p-3.5 rounded-xl bg-white border border-slate-200/90 shadow-xs space-y-2.5 transition-all"
+                className="p-3.5 rounded-xl bg-white/5 border border-white/10 shadow-xs space-y-2.5 transition-all"
               >
                 {/* Review Header */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-[10px]">
+                    <div className="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-[10px] border border-white/10">
                       {reviewerInitial}
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-slate-900 mr-2">
+                      <span className="text-xs font-semibold text-white mr-2">
                         {reviewerName}
                       </span>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-neutral-400 font-mono">
                         {formatDate(review.createdAt)}
                       </span>
                     </div>
@@ -436,13 +436,13 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                           setEditingReviewId(review._id);
                           setEditingContent(review.content);
                         }}
-                        className="text-slate-400 hover:text-indigo-600 font-medium transition-colors"
+                        className="text-neutral-400 hover:text-white font-medium transition-colors"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDeleteReview(review._id)}
-                        className="text-slate-400 hover:text-rose-600 font-medium transition-colors"
+                        className="text-neutral-400 hover:text-red-400 font-medium transition-colors"
                       >
                         Delete
                       </button>
@@ -458,7 +458,7 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                       value={editingContent}
                       onChange={(e) => setEditingContent(e.target.value)}
                       maxLength={1000}
-                      className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-1.5 text-xs rounded-lg border border-white/10 bg-black/40 text-white focus:outline-none focus:border-white/30"
                     />
                     <div className="flex items-center gap-2 justify-end">
                       <GlassAiButton
@@ -482,7 +482,7 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed pl-8">
+                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed pl-8">
                     {review.content}
                   </p>
                 )}
@@ -494,9 +494,9 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                     type="button"
                     onClick={() => handleVoteReview(review)}
                     size="xs"
-                    variant={review.hasVoted ? "success" : "glass"}
+                    variant={review.hasVoted ? "primary" : "glass"}
                   >
-                    👍 {review.helpfulCount || 0} <span className="hidden sm:inline">Helpful</span>
+                    Helpful ({review.helpfulCount || 0})
                   </GlassAiButton>
 
                   {/* Reply Button */}
@@ -512,11 +512,6 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
                     }}
                     size="xs"
                     variant="glass"
-                    icon={
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 016 6v3" />
-                      </svg>
-                    }
                   >
                     Reply
                   </GlassAiButton>
@@ -524,14 +519,14 @@ const ReviewSection = ({ answerId, isAnswerAuthor, currentUser, token, isAuthent
 
                 {/* Inline Reply Input */}
                 {isReplying && (
-                  <div className="ml-8 mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                  <div className="ml-8 mt-2 p-3 bg-white/5 rounded-xl border border-white/10 space-y-2">
                     <textarea
                       rows={2}
                       value={replyContent}
                       onChange={(e) => setReplyContent(e.target.value)}
                       maxLength={500}
                       placeholder={`Reply to ${reviewerName}...`}
-                      className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-900 focus:outline-none focus:border-indigo-500 bg-white"
+                      className="w-full px-3 py-1.5 text-xs rounded-lg border border-white/10 text-white focus:outline-none focus:border-white/30 bg-black/40"
                     />
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-slate-400">{replyContent.length}/500</span>
