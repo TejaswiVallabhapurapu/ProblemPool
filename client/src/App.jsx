@@ -19,15 +19,22 @@ import Challenges from './pages/Challenges';
 import Platform from './pages/Platform';
 import TeamUpDiscovery from './pages/TeamUpDiscovery';
 import TeamWorkspace from './pages/TeamWorkspace';
+import WebThreadsBackground from './components/WebThreadsBackground';
+import { useLocation } from 'react-router-dom';
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const isPlatformPage = location.pathname === '/' || location.pathname === '/platform';
+
   return (
-    <AuthProvider>
-      <Router>
-        <div className="flex flex-col min-h-screen bg-[#080808] text-[#f8fafc]">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
+    <div className="flex flex-col min-h-screen bg-[#080808] text-[#f8fafc] relative">
+      {/* Global WebThreads Background for all application and auth pages except Platform */}
+      {!isPlatformPage && <WebThreadsBackground />}
+
+      <div className="relative z-10 flex flex-col flex-grow">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
               {/* Public Landing & Authentication */}
               <Route path="/" element={<Platform />} />
               <Route path="/platform" element={<Platform />} />
@@ -169,6 +176,15 @@ function App() {
           </main>
           <Footer />
         </div>
+      </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
       </Router>
     </AuthProvider>
   );
