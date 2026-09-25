@@ -68,7 +68,7 @@ const CreateProblem = () => {
 
     setImprovingAi(true);
     setAiError(null);
-    setAppliedFields();
+    setAppliedFields({});
 
     try {
       const res = await improveProblemWithAI(
