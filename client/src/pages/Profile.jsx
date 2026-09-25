@@ -340,14 +340,14 @@ const Profile = () => {
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Sign In Required</h2>
         <p className="text-sm text-slate-600 mb-6">
-          Please log in to view and manage your ProblemPool profile, reputation, followers, and interests.
+          Please sign in to view and manage your ProblemPool profile, reputation, followers, and interests.
         </p>
         <Link
           to="/login"
           state={{ from: '/profile' }}
           className="inline-flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
         >
-          Log In to Account
+          Sign In to Account
         </Link>
       </div>
     );
