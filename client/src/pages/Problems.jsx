@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, PlusCircle, AlertCircle, RefreshCw, FolderSearch } from 'lucide-react';
-import { getProblems } from '../services/api';
+import { getProblems, getMySavedProblemIds } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import ProblemCard from '../components/ProblemCard';
 import CategoryFilter from '../components/CategoryFilter';
 
 const Problems = () => {
+  const { token, isAuthenticated } = useAuth();
   const [problems, setProblems] = useState([]);
+  const [savedIds, setSavedIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,11 +19,21 @@ const Problems = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getProblems();
-      if (data && data.success) {
-        setProblems(data.problems || []);
+      const promises = [getProblems()];
+      if (token && isAuthenticated) {
+        promises.push(getMySavedProblemIds(token).catch(() => ({ success: true, savedProblemIds: [] })));
+      }
+
+      const [problemsData, savedData] = await Promise.all(promises);
+
+      if (problemsData && problemsData.success) {
+        setProblems(problemsData.problems || []);
       } else {
-        setError(data?.message || 'Failed to retrieve problems');
+        setError(problemsData?.message || 'Failed to retrieve problems');
+      }
+
+      if (savedData && Array.isArray(savedData.savedProblemIds)) {
+        setSavedIds(new Set(savedData.savedProblemIds));
       }
     } catch (err) {
       setError(err.message || 'Unable to connect to the server. Please check if the backend is running.');
@@ -31,7 +44,19 @@ const Problems = () => {
 
   useEffect(() => {
     fetchProblemList();
-  }, []);
+  }, [token, isAuthenticated]);
+
+  const handleToggleSave = (problemId, nextSaved) => {
+    setSavedIds((prev) => {
+      const next = new Set(prev);
+      if (nextSaved) {
+        next.add(problemId);
+      } else {
+        next.delete(problemId);
+      }
+      return next;
+    });
+  };
 
   // Filter problems based on both search term and selected category
   const filteredProblems = useMemo(() => {
@@ -192,7 +217,12 @@ const Problems = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProblems.map((problem) => (
-              <ProblemCard key={problem._id} problem={problem} />
+              <ProblemCard
+                key={problem._id}
+                problem={problem}
+                isSaved={savedIds.has(problem._id)}
+                onToggleSave={handleToggleSave}
+              />
             ))}
           </div>
         </>

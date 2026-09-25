@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Problems from './pages/Problems';
 import CreateProblem from './pages/CreateProblem';
 import ProblemDetails from './pages/ProblemDetails';
+import SavedProblems from './pages/SavedProblems';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -26,6 +27,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <CreateProblem />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/saved-problems"
+                element={
+                  <ProtectedRoute>
+                    <SavedProblems />
                   </ProtectedRoute>
                 }
               />

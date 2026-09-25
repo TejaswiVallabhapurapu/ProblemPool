@@ -512,3 +512,68 @@ export const deleteReply = async (replyId, token) => {
     headers,
   });
 };
+
+/**
+ * Save a problem for later (Protected)
+ * @param {string} problemId
+ * @param {string} token
+ */
+export const saveProblem = async (problemId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/${problemId}/save`, {
+    method: 'POST',
+    headers,
+  });
+};
+
+/**
+ * Remove a problem from saved (Protected)
+ * @param {string} problemId
+ * @param {string} token
+ */
+export const unsaveProblem = async (problemId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/problems/${problemId}/save`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Get all saved problems for the current user (Protected)
+ * @param {string} token
+ */
+export const getMySavedProblems = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/saved-problems', {
+    headers,
+  });
+};
+
+/**
+ * Get list of saved problem IDs for the current user for quick lookup (Protected)
+ * @param {string} token
+ */
+export const getMySavedProblemIds = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/users/me/saved-problems/ids', {
+    headers,
+  });
+};
+

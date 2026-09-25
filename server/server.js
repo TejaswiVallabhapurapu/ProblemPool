@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const answerRoutes = require('./routes/answerRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const replyRoutes = require('./routes/replyRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -87,6 +88,7 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/problems', problemRoutes);
 app.use('/api/answers', answerRoutes);
 app.use('/api/reviews', reviewRoutes);

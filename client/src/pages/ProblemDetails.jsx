@@ -6,9 +6,13 @@ import {
   getProblemAnswers,
   submitAnswer,
   deleteAnswer,
+  saveProblem,
+  unsaveProblem,
+  getMySavedProblemIds,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
+import { Bookmark, Loader2 } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Education: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -46,6 +50,11 @@ const ProblemDetails = () => {
   const [isDeletingProblem, setIsDeletingProblem] = useState(false);
   const [answerSort, setAnswerSort] = useState('best_answer');
 
+  // Save states
+  const [isSaved, setIsSaved] = useState(false);
+  const [savingState, setSavingState] = useState(false);
+  const [saveNotice, setSaveNotice] = useState(null);
+
   // Answer form states
   const [answerContent, setAnswerContent] = useState('');
   const [submittingAnswer, setSubmittingAnswer] = useState(false);
@@ -57,14 +66,22 @@ const ProblemDetails = () => {
       setLoading(true);
       setError(null);
 
-      // Fetch problem details and answers in parallel with token for user vote mapping
-      const [problemRes, answersRes] = await Promise.all([
+      // Fetch problem details, answers, and saved problem status in parallel
+      const promises = [
         getProblem(id),
         getProblemAnswers(id, currentSort, token).catch((err) => {
           console.warn('Failed to load answers:', err);
           return { success: true, answers: [] };
         }),
-      ]);
+      ];
+
+      if (token) {
+        promises.push(
+          getMySavedProblemIds(token).catch(() => ({ success: true, savedProblemIds: [] }))
+        );
+      }
+
+      const [problemRes, answersRes, savedIdsRes] = await Promise.all(promises);
 
       if (problemRes.success && problemRes.problem) {
         setProblem(problemRes.problem);
@@ -74,6 +91,10 @@ const ProblemDetails = () => {
 
       if (answersRes && answersRes.answers) {
         setAnswers(answersRes.answers);
+      }
+
+      if (savedIdsRes && Array.isArray(savedIdsRes.savedProblemIds)) {
+        setIsSaved(savedIdsRes.savedProblemIds.includes(id));
       }
     } catch (err) {
       setError(err.message || 'Unable to load problem details');
@@ -85,6 +106,35 @@ const ProblemDetails = () => {
   useEffect(() => {
     fetchProblemAndAnswers(answerSort);
   }, [id, answerSort, token]);
+
+  const handleSaveToggle = async () => {
+    if (!isAuthenticated || !token) {
+      setSaveNotice('Please login to save problems.');
+      setTimeout(() => setSaveNotice(null), 3500);
+      return;
+    }
+
+    if (savingState) return;
+
+    const nextState = !isSaved;
+    setSavingState(true);
+    setSaveNotice(null);
+    setIsSaved(nextState);
+
+    try {
+      if (nextState) {
+        await saveProblem(id, token);
+      } else {
+        await unsaveProblem(id, token);
+      }
+    } catch (err) {
+      setIsSaved(!nextState);
+      setSaveNotice(err.message || 'Failed to update saved status');
+      setTimeout(() => setSaveNotice(null), 3000);
+    } finally {
+      setSavingState(false);
+    }
+  };
 
   const handleDeleteProblem = async () => {
     if (!window.confirm('Are you sure you want to delete this problem and all its answers/reviews?')) {
@@ -231,8 +281,23 @@ const ProblemDetails = () => {
           {/* Problem Card */}
           <article className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-10">
             {/* Header Metadata */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
-              <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100 relative">
+              {/* Notice popup if unauthenticated */}
+              {saveNotice && (
+                <div className="absolute top-0 right-0 z-20 bg-slate-900/95 text-white text-xs font-medium py-1.5 px-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in zoom-in duration-150">
+                  <span>{saveNotice}</span>
+                  {!isAuthenticated && (
+                    <button
+                      onClick={() => navigate('/login', { state: { from: location.pathname } })}
+                      className="text-indigo-400 hover:text-indigo-300 underline font-semibold ml-1"
+                    >
+                      Login
+                    </button>
+                  )}
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center gap-2.5">
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
                     CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200'
@@ -245,14 +310,14 @@ const ProblemDetails = () => {
                 <span
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
                     problemStatus === 'Solved'
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-xs'
+                      ? 'bg-blue-50 text-blue-800 border-blue-200 shadow-xs'
                       : problemStatus === 'Answered'
-                      ? 'bg-blue-50 text-blue-800 border-blue-200'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                       : 'bg-amber-50 text-amber-800 border-amber-200'
                   }`}
                 >
-                  <span className="text-xs">
-                    {problemStatus === 'Solved' ? '🟢' : problemStatus === 'Answered' ? '🟢' : '🟡'}
+                  <span>
+                    {problemStatus === 'Solved' ? '🔵' : problemStatus === 'Answered' ? '🟢' : '🟡'}
                   </span>
                   <span>{problemStatus}</span>
                 </span>
@@ -262,17 +327,42 @@ const ProblemDetails = () => {
                 </span>
               </div>
 
-              {/* Creator Delete Option */}
-              {isProblemOwner && (
+              {/* Right Side Actions: Save Problem & Creator Delete */}
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={handleDeleteProblem}
-                  disabled={isDeletingProblem}
-                  className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer"
-                  title="Delete this problem"
+                  type="button"
+                  onClick={handleSaveToggle}
+                  disabled={savingState}
+                  title={isSaved ? 'Remove from saved problems' : 'Save problem for later'}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
+                    isSaved
+                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
                 >
-                  {isDeletingProblem ? 'Deleting...' : 'Delete problem'}
+                  {savingState ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />
+                  ) : (
+                    <Bookmark
+                      className={`w-3.5 h-3.5 ${
+                        isSaved ? 'fill-indigo-600 text-indigo-600' : 'text-slate-400'
+                      }`}
+                    />
+                  )}
+                  <span>{isSaved ? '🔖 Saved' : '🔖 Save'}</span>
                 </button>
-              )}
+
+                {isProblemOwner && (
+                  <button
+                    onClick={handleDeleteProblem}
+                    disabled={isDeletingProblem}
+                    className="text-xs text-slate-400 hover:text-rose-600 font-medium transition-colors cursor-pointer ml-1"
+                    title="Delete this problem"
+                  >
+                    {isDeletingProblem ? 'Deleting...' : 'Delete problem'}
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Title */}

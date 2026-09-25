@@ -1,5 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Bookmark, MessageSquare, ThumbsUp, Star, MapPin, User, Check, Loader2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { saveProblem, unsaveProblem } from '../services/api';
 
 const CATEGORY_COLORS = {
   Education: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -21,38 +24,118 @@ const formatDate = (dateString) => {
   });
 };
 
-const ProblemCard = ({ problem }) => {
+const ProblemCard = ({
+  problem,
+  isSaved: initialIsSaved = null,
+  onToggleSave = null,
+}) => {
+  const { token, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const [saved, setSaved] = useState(Boolean(initialIsSaved));
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState(null);
+
+  useEffect(() => {
+    if (initialIsSaved !== null) {
+      setSaved(Boolean(initialIsSaved));
+    }
+  }, [initialIsSaved]);
+
   const categoryBadgeClass =
     CATEGORY_COLORS[problem.category] || 'bg-slate-50 text-slate-700 border-slate-200';
 
   const authorName = problem.createdBy?.name || 'Community Member';
 
-  // Dynamic Status Badge
-  const status = problem.status || (problem.bestAnswer ? 'Solved' : problem.answersCount > 0 ? 'Answered' : 'Unanswered');
+  // Compute status
+  const answersCount = problem.answersCount || (Array.isArray(problem.answers) ? problem.answers.length : 0);
+  const hasBestAnswer = Boolean(problem.bestAnswer);
+  const totalHelpfulVotes = problem.totalHelpfulVotes || 0;
+
+  const status =
+    problem.status ||
+    (hasBestAnswer ? 'Solved' : answersCount > 0 ? 'Answered' : 'Unanswered');
 
   const statusBadge =
     status === 'Solved' ? (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
-        <span>🟢</span> Solved
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+        🔵 Solved
       </span>
     ) : status === 'Answered' ? (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
-        <span>🟢</span> Answered
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+        🟢 Answered
       </span>
     ) : (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-        <span>🟡</span> Unanswered
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+        <span className="w-2 h-2 rounded-full bg-amber-500" />
+        🟡 Unanswered
       </span>
     );
 
+  const handleSaveToggle = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isAuthenticated || !token) {
+      setNotice('Please login to save problems.');
+      setTimeout(() => setNotice(null), 3500);
+      return;
+    }
+
+    if (saving) return;
+
+    const nextState = !saved;
+    setSaving(true);
+    setNotice(null);
+
+    // Optimistic UI update
+    setSaved(nextState);
+
+    try {
+      if (nextState) {
+        await saveProblem(problem._id, token);
+      } else {
+        await unsaveProblem(problem._id, token);
+      }
+      if (onToggleSave) {
+        onToggleSave(problem._id, nextState);
+      }
+    } catch (err) {
+      console.error('Save toggle error:', err);
+      // Revert optimistic update on error
+      setSaved(!nextState);
+      setNotice(err.message || 'Failed to update saved status');
+      setTimeout(() => setNotice(null), 3000);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between p-6">
+    <div className="group bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between p-6 relative">
+      {/* Toast / Notice notification */}
+      {notice && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-slate-900/95 text-white text-xs font-medium py-1.5 px-3 rounded-xl shadow-lg border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in zoom-in duration-150 whitespace-nowrap">
+          <span>{notice}</span>
+          {!isAuthenticated && (
+            <button
+              onClick={() => navigate('/login')}
+              className="text-indigo-400 hover:text-indigo-300 underline font-semibold ml-1"
+            >
+              Login
+            </button>
+          )}
+        </div>
+      )}
+
       <div>
         {/* Category, Status & Date */}
-        <div className="flex items-center justify-between gap-2 mb-3.5">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2 mb-3.5 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${categoryBadgeClass}`}
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${categoryBadgeClass}`}
             >
               {problem.category}
             </span>
@@ -64,51 +147,83 @@ const ProblemCard = ({ problem }) => {
         </div>
 
         {/* Problem Title */}
-        <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">
-          {problem.title}
-        </h3>
+        <Link to={`/problems/${problem._id}`} className="block group/title">
+          <h3 className="text-lg font-bold text-slate-900 group-hover/title:text-indigo-600 transition-colors line-clamp-2 mb-2 leading-snug">
+            {problem.title}
+          </h3>
+        </Link>
 
         {/* Short Description */}
         <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed mb-4">
           {problem.description}
         </p>
 
-        {/* Author attribution */}
-        <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-medium mb-4">
-          <svg className="w-3.5 h-3.5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-          </svg>
-          <span className="truncate">Posted by {authorName}</span>
+        {/* Author attribution & Location */}
+        <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-4 gap-2">
+          <div className="flex items-center gap-1.5 text-indigo-600 font-medium truncate">
+            <User className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+            <span className="truncate">👤 {authorName}</span>
+          </div>
+
+          {problem.location && (
+            <div className="flex items-center gap-1 text-slate-400 truncate text-[11px]">
+              <MapPin className="w-3 h-3 shrink-0" />
+              <span className="truncate">{problem.location}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Engagement stats (Answers, Helpful votes, Best Answer) */}
+        <div className="flex items-center gap-3 py-2 px-3 bg-slate-50/80 rounded-xl text-xs font-medium text-slate-600 mb-4 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 text-slate-700">
+            <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
+            <span>💬 {answersCount} {answersCount === 1 ? 'Answer' : 'Answers'}</span>
+          </span>
+
+          {totalHelpfulVotes > 0 && (
+            <span className="inline-flex items-center gap-1 text-emerald-700">
+              <ThumbsUp className="w-3.5 h-3.5 text-emerald-500" />
+              <span>👍 {totalHelpfulVotes} Helpful</span>
+            </span>
+          )}
+
+          {hasBestAnswer && (
+            <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 font-bold ml-auto text-[11px]">
+              <Star className="w-3 h-3 text-amber-500 fill-amber-400" />
+              <span>⭐ Best Answer</span>
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Footer Info: Location & Action */}
-      <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
-        <div className="flex items-center text-xs text-slate-500 font-medium gap-1.5 truncate">
-          <svg
-            className="w-4 h-4 text-slate-400 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+      {/* Footer Info: Save Button & View Action */}
+      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+        <button
+          type="button"
+          onClick={handleSaveToggle}
+          disabled={saving}
+          title={saved ? 'Remove from saved problems' : 'Save for later'}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+            saved
+              ? 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 shadow-xs'
+              : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+          }`}
+        >
+          {saving ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />
+          ) : (
+            <Bookmark
+              className={`w-3.5 h-3.5 ${
+                saved ? 'fill-indigo-600 text-indigo-600' : 'text-slate-400'
+              }`}
             />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-            />
-          </svg>
-          <span className="truncate">{problem.location}</span>
-        </div>
+          )}
+          <span>{saved ? '🔖 Saved' : '🔖 Save'}</span>
+        </button>
 
         <Link
           to={`/problems/${problem._id}`}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 px-3 py-1.5 rounded-lg transition-colors shrink-0"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 px-3.5 py-1.5 rounded-xl transition-colors shrink-0"
         >
           <span>View Problem</span>
           <svg

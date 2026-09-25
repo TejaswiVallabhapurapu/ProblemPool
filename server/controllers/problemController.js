@@ -5,6 +5,7 @@ const AnswerVote = require('../models/AnswerVote');
 const Review = require('../models/Review');
 const ReviewVote = require('../models/ReviewVote');
 const Reply = require('../models/Reply');
+const SavedProblem = require('../models/SavedProblem');
 
 /**
  * Helper to determine dynamic problem status
@@ -19,7 +20,7 @@ const computeProblemStatus = (problem, answersCount) => {
   return 'Unanswered';
 };
 
-// @desc    Get all problems (newest first) with answersCount and status
+// @desc    Get all problems (newest first) with answersCount, helpful votes, and status
 // @route   GET /api/problems
 const getProblems = async (req, res) => {
   try {
@@ -31,10 +32,19 @@ const getProblems = async (req, res) => {
 
     const problemsWithMeta = await Promise.all(
       rawProblems.map(async (p) => {
-        const answersCount = await Answer.countDocuments({ problem: p._id });
+        const answers = await Answer.find({ problem: p._id }).select('_id').lean();
+        const answersCount = answers.length;
+        const answerIds = answers.map((a) => a._id);
+
+        const totalHelpfulVotes = await AnswerVote.countDocuments({
+          answer: { $in: answerIds },
+          voteType: 'helpful',
+        });
+
         return {
           ...p,
           answersCount,
+          totalHelpfulVotes,
           status: computeProblemStatus(p, answersCount),
         };
       })
@@ -52,7 +62,7 @@ const getProblems = async (req, res) => {
   }
 };
 
-// @desc    Get single problem by ID with answersCount and status
+// @desc    Get single problem by ID with answersCount, helpful votes, and status
 // @route   GET /api/problems/:id
 const getProblemById = async (req, res) => {
   try {
@@ -77,7 +87,15 @@ const getProblemById = async (req, res) => {
       });
     }
 
-    const answersCount = await Answer.countDocuments({ problem: id });
+    const answers = await Answer.find({ problem: id }).select('_id').lean();
+    const answersCount = answers.length;
+    const answerIds = answers.map((a) => a._id);
+
+    const totalHelpfulVotes = await AnswerVote.countDocuments({
+      answer: { $in: answerIds },
+      voteType: 'helpful',
+    });
+
     const status = computeProblemStatus(problem, answersCount);
 
     return res.status(200).json({
@@ -85,6 +103,7 @@ const getProblemById = async (req, res) => {
       problem: {
         ...problem,
         answersCount,
+        totalHelpfulVotes,
         status,
       },
     });
@@ -129,6 +148,7 @@ const createProblem = async (req, res) => {
       problem: {
         ...populatedProblem,
         answersCount: 0,
+        totalHelpfulVotes: 0,
         status: 'Unanswered',
       },
     });
@@ -140,7 +160,7 @@ const createProblem = async (req, res) => {
   }
 };
 
-// @desc    Delete a problem and cascade delete all associated answers, votes, reviews, replies
+// @desc    Delete a problem and cascade delete all associated answers, votes, reviews, replies, and saved records
 // @route   DELETE /api/problems/:id
 const deleteProblem = async (req, res) => {
   try {
@@ -185,11 +205,12 @@ const deleteProblem = async (req, res) => {
       Review.deleteMany({ answer: { $in: answerIds } }),
       ReviewVote.deleteMany({ review: { $in: reviewIds } }),
       Reply.deleteMany({ review: { $in: reviewIds } }),
+      SavedProblem.deleteMany({ problem: id }),
     ]);
 
     return res.status(200).json({
       success: true,
-      message: 'Problem and all associated answers/reviews deleted successfully',
+      message: 'Problem and all associated answers/reviews/saved records deleted successfully',
     });
   } catch (error) {
     return res.status(500).json({
@@ -216,10 +237,19 @@ const getProblemsByCategory = async (req, res) => {
 
     const problemsWithMeta = await Promise.all(
       rawProblems.map(async (p) => {
-        const answersCount = await Answer.countDocuments({ problem: p._id });
+        const answers = await Answer.find({ problem: p._id }).select('_id').lean();
+        const answersCount = answers.length;
+        const answerIds = answers.map((a) => a._id);
+
+        const totalHelpfulVotes = await AnswerVote.countDocuments({
+          answer: { $in: answerIds },
+          voteType: 'helpful',
+        });
+
         return {
           ...p,
           answersCount,
+          totalHelpfulVotes,
           status: computeProblemStatus(p, answersCount),
         };
       })
@@ -283,7 +313,6 @@ const setBestAnswer = async (req, res) => {
       });
     }
 
-    // If same answer is already best answer, leave it or confirm
     problem.bestAnswer = answerId;
     await problem.save();
 

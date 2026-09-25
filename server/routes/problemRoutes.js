@@ -14,6 +14,10 @@ const {
   createAnswer,
   deleteAnswer,
 } = require('../controllers/answerController');
+const {
+  saveProblem,
+  unsaveProblem,
+} = require('../controllers/savedProblemController');
 const { protect, optionalProtect } = require('../middleware/authMiddleware');
 
 // Problem CRUD
@@ -27,6 +31,11 @@ router.route('/category/:category')
 router.route('/:id')
   .get(getProblemById)
   .delete(protect, deleteProblem);
+
+// Save / Unsave Problem (Protected)
+router.route('/:problemId/save')
+  .post(protect, saveProblem)
+  .delete(protect, unsaveProblem);
 
 // Best Answer actions (Problem owner only)
 router.route('/:problemId/best-answer/:answerId')

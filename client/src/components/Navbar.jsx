@@ -68,6 +68,10 @@ const Navbar = () => {
 
             {isAuthenticated ? (
               <>
+                <NavLink to="/saved-problems" className={navLinkClass}>
+                  🔖 Saved Problems
+                </NavLink>
+
                 <Link
                   to="/create-problem"
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium shadow-sm shadow-indigo-200 hover:shadow-md transition-all duration-200 active:scale-95"
@@ -190,6 +194,13 @@ const Navbar = () => {
                   {user?.name}
                 </div>
               </div>
+              <NavLink
+                to="/saved-problems"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+              >
+                🔖 Saved Problems
+              </NavLink>
               <Link
                 to="/create-problem"
                 onClick={() => setMobileMenuOpen(false)}
