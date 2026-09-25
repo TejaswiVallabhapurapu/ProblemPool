@@ -74,7 +74,6 @@ const Leaderboard = () => {
         {/* Category Pills */}
         <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
           {CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
             const isActive = category === cat.id;
 
             return (
@@ -88,7 +87,6 @@ const Leaderboard = () => {
                     : 'bg-[#181818] hover:bg-[#202020] text-slate-200 border border-white/10'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-neutral-400'}`} />
                 <span>{cat.label}</span>
               </button>
             );
