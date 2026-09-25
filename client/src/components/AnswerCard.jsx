@@ -151,32 +151,44 @@ const AnswerCard = ({
           : 'glass-card-3d border-slate-200/90 shadow-xs hover:border-slate-300'
       }`}
     >
-      {/* Best Answer Header Badge if marked */}
-      {isBestAnswer && (
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/90 border border-amber-300 text-amber-900 text-xs font-extrabold tracking-wide uppercase shadow-xs">
-          <span>⭐</span>
-          <span>BEST ANSWER</span>
-        </div>
-      )}
+      {/* Header Badges: Best Answer & Team Answer */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {isBestAnswer && (
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#222222] border border-white/30 text-white text-xs font-black tracking-wide uppercase shadow-md">
+            <span>⭐</span>
+            <span>BEST ANSWER</span>
+          </div>
+        )}
+
+        {answer.isTeamAnswer && (
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1a1a1a] border border-white/20 text-slate-200 text-xs font-bold tracking-wide shadow-sm">
+            <span>🤝</span>
+            <span>TEAM ANSWER</span>
+            {answer.team?.name && (
+              <span className="text-white font-black ml-1">• {answer.team.name}</span>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Author & Header Meta */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <div
-            className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shadow-xs ${
+            className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shadow-xs border ${
               isBestAnswer
-                ? 'bg-amber-100 text-amber-800'
-                : 'bg-indigo-100 text-indigo-700'
+                ? 'bg-[#222222] text-white border-white/30'
+                : 'bg-[#181818] text-slate-200 border-white/10'
             }`}
           >
-            {answerAuthorInitial}
+            {answer.isTeamAnswer ? '🤝' : answerAuthorInitial}
           </div>
           <div>
-            <div className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <span>{answerAuthorName}</span>
+            <div className="text-sm font-bold text-white flex items-center gap-2">
+              <span>{answer.isTeamAnswer ? (answer.team?.name || 'Collaborative Team') : answerAuthorName}</span>
               {isAnswerAuthor && (
-                <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-medium">
-                  You
+                <span className="text-[10px] bg-[#222222] text-slate-300 border border-white/10 px-1.5 py-0.5 rounded font-medium">
+                  {answer.isTeamAnswer ? 'Your Team' : 'You'}
                 </span>
               )}
             </div>
@@ -185,6 +197,24 @@ const AnswerCard = ({
             </div>
           </div>
         </div>
+
+        {/* Team Members List (If Team Answer) */}
+        {answer.isTeamAnswer && Array.isArray(answer.teamMembers) && answer.teamMembers.length > 0 && (
+          <div className="w-full sm:w-auto p-2 rounded-xl bg-[#121212] border border-white/10 flex items-center gap-2 flex-wrap text-xs">
+            <span className="text-slate-400 font-medium">Contributors:</span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {answer.teamMembers.map((member) => (
+                <span
+                  key={member._id || member}
+                  className="px-2 py-0.5 rounded-md bg-[#1c1c1c] border border-white/10 text-slate-200 text-[11px] font-semibold flex items-center gap-1"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                  <span>{member.name || member.username || 'Member'}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Actions for Author vs Other Users */}
         <div className="flex items-center gap-2">
