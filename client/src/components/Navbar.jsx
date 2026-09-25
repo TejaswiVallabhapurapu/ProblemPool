@@ -62,24 +62,46 @@ const Navbar = () => {
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-2">
-            <NavLink to={isAuthenticated ? '/dashboard' : '/'} end className={navLinkClass}>
-              Dashboard
-            </NavLink>
-            <NavLink to="/platform" className={navLinkClass}>
-              Platform
-            </NavLink>
-            <NavLink to="/problems" className={navLinkClass}>
-              Problems
-            </NavLink>
-            <NavLink to="/team-up" className={navLinkClass}>
-              🤝 Team Up
-            </NavLink>
-            <NavLink to="/challenges" className={navLinkClass}>
-              🧩 Challenges
-            </NavLink>
-            <NavLink to="/leaderboard" className={navLinkClass}>
-              🏆 Leaderboard
-            </NavLink>
+            {isAuthenticated ? (
+              <>
+                <NavLink to="/dashboard" end className={navLinkClass}>
+                  Dashboard
+                </NavLink>
+                <NavLink to="/platform" className={navLinkClass}>
+                  Platform
+                </NavLink>
+                <NavLink to="/problems" className={navLinkClass}>
+                  Problems
+                </NavLink>
+                <NavLink to="/team-up" className={navLinkClass}>
+                  🤝 Team Up
+                </NavLink>
+                <NavLink to="/challenges" className={navLinkClass}>
+                  🧩 Challenges
+                </NavLink>
+                <NavLink to="/leaderboard" className={navLinkClass}>
+                  🏆 Leaderboard
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/platform" className={navLinkClass}>
+                  Platform
+                </NavLink>
+                <a
+                  href="/platform#how-it-works"
+                  className="font-semibold text-sm transition-colors duration-200 px-3 py-1.5 rounded-xl text-[#A0A0A0] hover:text-white hover:bg-[#181818]"
+                >
+                  How It Works
+                </a>
+                <NavLink to="/challenges" className={navLinkClass}>
+                  🧩 Challenges
+                </NavLink>
+                <NavLink to="/leaderboard" className={navLinkClass}>
+                  🏆 Leaderboard
+                </NavLink>
+              </>
+            )}
 
             {isAuthenticated ? (
               <>
@@ -191,49 +213,84 @@ const Navbar = () => {
       {/* Mobile menu panel */}
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-white/10 bg-[#0c0c0c] px-4 pt-2 pb-5 space-y-2.5 shadow-2xl">
-          <NavLink
-            to={isAuthenticated ? '/dashboard' : '/'}
-            end
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/platform"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
-          >
-            Platform
-          </NavLink>
-          <NavLink
-            to="/problems"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
-          >
-            Problems
-          </NavLink>
-          <NavLink
-            to="/team-up"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
-          >
-            🤝 Team Up
-          </NavLink>
-          <NavLink
-            to="/challenges"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
-          >
-            🧩 Weekly Challenges
-          </NavLink>
-          <NavLink
-            to="/leaderboard"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
-          >
-            🏆 Leaderboard
-          </NavLink>
+          {isAuthenticated ? (
+            <>
+              <NavLink
+                to="/dashboard"
+                end
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/platform"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                Platform
+              </NavLink>
+              <NavLink
+                to="/problems"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                Problems
+              </NavLink>
+              <NavLink
+                to="/team-up"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                🤝 Team Up
+              </NavLink>
+              <NavLink
+                to="/challenges"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                🧩 Weekly Challenges
+              </NavLink>
+              <NavLink
+                to="/leaderboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                🏆 Leaderboard
+              </NavLink>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/platform"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                Platform
+              </NavLink>
+              <a
+                href="/platform#how-it-works"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                How It Works
+              </a>
+              <NavLink
+                to="/challenges"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                🧩 Challenges
+              </NavLink>
+              <NavLink
+                to="/leaderboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-xl text-base font-semibold text-slate-300 hover:bg-[#181818] hover:text-white"
+              >
+                🏆 Leaderboard
+              </NavLink>
+            </>
+          )}
 
           {isAuthenticated ? (
             <div className="pt-2 border-t border-white/10 space-y-2">
