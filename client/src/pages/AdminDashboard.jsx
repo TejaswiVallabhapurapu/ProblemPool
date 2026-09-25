@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import GlassAiButton from '../components/GlassAiButton';
+import ParticlesBackground from '../components/ParticlesBackground';
 import {
   getAdminStats,
   getAdminReports,

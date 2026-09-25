@@ -397,7 +397,7 @@ const Profile = () => {
 
   return (
     <div className="relative min-h-screen">
-      <KnowledgeNetworkBackground variant="constellation" />
+      <ParticlesBackground />
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* ========================================================= */}
       {/* 1. PROFILE HEADER CARD */}
