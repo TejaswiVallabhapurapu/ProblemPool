@@ -670,7 +670,7 @@ const ProblemDetails = () => {
                                 key={m._id}
                                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#1a1a1a] border border-white/10 text-[11px] font-medium text-neutral-300"
                               >
-                                <span>{m.name}</span>
+                                <span>{m?.name || m?.username || 'Member'}</span>
                                 {m._id === team.leaderId?._id && (
                                   <span className="text-[9px] font-mono text-neutral-400 font-semibold uppercase">(Leader)</span>
                                 )}
@@ -718,7 +718,7 @@ const ProblemDetails = () => {
                                 try {
                                   const res = await joinTeam(team._id, token);
                                   if (res.success) {
-                                    setTeamNotice(`Joined team "${team.name}"! Navigating to workspace...`);
+                                    setTeamNotice(`Joined team "${team?.name || 'Team'}"! Navigating to workspace...`);
                                     setTimeout(() => {
                                       navigate(`/problems/${problem._id}/team/${team._id}`);
                                     }, 600);
@@ -927,7 +927,7 @@ const ProblemDetails = () => {
                   </h3>
                   {user && (
                     <span className="text-xs text-slate-500 font-medium">
-                      Answering as <strong className="text-white">{user.name}</strong>
+                      Answering as <strong className="text-white">{user?.name || user?.username || 'User'}</strong>
                     </span>
                   )}
                 </div>
