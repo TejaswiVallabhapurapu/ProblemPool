@@ -35,7 +35,9 @@ const getAnswersByProblem = async (req, res) => {
 
     // Fetch all answers for this problem
     const rawAnswers = await Answer.find({ problem: problemId })
-      .populate('user', 'name email')
+      .populate('user', 'name username avatar email')
+      .populate('team', 'name description leaderId')
+      .populate('teamMembers', 'name username avatar email')
       .lean();
 
     const currentUserId = req.user ? req.user._id.toString() : null;

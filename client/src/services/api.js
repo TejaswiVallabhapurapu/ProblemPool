@@ -1496,6 +1496,234 @@ export const summarizeAnswersWithAI = async (data, token) => {
   });
 };
 
+/**
+ * =========================================================
+ * SECTION 11: 🤝 TEAM UP / COLLABORATIVE PROBLEM SOLVING API
+ * =========================================================
+ */
+
+/**
+ * Create a new team for a problem
+ */
+export const createTeam = async (problemId, teamData, token) => {
+  return await safeFetch(`/problems/${problemId}/teams`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(teamData),
+  });
+};
+
+/**
+ * Get all active teams for a problem
+ */
+export const getProblemTeams = async (problemId, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch(`/problems/${problemId}/teams`, {
+    method: 'GET',
+    headers,
+  });
+};
+
+/**
+ * Get Team Workspace by team ID
+ */
+export const getTeamById = async (teamId, token) => {
+  return await safeFetch(`/teams/${teamId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Join an active team
+ */
+export const joinTeam = async (teamId, token) => {
+  return await safeFetch(`/teams/${teamId}/join`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Leave a team
+ */
+export const leaveTeam = async (teamId, token) => {
+  return await safeFetch(`/teams/${teamId}/leave`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Remove a member from team (Leader only)
+ */
+export const removeTeamMember = async (teamId, userId, token) => {
+  return await safeFetch(`/teams/${teamId}/members/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Transfer team leadership (Leader only)
+ */
+export const transferTeamLeadership = async (teamId, newLeaderId, token) => {
+  return await safeFetch(`/teams/${teamId}/transfer-leadership`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ newLeaderId }),
+  });
+};
+
+/**
+ * Update team info or shared solution draft
+ */
+export const updateTeam = async (teamId, updateData, token) => {
+  return await safeFetch(`/teams/${teamId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateData),
+  });
+};
+
+/**
+ * Get team discussion messages
+ */
+export const getTeamMessages = async (teamId, token) => {
+  return await safeFetch(`/teams/${teamId}/messages`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Post a discussion message in team workspace
+ */
+export const postTeamMessage = async (teamId, message, token) => {
+  return await safeFetch(`/teams/${teamId}/messages`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ message }),
+  });
+};
+
+/**
+ * Get team tasks & contribution stats
+ */
+export const getTeamTasks = async (teamId, token) => {
+  return await safeFetch(`/teams/${teamId}/tasks`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Create a task in team workspace
+ */
+export const createTeamTask = async (teamId, taskData, token) => {
+  return await safeFetch(`/teams/${teamId}/tasks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(taskData),
+  });
+};
+
+/**
+ * Update/toggle a team task
+ */
+export const updateTeamTask = async (teamId, taskId, taskData, token) => {
+  return await safeFetch(`/teams/${teamId}/tasks/${taskId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(taskData),
+  });
+};
+
+/**
+ * Delete a team task
+ */
+export const deleteTeamTask = async (teamId, taskId, token) => {
+  return await safeFetch(`/teams/${teamId}/tasks/${taskId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+/**
+ * Submit final team solution as an official Team Answer
+ */
+export const submitTeamAnswer = async (teamId, content, token) => {
+  return await safeFetch(`/teams/${teamId}/submit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content }),
+  });
+};
+
+/**
+ * Get problems currently looking for teams / collaborators
+ */
+export const getCollaborativeProblems = async (params = {}, token = null) => {
+  const queryParams = new URLSearchParams();
+  if (params.category && params.category !== 'All') queryParams.append('category', params.category);
+  if (params.search) queryParams.append('search', params.search);
+  if (params.sort) queryParams.append('sort', params.sort);
+  if (params.limit) queryParams.append('limit', params.limit);
+  if (params.page) queryParams.append('page', params.page);
+
+  const queryStr = queryParams.toString();
+  const endpoint = queryStr ? `/teams/collaborative-problems?${queryStr}` : '/teams/collaborative-problems';
+
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(endpoint, {
+    method: 'GET',
+    headers,
+  });
+};
+
+
 
 
 
