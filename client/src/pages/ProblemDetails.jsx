@@ -9,10 +9,11 @@ import {
   saveProblem,
   unsaveProblem,
   getMySavedProblemIds,
+  getRelatedProblems,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AnswerCard from '../components/AnswerCard';
-import { Bookmark, Loader2, Eye, Tag } from 'lucide-react';
+import { Bookmark, Loader2, Eye, Tag, MessageSquare, CheckCircle2, HelpCircle, Layers, ArrowRight } from 'lucide-react';
 
 const CATEGORY_COLORS = {
   Programming: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -54,6 +55,7 @@ const ProblemDetails = () => {
 
   const [problem, setProblem] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [relatedProblems, setRelatedProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeletingProblem, setIsDeletingProblem] = useState(false);
@@ -75,12 +77,16 @@ const ProblemDetails = () => {
       setLoading(true);
       setError(null);
 
-      // Fetch problem details, answers, and saved problem status in parallel
+      // Fetch problem details, answers, saved problem status, and related problems in parallel
       const promises = [
         getProblem(id),
         getProblemAnswers(id, currentSort, token).catch((err) => {
           console.warn('Failed to load answers:', err);
           return { success: true, answers: [] };
+        }),
+        getRelatedProblems(id, token, 6).catch((err) => {
+          console.warn('Failed to load related problems:', err);
+          return { success: true, problems: [] };
         }),
       ];
 
@@ -90,7 +96,7 @@ const ProblemDetails = () => {
         );
       }
 
-      const [problemRes, answersRes, savedIdsRes] = await Promise.all(promises);
+      const [problemRes, answersRes, relatedRes, savedIdsRes] = await Promise.all(promises);
 
       if (problemRes.success && problemRes.problem) {
         setProblem(problemRes.problem);
@@ -100,6 +106,10 @@ const ProblemDetails = () => {
 
       if (answersRes && answersRes.answers) {
         setAnswers(answersRes.answers);
+      }
+
+      if (relatedRes && Array.isArray(relatedRes.problems)) {
+        setRelatedProblems(relatedRes.problems);
       }
 
       if (savedIdsRes && Array.isArray(savedIdsRes.savedProblemIds)) {
@@ -623,6 +633,110 @@ const ProblemDetails = () => {
               )}
             </div>
           </section>
+
+          {/* ========================================================= */}
+          {/* RELATED PROBLEMS SECTION */}
+          {/* ========================================================= */}
+          {relatedProblems.length > 0 && (
+            <section className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-slate-100">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <span>🔗 Related Problems</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Explore similar community challenges, questions, and solutions.
+                  </p>
+                </div>
+                <Link
+                  to={problem.category ? `/problems?category=${encodeURIComponent(problem.category)}` : '/problems'}
+                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 self-start sm:self-auto"
+                >
+                  <span>More in {problem.category || 'this category'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {relatedProblems.map((rel) => {
+                  const isSolved = rel.status === 'Solved' || Boolean(rel.bestAnswer);
+                  const isAnswered = rel.status === 'Answered' || rel.answersCount > 0;
+
+                  return (
+                    <Link
+                      key={rel._id}
+                      to={`/problems/${rel._id}`}
+                      className="group p-4 rounded-2xl border border-slate-200/90 bg-slate-50/40 hover:bg-white hover:border-indigo-200 transition-all duration-200 shadow-xs flex flex-col justify-between"
+                    >
+                      <div>
+                        {/* Header: Category + Status */}
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
+                              CATEGORY_COLORS[rel.category] || CATEGORY_COLORS.General
+                            }`}
+                          >
+                            {rel.category || 'General'}
+                          </span>
+
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                              isSolved
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                : isAnswered
+                                ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                                : 'bg-slate-100 text-slate-600 border border-slate-200'
+                            }`}
+                          >
+                            {isSolved ? '🏆 Solved' : isAnswered ? '💡 Answered' : '❓ Open'}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2 leading-snug">
+                          {rel.title}
+                        </h4>
+
+                        {/* Tags */}
+                        {Array.isArray(rel.tags) && rel.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {rel.tags.slice(0, 3).map((t) => (
+                              <span
+                                key={t}
+                                className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-600"
+                              >
+                                #{t}
+                              </span>
+                            ))}
+                            {rel.tags.length > 3 && (
+                              <span className="text-[10px] text-slate-400">+{rel.tags.length - 3}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Footer metrics */}
+                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                        <div className="flex items-center gap-3">
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-3.5 h-3.5 text-slate-400" />
+                            <span>{rel.views || 0}</span>
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
+                            <span>{rel.answersCount || 0}</span>
+                          </span>
+                        </div>
+                        <span className="text-indigo-600 group-hover:translate-x-0.5 transition-transform font-semibold">
+                          View →
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* Bottom Navigation */}
           <div className="pt-2 flex items-center justify-between">

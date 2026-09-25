@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createProblem } from '../services/api';
+import { createProblem, checkSimilarProblems } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { POPULAR_CATEGORIES } from '../components/CategoryFilter';
-import { Tag, Plus, X, Sparkles } from 'lucide-react';
+import { Tag, Plus, X, Sparkles, Search, ExternalLink, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 const SUGGESTED_TAGS = [
   'React',
@@ -34,9 +34,82 @@ const CreateProblem = () => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
 
+  // Duplicate / Similar problems states
+  const [similarProblems, setSimilarProblems] = useState([]);
+  const [checkingSimilar, setCheckingSimilar] = useState(false);
+  const [dismissedSimilar, setDismissedSimilar] = useState(false);
+  const lastCheckedTitle = useRef('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+
+  // Debounced search for similar problems as user types title
+  useEffect(() => {
+    const cleanTitle = formData.title.trim();
+
+    if (cleanTitle.length < 4) {
+      setSimilarProblems([]);
+      setCheckingSimilar(false);
+      return;
+    }
+
+    if (cleanTitle === lastCheckedTitle.current) return;
+
+    setDismissedSimilar(false);
+    setCheckingSimilar(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await checkSimilarProblems(
+          {
+            title: cleanTitle,
+            description: formData.description,
+            category: formData.category,
+            tags,
+          },
+          token
+        );
+        lastCheckedTitle.current = cleanTitle;
+        if (res?.success && Array.isArray(res.similarProblems)) {
+          setSimilarProblems(res.similarProblems);
+        } else {
+          setSimilarProblems([]);
+        }
+      } catch (err) {
+        console.warn('Duplicate check skipped:', err);
+      } finally {
+        setCheckingSimilar(false);
+      }
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [formData.title, formData.category, tags, token]);
+
+  const handleManualCheckSimilar = async () => {
+    const cleanTitle = formData.title.trim();
+    if (!cleanTitle || cleanTitle.length < 3) return;
+    setCheckingSimilar(true);
+    setDismissedSimilar(false);
+    try {
+      const res = await checkSimilarProblems(
+        {
+          title: cleanTitle,
+          description: formData.description,
+          category: formData.category,
+          tags,
+        },
+        token
+      );
+      if (res?.success && Array.isArray(res.similarProblems)) {
+        setSimilarProblems(res.similarProblems);
+      }
+    } catch (err) {
+      console.warn('Similar check failed:', err);
+    } finally {
+      setCheckingSimilar(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -174,9 +247,18 @@ const CreateProblem = () => {
         <form onSubmit={handleSubmit} noValidate className="space-y-6">
           {/* Problem Title */}
           <div>
-            <label htmlFor="title" className="block text-sm font-semibold text-slate-900 mb-1.5">
-              Problem Title <span className="text-rose-500">*</span>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label htmlFor="title" className="block text-sm font-semibold text-slate-900">
+                Problem Title <span className="text-rose-500">*</span>
+              </label>
+              {checkingSimilar && (
+                <span className="text-xs text-indigo-600 font-medium flex items-center gap-1.5 animate-pulse">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Checking for similar questions...</span>
+                </span>
+              )}
+            </div>
+
             <input
               type="text"
               id="title"
@@ -192,6 +274,96 @@ const CreateProblem = () => {
             />
             {fieldErrors.title && (
               <p className="mt-1.5 text-xs text-rose-600 font-medium">{fieldErrors.title}</p>
+            )}
+
+            {/* Possible Similar Problems Suggestion Box */}
+            {similarProblems.length > 0 && !dismissedSimilar && (
+              <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-amber-50/80 to-amber-50/30 border border-amber-200/90 shadow-xs animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                    <span className="text-base">🔎</span>
+                    <span>Possible Similar Problems ({similarProblems.length})</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setDismissedSimilar(true)}
+                    className="text-xs text-amber-800/80 hover:text-amber-950 font-semibold inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100/70 hover:bg-amber-200/70 transition cursor-pointer"
+                  >
+                    <span>Dismiss</span>
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <p className="text-xs text-amber-800/90 mb-3.5 leading-relaxed">
+                  We found existing community questions with similar titles or keywords. Checking them might give you an instant solution:
+                </p>
+
+                <div className="space-y-2.5 mb-3.5">
+                  {similarProblems.map((sim) => {
+                    const isSolved = sim.status === 'Solved' || Boolean(sim.bestAnswer);
+                    const isAnswered = sim.status === 'Answered' || sim.answersCount > 0;
+
+                    return (
+                      <div
+                        key={sim._id}
+                        className="p-3.5 rounded-xl bg-white border border-amber-200/70 shadow-2xs hover:border-indigo-300 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span
+                              className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                                isSolved
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : isAnswered
+                                  ? 'bg-indigo-100 text-indigo-800'
+                                  : 'bg-slate-100 text-slate-700'
+                              }`}
+                            >
+                              {isSolved ? '🏆 Solved' : isAnswered ? '💡 Answered' : '❓ Open'}
+                            </span>
+                            <span className="text-xs font-semibold text-slate-500">
+                              {sim.category || 'General'}
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-xs text-slate-500 flex items-center gap-1">
+                              <MessageSquare className="w-3 h-3 text-slate-400" />
+                              <span>{sim.answersCount || 0} answers</span>
+                            </span>
+                          </div>
+                          <h5 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                            {sim.title}
+                          </h5>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <a
+                            href={`/problems/${sim._id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/80 transition"
+                          >
+                            <span>View Problem</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-amber-200/60 text-xs">
+                  <span className="text-amber-800/80 font-medium">
+                    Different problem? You can proceed with posting.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setDismissedSimilar(true)}
+                    className="font-bold text-indigo-700 hover:text-indigo-900 cursor-pointer"
+                  >
+                    Continue Posting →
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 

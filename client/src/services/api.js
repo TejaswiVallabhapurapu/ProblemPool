@@ -848,6 +848,37 @@ export const getPersonalizedFeed = async (token = null) => {
 };
 
 /**
+ * Get related problems for a given problem ID
+ * @param {string} problemId
+ * @param {string} [token]
+ * @param {number} [limit=4]
+ */
+export const getRelatedProblems = async (problemId, token = null, limit = 4) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch(`/problems/${problemId}/related?limit=${limit}`, { headers });
+};
+
+/**
+ * Check for duplicate / similar problems before posting
+ * @param {Object} queryData - { title, description, category, tags }
+ * @param {string} [token]
+ */
+export const checkSimilarProblems = async (queryData, token = null) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+  return await safeFetch('/problems/similar', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(queryData),
+  });
+};
+
+/**
  * Follow or unfollow a user (Protected)
  * @param {string} userId
  * @param {string} token

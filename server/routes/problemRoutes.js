@@ -13,6 +13,8 @@ const {
   getTrendingProblems,
   getPopularProblems,
   getPersonalizedFeed,
+  getRelatedProblems,
+  checkSimilarProblems,
   setBestAnswer,
   removeBestAnswer,
 } = require('../controllers/problemController');
@@ -27,14 +29,19 @@ const {
 } = require('../controllers/savedProblemController');
 const { protect, optionalProtect } = require('../middleware/authMiddleware');
 
-// Search, Feed, Tags, Trending & Popular endpoints (must come before /:id)
+// Search, Feed, Tags, Trending, Similar & Popular endpoints (must come before /:id)
 router.get('/feed', optionalProtect, getPersonalizedFeed);
+router.post('/similar', optionalProtect, checkSimilarProblems);
+router.get('/similar', optionalProtect, checkSimilarProblems);
 router.get('/search', optionalProtect, searchProblems);
 router.get('/trending', optionalProtect, getTrendingProblems);
 router.get('/popular', optionalProtect, getPopularProblems);
 router.get('/tags', getPopularTags);
 router.get('/tag/:tag', optionalProtect, getProblemsByTag);
 router.get('/category/:category', optionalProtect, getProblemsByCategory);
+
+// Related problems for a given problem ID
+router.get('/:id/related', optionalProtect, getRelatedProblems);
 
 // Problem CRUD
 router.route('/')

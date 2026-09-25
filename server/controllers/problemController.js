@@ -1044,6 +1044,252 @@ const getPersonalizedFeed = async (req, res) => {
   }
 };
 
+// Common stopwords to exclude from keyword extraction
+const STOP_WORDS = new Set([
+  'a', 'an', 'the', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 'be', 'been',
+  'to', 'of', 'in', 'for', 'with', 'on', 'at', 'by', 'from', 'up', 'about', 'into',
+  'over', 'after', 'how', 'what', 'why', 'when', 'where', 'who', 'which', 'can',
+  'could', 'should', 'would', 'do', 'does', 'did', 'not', 'no', 'my', 'your', 'his',
+  'her', 'their', 'its', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she',
+  'it', 'we', 'they', 'me', 'him', 'us', 'them', 'if', 'so', 'then', 'than', 'as',
+  'using', 'getting', 'having', 'working', 'help', 'need', 'error', 'issue', 'problem',
+]);
+
+const extractKeywords = (text) => {
+  if (!text || typeof text !== 'string') return [];
+  const words = text
+    .toLowerCase()
+    .replace(/[^a-z0-9+#.-]/g, ' ')
+    .split(/\s+/)
+    .filter((w) => w.length >= 3 && !STOP_WORDS.has(w));
+  return Array.from(new Set(words)).slice(0, 10);
+};
+
+/**
+ * @desc    Get related problems for a given problem
+ *          Uses shared tags, category, and relevant keywords
+ * @route   GET /api/problems/:id/related
+ * @access  Public
+ */
+const getRelatedProblems = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 4, 1), 10);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: 'Invalid problem ID format' });
+    }
+
+    const currentProblem = await Problem.findById(id).select('title tags category description').lean();
+    if (!currentProblem) {
+      return res.status(404).json({ success: false, message: 'Problem not found' });
+    }
+
+    const tags = Array.isArray(currentProblem.tags) ? currentProblem.tags : [];
+    const keywords = extractKeywords(currentProblem.title);
+
+    const orConditions = [];
+
+    if (tags.length > 0) {
+      orConditions.push({ tags: { $in: tags } });
+    }
+
+    if (currentProblem.category && currentProblem.category !== 'General') {
+      orConditions.push({ category: currentProblem.category });
+    }
+
+    if (keywords.length > 0) {
+      const keywordRegexes = keywords.map((kw) => new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'));
+      orConditions.push({ title: { $in: keywordRegexes } });
+    }
+
+    let candidates = [];
+    if (orConditions.length > 0) {
+      candidates = await Problem.find({
+        _id: { $ne: currentProblem._id },
+        $or: orConditions,
+      })
+        .populate('createdBy', 'name username avatar')
+        .populate('bestAnswer')
+        .limit(20)
+        .lean();
+    }
+
+    // Score candidates by relevance
+    const scoredCandidates = candidates.map((p) => {
+      let score = 0;
+      const pTags = Array.isArray(p.tags) ? p.tags : [];
+
+      // 1. Tag overlap (+3 per common tag)
+      tags.forEach((t) => {
+        if (pTags.includes(t)) score += 3;
+      });
+
+      // 2. Category match (+2)
+      if (p.category === currentProblem.category) score += 2;
+
+      // 3. Title keyword matches (+2 per word)
+      const pTitleLower = (p.title || '').toLowerCase();
+      keywords.forEach((kw) => {
+        if (pTitleLower.includes(kw)) score += 2;
+      });
+
+      // 4. Slight view popularity weight
+      score += Math.min((p.views || 0) * 0.05, 2);
+
+      return { problem: p, score };
+    });
+
+    scoredCandidates.sort((a, b) => b.score - a.score);
+
+    let selectedProblems = scoredCandidates.slice(0, limit).map((sc) => sc.problem);
+
+    // If not enough related candidates, fill with category or popular
+    if (selectedProblems.length < limit) {
+      const existingIds = new Set([
+        currentProblem._id.toString(),
+        ...selectedProblems.map((p) => p._id.toString()),
+      ]);
+      const fallback = await Problem.find({
+        _id: { $nin: Array.from(existingIds) },
+        ...(currentProblem.category ? { category: currentProblem.category } : {}),
+      })
+        .populate('createdBy', 'name username avatar')
+        .populate('bestAnswer')
+        .sort({ views: -1, createdAt: -1 })
+        .limit(limit - selectedProblems.length)
+        .lean();
+
+      selectedProblems = [...selectedProblems, ...fallback];
+    }
+
+    const formattedProblems = await batchFormatProblems(selectedProblems);
+
+    return res.status(200).json({
+      success: true,
+      count: formattedProblems.length,
+      problems: formattedProblems,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch related problems: ' + error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Check for potential duplicate / similar problems before posting
+ * @route   POST /api/problems/similar or GET /api/problems/similar
+ * @access  Public
+ */
+const checkSimilarProblems = async (req, res) => {
+  try {
+    const title = req.body.title || req.query.title || '';
+    const description = req.body.description || req.query.description || '';
+    const category = req.body.category || req.query.category || '';
+    const tags = req.body.tags || req.query.tags || [];
+
+    const cleanTitle = typeof title === 'string' ? title.trim() : '';
+
+    if (!cleanTitle || cleanTitle.length < 3) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        similarProblems: [],
+      });
+    }
+
+    const keywords = extractKeywords(cleanTitle);
+    const normalizedTagList = normalizeTags(tags);
+
+    const orConditions = [];
+
+    // 1. Direct title regex match
+    if (cleanTitle.length >= 4) {
+      orConditions.push({
+        title: new RegExp(cleanTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'),
+      });
+    }
+
+    // 2. Keyword regexes in title
+    if (keywords.length > 0) {
+      const kwRegexes = keywords.map(
+        (kw) => new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
+      );
+      orConditions.push({ title: { $in: kwRegexes } });
+    }
+
+    // 3. Tag matches
+    if (normalizedTagList.length > 0) {
+      orConditions.push({ tags: { $in: normalizedTagList } });
+    }
+
+    if (orConditions.length === 0) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        similarProblems: [],
+      });
+    }
+
+    const candidates = await Problem.find({ $or: orConditions })
+      .populate('createdBy', 'name username avatar')
+      .populate('bestAnswer')
+      .sort({ views: -1, createdAt: -1 })
+      .limit(15)
+      .lean();
+
+    // Score and rank matches
+    const scored = candidates.map((p) => {
+      let score = 0;
+      const pTitleLower = (p.title || '').toLowerCase();
+      const inputTitleLower = cleanTitle.toLowerCase();
+
+      // Full substring match (+10)
+      if (pTitleLower.includes(inputTitleLower) || inputTitleLower.includes(pTitleLower)) {
+        score += 10;
+      }
+
+      // Keyword matches (+3 per word)
+      keywords.forEach((kw) => {
+        if (pTitleLower.includes(kw)) score += 3;
+      });
+
+      // Tag overlap (+2 per tag)
+      const pTags = Array.isArray(p.tags) ? p.tags : [];
+      normalizedTagList.forEach((t) => {
+        if (pTags.includes(t)) score += 2;
+      });
+
+      // Category match (+1.5)
+      if (category && p.category && p.category.toLowerCase() === category.toLowerCase()) {
+        score += 1.5;
+      }
+
+      return { problem: p, score };
+    });
+
+    // Keep candidates with significant similarity (score >= 3)
+    const filtered = scored.filter((item) => item.score >= 3);
+    filtered.sort((a, b) => b.score - a.score);
+
+    const topMatches = filtered.slice(0, 4).map((item) => item.problem);
+    const formattedMatches = await batchFormatProblems(topMatches);
+
+    return res.status(200).json({
+      success: true,
+      count: formattedMatches.length,
+      similarProblems: formattedMatches,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to search similar problems: ' + error.message,
+    });
+  }
+};
+
 module.exports = {
   getProblems,
   searchProblems,
@@ -1057,6 +1303,8 @@ module.exports = {
   getTrendingProblems,
   getPopularProblems,
   getPersonalizedFeed,
+  getRelatedProblems,
+  checkSimilarProblems,
   setBestAnswer,
   removeBestAnswer,
   normalizeTags,
