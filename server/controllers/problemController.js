@@ -8,6 +8,7 @@ const Reply = require('../models/Reply');
 const SavedProblem = require('../models/SavedProblem');
 const User = require('../models/User');
 const { adjustReputation, REPUTATION_RULES } = require('../services/reputationService');
+const { createNotification } = require('../services/notificationService');
 
 /**
  * Helper to determine dynamic problem status
@@ -736,6 +737,18 @@ const setBestAnswer = async (req, res) => {
         reason: `Your answer was selected as Best Answer on: "${problem.title.slice(0, 45)}..."`,
         referenceType: 'best_answer',
         referenceId: answer._id,
+      });
+
+      // Notify answer author
+      createNotification({
+        recipient: answer.user,
+        sender: req.user._id,
+        type: 'best_answer',
+        title: '⭐ Best Answer Awarded!',
+        message: `Your answer was selected as Best Answer on "${problem.title.slice(0, 50)}..." (+15 rep)`,
+        referenceType: 'problem',
+        referenceId: problem._id,
+        link: `/problems/${problem._id}`,
       });
     }
 

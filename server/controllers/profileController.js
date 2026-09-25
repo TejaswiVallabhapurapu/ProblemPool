@@ -402,6 +402,83 @@ const getMyAnswers = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Follow or Unfollow a user
+ * @route   POST /api/users/:id/follow
+ * @access  Private (JWT)
+ */
+const followUser = async (req, res) => {
+  try {
+    const targetUserId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(targetUserId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid user ID format',
+      });
+    }
+
+    if (targetUserId.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'You cannot follow yourself',
+      });
+    }
+
+    const targetUser = await User.findById(targetUserId);
+    if (!targetUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    const currentUser = await User.findById(req.user._id);
+    const followingList = currentUser.following || [];
+    const isFollowing = followingList.some((id) => id.toString() === targetUserId.toString());
+
+    if (isFollowing) {
+      // Unfollow
+      currentUser.following = followingList.filter((id) => id.toString() !== targetUserId.toString());
+      await currentUser.save();
+
+      return res.status(200).json({
+        success: true,
+        message: `Unfollowed ${targetUser.name}`,
+        isFollowing: false,
+      });
+    } else {
+      // Follow
+      currentUser.following.push(targetUserId);
+      await currentUser.save();
+
+      // Notify target user
+      const { createNotification } = require('../services/notificationService');
+      createNotification({
+        recipient: targetUser._id,
+        sender: currentUser._id,
+        type: 'follow',
+        title: 'New Follower',
+        message: `${currentUser.name} started following your problem-solving activity`,
+        referenceType: 'user',
+        referenceId: currentUser._id,
+        link: `/profile/${currentUser.username || currentUser._id}`,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: `Now following ${targetUser.name}`,
+        isFollowing: true,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update follow status: ' + error.message,
+    });
+  }
+};
+
 module.exports = {
   getMyProfileStats,
   getPublicUserProfile,
@@ -410,4 +487,5 @@ module.exports = {
   getMyActivityTimeline,
   getMyProblems,
   getMyAnswers,
+  followUser,
 };

@@ -9,6 +9,7 @@ const answerRoutes = require('./routes/answerRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const replyRoutes = require('./routes/replyRoutes');
 const userRoutes = require('./routes/userRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -93,6 +94,7 @@ app.use('/api/problems', problemRoutes);
 app.use('/api/answers', answerRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/replies', replyRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check endpoints for root and /api (used by uptime monitors & hosting platforms)
 app.get(['/', '/api'], (req, res) => {

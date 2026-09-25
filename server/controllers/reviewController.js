@@ -3,6 +3,8 @@ const Review = require('../models/Review');
 const ReviewVote = require('../models/ReviewVote');
 const Reply = require('../models/Reply');
 const Answer = require('../models/Answer');
+const Problem = require('../models/Problem');
+const { createNotification, parseAndNotifyMentions } = require('../services/notificationService');
 
 /**
  * @desc    Get all reviews for an answer with vote count, user vote status, and populated replies
@@ -142,6 +144,29 @@ const createReview = async (req, res) => {
       answer: answerId,
       user: req.user._id,
       content: content.trim(),
+    });
+
+    // Notify answer author
+    const problem = await Problem.findById(answer.problem).select('title').lean();
+    createNotification({
+      recipient: answer.user,
+      sender: req.user._id,
+      type: 'review',
+      title: 'New Review on Your Answer',
+      message: `${req.user.name} reviewed your answer on "${problem ? problem.title.slice(0, 50) : 'a problem'}..."`,
+      referenceType: 'answer',
+      referenceId: answer._id,
+      link: `/problems/${answer.problem}`,
+    });
+
+    // Parse mentions
+    parseAndNotifyMentions({
+      text: content,
+      senderUser: req.user,
+      referenceType: 'problem',
+      referenceId: answer.problem,
+      link: `/problems/${answer.problem}`,
+      contextTitle: problem ? problem.title : '',
     });
 
     const populatedReview = await Review.findById(newReview._id)

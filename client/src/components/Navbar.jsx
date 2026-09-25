@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AnimatedButton from './AnimatedButton';
+import NotificationBell from './NotificationBell';
+import { Bell } from 'lucide-react';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -71,6 +73,9 @@ const Navbar = () => {
                 <NavLink to="/saved-problems" className={navLinkClass}>
                   🔖 Saved Problems
                 </NavLink>
+
+                {/* Notification Bell Dropdown */}
+                <NotificationBell />
 
                 <Link
                   to="/create-problem"
@@ -203,6 +208,13 @@ const Navbar = () => {
                   <span className="block text-[11px] text-indigo-600 font-normal">View Community Profile →</span>
                 </div>
               </Link>
+              <NavLink
+                to="/notifications"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
+              >
+                🔔 Notifications
+              </NavLink>
               <NavLink
                 to="/saved-problems"
                 onClick={() => setMobileMenuOpen(false)}

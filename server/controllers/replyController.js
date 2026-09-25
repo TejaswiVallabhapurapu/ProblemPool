@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Reply = require('../models/Reply');
 const Review = require('../models/Review');
+const Answer = require('../models/Answer');
+const { createNotification, parseAndNotifyMentions } = require('../services/notificationService');
 
 /**
  * @desc    Get all replies for a specific review
@@ -87,6 +89,30 @@ const createReply = async (req, res) => {
       review: reviewId,
       user: req.user._id,
       content: content.trim(),
+    });
+
+    // Notify review author
+    const answer = await Answer.findById(review.answer).select('problem').lean();
+    const problemLink = answer ? `/problems/${answer.problem}` : '/problems';
+
+    createNotification({
+      recipient: review.user,
+      sender: req.user._id,
+      type: 'reply',
+      title: 'New Reply to Your Review',
+      message: `${req.user.name} replied to your review`,
+      referenceType: 'review',
+      referenceId: review._id,
+      link: problemLink,
+    });
+
+    // Parse mentions
+    parseAndNotifyMentions({
+      text: content,
+      senderUser: req.user,
+      referenceType: 'review',
+      referenceId: review._id,
+      link: problemLink,
     });
 
     const populatedReply = await Reply.findById(newReply._id)

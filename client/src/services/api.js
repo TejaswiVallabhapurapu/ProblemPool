@@ -787,4 +787,124 @@ export const getPublicUserProfile = async (idOrUsername) => {
   return await safeFetch(`/users/profile/${encodeURIComponent(idOrUsername)}`);
 };
 
+/**
+ * Follow or unfollow a user (Protected)
+ * @param {string} userId
+ * @param {string} token
+ */
+export const followUser = async (userId, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/users/${userId}/follow`, {
+    method: 'POST',
+    headers,
+  });
+};
+
+/**
+ * Get notifications for authenticated user
+ * @param {Object} [params] - { page, limit, unreadOnly }
+ * @param {string} token
+ */
+export const getNotifications = async (params = {}, token = null) => {
+  const queryParts = [];
+  if (params && typeof params === 'object') {
+    Object.entries(params).forEach(([key, val]) => {
+      if (val !== undefined && val !== null && val !== '') {
+        queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+      }
+    });
+  }
+  const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
+
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/notifications${queryString}`, { headers });
+};
+
+/**
+ * Get unread notification count
+ * @param {string} token
+ */
+export const getUnreadNotificationCount = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/notifications/unread-count', { headers });
+};
+
+/**
+ * Mark a single notification as read
+ * @param {string} id - Notification ID
+ * @param {string} token
+ */
+export const markNotificationAsRead = async (id, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/notifications/${id}/read`, {
+    method: 'PUT',
+    headers,
+  });
+};
+
+/**
+ * Mark all notifications as read
+ * @param {string} token
+ */
+export const markAllNotificationsAsRead = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/notifications/read-all', {
+    method: 'PUT',
+    headers,
+  });
+};
+
+/**
+ * Delete a single notification
+ * @param {string} id - Notification ID
+ * @param {string} token
+ */
+export const deleteNotification = async (id, token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch(`/notifications/${id}`, {
+    method: 'DELETE',
+    headers,
+  });
+};
+
+/**
+ * Clear all read notifications
+ * @param {string} token
+ */
+export const clearAllNotifications = async (token) => {
+  const headers = {};
+  if (token && token !== 'null' && token !== 'undefined') {
+    headers.Authorization = `Bearer ${token.trim()}`;
+  }
+
+  return await safeFetch('/notifications/clear-read', {
+    method: 'DELETE',
+    headers,
+  });
+};
+
 

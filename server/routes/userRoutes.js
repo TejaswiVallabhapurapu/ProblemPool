@@ -12,6 +12,7 @@ const {
   getMyActivityTimeline,
   getMyProblems,
   getMyAnswers,
+  followUser,
 } = require('../controllers/profileController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -26,6 +27,9 @@ router.get('/me/answers', protect, getMyAnswers);
 // Saved problems for current logged-in user
 router.get('/me/saved-problems', protect, getMySavedProblems);
 router.get('/me/saved-problems/ids', protect, getMySavedProblemIds);
+
+// Follow user
+router.post('/:id/follow', protect, followUser);
 
 // Public user profile (by ObjectId or username)
 router.get('/profile/:idOrUsername', getPublicUserProfile);

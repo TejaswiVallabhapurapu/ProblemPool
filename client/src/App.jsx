@@ -10,6 +10,7 @@ import CreateProblem from './pages/CreateProblem';
 import ProblemDetails from './pages/ProblemDetails';
 import SavedProblems from './pages/SavedProblems';
 import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -46,6 +47,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <ProtectedRoute>
+                    <Notifications />
                   </ProtectedRoute>
                 }
               />

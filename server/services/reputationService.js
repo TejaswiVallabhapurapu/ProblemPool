@@ -7,6 +7,7 @@ const ReviewVote = require('../models/ReviewVote');
 const SavedProblem = require('../models/SavedProblem');
 const ReputationHistory = require('../models/ReputationHistory');
 const Achievement = require('../models/Achievement');
+const { createNotification } = require('./notificationService');
 
 // Reputation Constants
 const REPUTATION_RULES = {
@@ -135,7 +136,20 @@ const adjustReputation = async ({
       await user.save();
     }
 
-    // 3. Check and award any newly qualified achievements
+    // 3. Notify user of positive reputation gains
+    if (points > 0) {
+      createNotification({
+        recipient: userId,
+        sender: null,
+        type: 'reputation',
+        title: '⭐ Reputation Earned',
+        message: `You earned +${points} reputation: ${reason}`,
+        referenceType: 'reputation',
+        link: '/profile?tab=history',
+      });
+    }
+
+    // 4. Check and award any newly qualified achievements
     await checkAndAwardAchievements(userId);
 
     return historyEntry;
@@ -304,6 +318,17 @@ const checkAndAwardAchievements = async (userId, customStats = null) => {
           },
           { upsert: true, new: true, setDefaultsOnInsert: true }
         );
+
+        // Notify user of newly unlocked achievement
+        createNotification({
+          recipient: userId,
+          sender: null,
+          type: 'badge',
+          title: `🏆 Achievement Unlocked: ${badgeDef.title}`,
+          message: `Congratulations! You unlocked the "${badgeDef.title}" badge: ${badgeDef.description}`,
+          referenceType: 'badge',
+          link: '/profile?tab=achievements',
+        });
       }
     }
   } catch (err) {

@@ -5,6 +5,7 @@ const AnswerVote = require('../models/AnswerVote');
 const Review = require('../models/Review');
 const ReviewVote = require('../models/ReviewVote');
 const Reply = require('../models/Reply');
+const { createNotification, parseAndNotifyMentions } = require('../services/notificationService');
 
 /**
  * @desc    Get all answers for a specific problem with vote counts, user vote, and best answer status
@@ -159,6 +160,28 @@ const { adjustReputation, REPUTATION_RULES } = require('../services/reputationSe
       reason: `Posted an answer to: "${problem.title.slice(0, 45)}..."`,
       referenceType: 'answer',
       referenceId: newAnswer._id,
+    });
+
+    // Notify problem author if not self
+    createNotification({
+      recipient: problem.createdBy,
+      sender: req.user._id,
+      type: 'answer',
+      title: 'New Answer',
+      message: `${req.user.name} posted an answer to your problem: "${problem.title.slice(0, 50)}..."`,
+      referenceType: 'problem',
+      referenceId: problem._id,
+      link: `/problems/${problem._id}`,
+    });
+
+    // Notify any mentioned users
+    parseAndNotifyMentions({
+      text: content,
+      senderUser: req.user,
+      referenceType: 'problem',
+      referenceId: problem._id,
+      link: `/problems/${problem._id}`,
+      contextTitle: problem.title,
     });
 
     // Populate user info for immediate frontend display
@@ -352,6 +375,18 @@ const voteAnswer = async (req, res) => {
           reason: 'Your answer received a helpful vote',
           referenceType: 'answer_vote',
           referenceId: answer._id,
+        });
+
+        // Notify answer author
+        createNotification({
+          recipient: answer.user,
+          sender: req.user._id,
+          type: 'vote',
+          title: 'Helpful Vote Received',
+          message: `${req.user.name} marked your answer as helpful (+2 rep)`,
+          referenceType: 'answer',
+          referenceId: answer._id,
+          link: `/problems/${answer.problem}`,
         });
       }
     }
