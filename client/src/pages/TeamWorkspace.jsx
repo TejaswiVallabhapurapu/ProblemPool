@@ -594,7 +594,7 @@ const TeamWorkspace = () => {
                       className={`flex gap-3 max-w-2xl ${isMyMsg ? 'ml-auto flex-row-reverse' : ''}`}
                     >
                       <div className="w-8 h-8 rounded-xl bg-[#222222] border border-white/10 text-white font-bold text-xs flex items-center justify-center shrink-0">
-                        {senderName.charAt(0).toUpperCase()}
+                        {senderName?.charAt?.(0)?.toUpperCase() || 'U'}
                       </div>
 
                       <div>
