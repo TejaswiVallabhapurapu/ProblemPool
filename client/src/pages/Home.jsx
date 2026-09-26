@@ -200,7 +200,7 @@ const Home = () => {
               </div>
 
               {/* Right Column: WireframeForms Cube */}
-              <div className="lg:col-span-5 flex items-center justify-center dashboard-wireframe w-full h-72 sm:h-80 lg:h-96 relative overflow-hidden pointer-events-none">
+              <div className="lg:col-span-5 flex items-center justify-center dashboard-wireframe w-full h-72 sm:h-80 lg:h-96 relative overflow-hidden pointer-events-none bg-transparent border-0 outline-none shadow-none">
                 <WireframeForms
                   variant="cube"
                   mode="dark"
@@ -212,6 +212,8 @@ const Home = () => {
                   hue={0}
                   saturation={1.00}
                   brightness={1.00}
+                  className="w-full h-full bg-transparent border-0 outline-none shadow-none pointer-events-none"
+                  style={{ background: 'transparent', border: 'none', outline: 'none', boxShadow: 'none', overflow: 'hidden' }}
                 />
               </div>
             </div>

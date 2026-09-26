@@ -118,13 +118,62 @@
 }
 
 /* ========================================================= */
-/* DesignCode ThreeUI AnimatedTopDock Sable Dark Styling     */
+/* DesignCode ThreeUI & Dashboard Floating Visuals           */
 /* ========================================================= */
 .shader-frame {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.shader-frame iframe {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.shader-frame iframe::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Dashboard Floating 3D WireframeForms Visual */
+.dashboard-wireframe {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.dashboard-wireframe iframe {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.dashboard-wireframe iframe::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .animated-top-dock-component {
