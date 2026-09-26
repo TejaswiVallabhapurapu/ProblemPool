@@ -56,15 +56,14 @@ const Leaderboard = () => {
     <div className="relative min-h-screen">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Page Header */}
-      <div className="text-center max-w-3xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-950/40 border border-amber-500/20/80 text-amber-800 text-xs font-bold mb-3 shadow-xs">
-          
+      <div className="text-center max-w-2xl mx-auto mb-10">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-bold mb-3 shadow-xs">
           <span>ProblemPool Hall of Fame</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-3">
-           Community Leaderboard
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight mb-3">
+          Community Leaderboard
         </h1>
-        <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+        <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
           Celebrating top problem solvers, insightful answerers, and outstanding contributors.
         </p>
       </div>
@@ -72,7 +71,7 @@ const Leaderboard = () => {
       {/* Filter Tabs Section */}
       <div className="bg-[#141414]/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 border border-white/10 shadow-sm mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           {CATEGORIES.map((cat) => {
             const isActive = category === cat.id;
 
@@ -81,9 +80,9 @@ const Leaderboard = () => {
                 key={cat.id}
                 type="button"
                 onClick={() => setCategory(cat.id)}
-                className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-2xl text-sm sm:text-base font-bold transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-slate-900 text-white shadow-md'
+                    ? 'bg-white text-black font-extrabold shadow-md'
                     : 'bg-[#181818] hover:bg-[#202020] text-slate-200 border border-white/10'
                 }`}
               >
@@ -94,7 +93,7 @@ const Leaderboard = () => {
         </div>
 
         {/* Timeframe Selector */}
-        <div className="flex items-center gap-1 bg-[#202020] p-1.5 rounded-2xl w-full md:w-auto justify-center">
+        <div className="flex items-center gap-1.5 bg-[#202020] p-1.5 rounded-2xl w-full md:w-auto justify-center">
           {TIMEFRAMES.map((tf) => {
             const isActive = timeframe === tf.id;
 
@@ -103,9 +102,9 @@ const Leaderboard = () => {
                 key={tf.id}
                 type="button"
                 onClick={() => setTimeframe(tf.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-[#141414]/90 backdrop-blur-md text-slate-200 shadow-xs'
+                    ? 'bg-white text-black font-bold shadow-xs'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >

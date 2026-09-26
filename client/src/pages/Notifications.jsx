@@ -187,27 +187,26 @@ const Notifications = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold mb-2">
-            
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold mb-2.5">
             <span>Community Updates</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
             Notification Center
           </h1>
-          <p className="text-slate-300 mt-1 text-sm">
+          <p className="text-slate-300 mt-2 text-base sm:text-lg leading-relaxed">
             Stay updated with real-time answers, reviews, helpful votes, and community achievements.
           </p>
         </div>
 
         {/* Global Actions */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap">
           {unreadCount > 0 && (
             <GlassAiButton
               type="button"
               onClick={handleMarkAllAsRead}
               disabled={actionLoading}
               loading={actionLoading}
-              size="xs"
+              size="sm"
               variant="glass"
             >
               Mark All as Read
@@ -218,7 +217,7 @@ const Notifications = () => {
             type="button"
             onClick={handleClearRead}
             disabled={actionLoading}
-            size="xs"
+            size="sm"
             variant="glass"
           >
             Clear Read
@@ -227,13 +226,13 @@ const Notifications = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-3">
+      <div className="flex items-center gap-2.5 mb-6 border-b border-white/10 pb-3">
         <button
           type="button"
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-4.5 py-2.5 rounded-xl text-sm sm:text-base font-bold transition-all cursor-pointer ${
             filter === 'all'
-              ? 'bg-indigo-600 text-white shadow-xs'
+              ? 'bg-white text-black font-extrabold shadow-xs'
               : 'text-slate-300 hover:text-white hover:bg-[#202020]'
           }`}
         >
@@ -243,17 +242,17 @@ const Notifications = () => {
         <button
           type="button"
           onClick={() => setFilter('unread')}
-          className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl text-sm sm:text-base font-bold transition-all cursor-pointer ${
             filter === 'unread'
-              ? 'bg-indigo-600 text-white shadow-xs'
+              ? 'bg-white text-black font-extrabold shadow-xs'
               : 'text-slate-300 hover:text-white hover:bg-[#202020]'
           }`}
         >
           <span>Unread</span>
           {unreadCount > 0 && (
             <span
-              className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                filter === 'unread' ? 'bg-[#141414]/90 backdrop-blur-md/20 text-white' : 'bg-rose-100 text-rose-300'
+              className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                filter === 'unread' ? 'bg-black text-white' : 'bg-rose-950 text-rose-300 border border-rose-800/40'
               }`}
             >
               {unreadCount}

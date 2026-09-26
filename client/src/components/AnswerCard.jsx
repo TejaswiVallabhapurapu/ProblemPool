@@ -163,7 +163,7 @@ const AnswerCard = ({
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <div
-            className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shadow-xs border ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-xs border ${
               isBestAnswer
                 ? 'bg-[#222222] text-white border-white/30'
                 : 'bg-[#181818] text-slate-200 border-white/10'
@@ -172,15 +172,15 @@ const AnswerCard = ({
             {answerAuthorInitial}
           </div>
           <div>
-            <div className="text-sm font-bold text-white flex items-center gap-2">
+            <div className="text-base font-bold text-white flex items-center gap-2">
               <span>{answer.isTeamAnswer ? (answer.team?.name || 'Collaborative Team') : answerAuthorName}</span>
               {isAnswerAuthor && (
-                <span className="text-[10px] bg-[#222222] text-slate-300 border border-white/10 px-1.5 py-0.5 rounded font-medium">
+                <span className="text-xs bg-[#222222] text-slate-300 border border-white/10 px-2 py-0.5 rounded font-medium">
                   {answer.isTeamAnswer ? 'Your Team' : 'You'}
                 </span>
               )}
             </div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs sm:text-sm text-slate-400">
               {formatDate(answer.createdAt)}
             </div>
           </div>
@@ -188,13 +188,13 @@ const AnswerCard = ({
 
         {/* Team Members List (If Team Answer) */}
         {answer.isTeamAnswer && Array.isArray(answer.teamMembers) && answer.teamMembers.length > 0 && (
-          <div className="w-full sm:w-auto p-2 rounded-xl bg-[#121212] border border-white/10 flex items-center gap-2 flex-wrap text-xs">
+          <div className="w-full sm:w-auto p-2.5 rounded-xl bg-[#121212] border border-white/10 flex items-center gap-2 flex-wrap text-xs sm:text-sm">
             <span className="text-slate-400 font-medium">Contributors:</span>
             <div className="flex items-center gap-1.5 flex-wrap">
               {answer.teamMembers.map((member) => (
                 <span
                   key={member._id || member}
-                  className="px-2 py-0.5 rounded-md bg-[#1c1c1c] border border-white/10 text-slate-200 text-[11px] font-semibold"
+                  className="px-2.5 py-1 rounded-md bg-[#1c1c1c] border border-white/10 text-slate-200 text-xs font-semibold"
                 >
                   {member.name || member.username || 'Member'}
                 </span>
@@ -209,7 +209,7 @@ const AnswerCard = ({
             <GlassAiButton
               type="button"
               onClick={() => onDeleteAnswer(answer._id)}
-              size="xs"
+              size="sm"
               variant="danger"
             >
               Delete
@@ -218,7 +218,7 @@ const AnswerCard = ({
             <GlassAiButton
               type="button"
               onClick={() => setShowReportModal(true)}
-              size="xs"
+              size="sm"
               variant="glass"
             >
               Report
@@ -233,14 +233,14 @@ const AnswerCard = ({
       </div>
 
       {/* Interactive Actions Bar (Text Only) */}
-      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/10">
+      <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/10">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {/* Helpful Button */}
           <GlassAiButton
             type="button"
             onClick={() => handleVote('helpful')}
             disabled={isAnswerAuthor || voting}
-            size="xs"
+            size="sm"
             variant={userVote === 'helpful' ? "success" : "glass"}
           >
             {helpfulCount} Helpful
@@ -251,7 +251,7 @@ const AnswerCard = ({
             type="button"
             onClick={() => handleVote('not_helpful')}
             disabled={isAnswerAuthor || voting}
-            size="xs"
+            size="sm"
             variant={userVote === 'not_helpful' ? "danger" : "glass"}
           >
             {notHelpfulCount} Not Helpful
@@ -261,7 +261,7 @@ const AnswerCard = ({
           <GlassAiButton
             type="button"
             onClick={() => setShowReviews(!showReviews)}
-            size="xs"
+            size="sm"
             variant={showReviews ? "primary" : "glass"}
           >
             Reviews ({reviewCount})
@@ -275,7 +275,7 @@ const AnswerCard = ({
             onClick={handleBestAnswerToggle}
             disabled={togglingBestAnswer}
             loading={togglingBestAnswer}
-            size="xs"
+            size="sm"
             variant={isBestAnswer ? "primary" : "glass"}
           >
             {isBestAnswer ? 'Unmark Best Answer' : 'Select as Best Answer'}

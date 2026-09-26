@@ -116,39 +116,43 @@
 /* ========================================================= */
 
 .glass-ai-size-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.15rem;
   border-radius: 10px;
+  font-weight: 700;
 }
 .glass-ai-size-xs .glass-ai-surface {
-  padding: 0.3rem 0.65rem;
+  padding: 0.35rem 0.75rem;
 }
 
 .glass-ai-size-sm {
-  font-size: 0.8125rem;
-  line-height: 1.15rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   border-radius: 12px;
+  font-weight: 700;
 }
 .glass-ai-size-sm .glass-ai-surface {
-  padding: 0.45rem 0.85rem;
+  padding: 0.5rem 1rem;
 }
 
 .glass-ai-size-md {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.35rem;
   border-radius: 14px;
+  font-weight: 700;
 }
 .glass-ai-size-md .glass-ai-surface {
-  padding: 0.55rem 1.15rem;
+  padding: 0.65rem 1.25rem;
 }
 
 .glass-ai-size-lg {
-  font-size: 1rem;
-  line-height: 1.5rem;
+  font-size: 1.0625rem;
+  line-height: 1.55rem;
   border-radius: 16px;
+  font-weight: 800;
 }
 .glass-ai-size-lg .glass-ai-surface {
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.65rem;
 }
 
 /* ========================================================= */

@@ -124,6 +124,29 @@ const WebThreads = ({
 
     let time = 0;
 
+    // Cached Grain Pattern Canvas to prevent per-frame CPU allocation & fillRect calls
+    let grainPattern = null;
+    const updateGrainPattern = () => {
+      if (!grain || grainIntensity <= 0) {
+        grainPattern = null;
+        return;
+      }
+      const patternCanvas = document.createElement('canvas');
+      const pSize = 128;
+      patternCanvas.width = pSize;
+      patternCanvas.height = pSize;
+      const pCtx = patternCanvas.getContext('2d');
+      if (pCtx) {
+        pCtx.fillStyle = `rgba(255, 255, 255, ${Math.min(0.2, grainIntensity * 0.25)})`;
+        const count = Math.floor((pSize * pSize) / 35);
+        for (let i = 0; i < count; i++) {
+          pCtx.fillRect(Math.random() * pSize, Math.random() * pSize, 1, 1);
+        }
+        grainPattern = ctx.createPattern(patternCanvas, 'repeat');
+      }
+    };
+    updateGrainPattern();
+
     const render = () => {
       time += 0.015 * effectiveSpeed;
 
@@ -137,7 +160,7 @@ const WebThreads = ({
 
       const centerY = height * position;
       const numThreads = Math.max(1, threadCount);
-      const points = 70; // resolution of curve points across screen width
+      const points = 60; // optimized resolution of curve points across screen width
 
       // Render each thread with its harmonic wave function
       for (let i = 0; i < numThreads; i++) {
@@ -240,15 +263,10 @@ const WebThreads = ({
         }
       }
 
-      // Procedural Grain Layer
-      if (grain && grainIntensity > 0) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${grainIntensity * 0.3})`;
-        const grainCount = Math.floor((width * height) / 3000);
-        for (let g = 0; g < grainCount; g++) {
-          const gx = Math.random() * width;
-          const gy = Math.random() * height;
-          ctx.fillRect(gx, gy, 1, 1);
-        }
+      // High-performance Grain Layer
+      if (grainPattern) {
+        ctx.fillStyle = grainPattern;
+        ctx.fillRect(0, 0, width, height);
       }
 
       ctx.restore();

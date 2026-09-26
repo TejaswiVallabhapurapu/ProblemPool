@@ -438,19 +438,19 @@ const Challenges = () => {
 
         {/* Challenge Summary Badges */}
         <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-3 shrink-0">
-          <div className="px-4 py-2 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-center shadow-xs">
-            <span className="block text-xl font-extrabold text-white">
+          <div className="px-5 py-2.5 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-center shadow-xs">
+            <span className="block text-2xl font-black text-white">
               {allChallenges.length}
             </span>
-            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
               Challenges
             </span>
           </div>
-          <div className="px-4 py-2 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-center shadow-xs">
-            <span className="block text-xl font-extrabold text-emerald-600">
+          <div className="px-5 py-2.5 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-center shadow-xs">
+            <span className="block text-2xl font-black text-white">
               {allChallenges.reduce((acc, c) => acc + (c.problemsCount || 0), 0)}
             </span>
-            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
               Problems
             </span>
           </div>
@@ -463,21 +463,20 @@ const Challenges = () => {
       <div className="space-y-4 mb-10">
         {/* Search Input */}
         <div className="relative">
-          
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search challenges by title, category, or problem..."
-            className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white placeholder:text-neutral-400 text-sm sm:text-base font-medium focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-white/10 shadow-xs transition"
+            className="w-full px-5 py-4 rounded-2xl bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white placeholder:text-neutral-400 text-base font-medium focus:outline-none focus:border-white/30 focus:ring-2 focus:ring-white/10 shadow-xs transition"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-neutral-400 hover:text-slate-300 rounded-full hover:bg-[#202020]"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 hover:text-white rounded-xl hover:bg-[#202020] text-sm font-semibold"
             >
-              
+              Clear
             </button>
           )}
         </div>
@@ -485,7 +484,7 @@ const Challenges = () => {
         {/* Category & Difficulty Filters Bar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Category Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
             {CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
@@ -493,10 +492,10 @@ const Challenges = () => {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-200'
-                      : 'bg-[#141414]/90 backdrop-blur-md text-slate-300 hover:text-white border border-white/10 hover:border-slate-300'
+                      ? 'bg-white text-black font-bold shadow-md'
+                      : 'bg-[#141414]/90 backdrop-blur-md text-slate-300 hover:text-white border border-white/10 hover:border-white/20'
                   }`}
                 >
                   {cat}
@@ -506,20 +505,19 @@ const Challenges = () => {
           </div>
 
           {/* Difficulty Dropdown Filter */}
-          <div className="flex items-center gap-2 self-start lg:self-auto shrink-0 text-xs">
-            <span className="font-semibold text-neutral-400 flex items-center gap-1">
-              
+          <div className="flex items-center gap-2 self-start lg:self-auto shrink-0 text-sm">
+            <span className="font-bold text-slate-300 flex items-center gap-1">
               <span>Difficulty:</span>
             </span>
-            <div className="flex items-center gap-1 bg-[#141414]/90 backdrop-blur-md p-1 rounded-xl border border-white/10 shadow-2xs">
+            <div className="flex items-center gap-1.5 bg-[#141414]/90 backdrop-blur-md p-1.5 rounded-xl border border-white/10 shadow-2xs">
               {DIFFICULTIES.map((diff) => (
                 <button
                   key={diff}
                   type="button"
                   onClick={() => setSelectedDifficulty(diff)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`px-3 py-1 rounded-lg text-xs sm:text-sm font-bold transition cursor-pointer ${
                     selectedDifficulty === diff
-                      ? 'bg-white/10 text-slate-200'
+                      ? 'bg-white text-black font-bold shadow-xs'
                       : 'text-slate-300 hover:text-white'
                   }`}
                 >

@@ -190,17 +190,17 @@ const ProblemCard = ({
         <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${categoryBadgeClass}`}
+              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ${categoryBadgeClass}`}
             >
               {problem.category}
             </span>
             {statusBadge}
           </div>
           <div className="flex items-center gap-2 ml-auto">
-            <span className="text-[11px] text-slate-400 font-medium">
+            <span className="text-xs text-slate-300 font-medium">
               {formatDate(problem.createdAt)}
             </span>
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+            <span className="text-xs font-extrabold px-2 py-0.5 rounded bg-white/10 text-slate-200 border border-white/15">
               3D
             </span>
           </div>
@@ -212,32 +212,32 @@ const ProblemCard = ({
           className="block group/title"
           data-no-flip="true"
         >
-          <h3 className="text-base sm:text-lg font-bold text-white group-hover/title:text-slate-300 transition-colors line-clamp-2 mb-2 leading-snug">
+          <h3 className="text-lg sm:text-xl font-extrabold text-white group-hover/title:text-slate-200 transition-colors line-clamp-2 mb-2.5 leading-snug">
             {problem.title}
           </h3>
         </Link>
 
         {/* Short Description */}
-        <p className="text-slate-400 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3.5">
+        <p className="text-slate-300 text-sm sm:text-[15px] line-clamp-3 leading-relaxed mb-3.5">
           {problem.description}
         </p>
 
         {/* Tags Row */}
         {tagsList.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 mb-3.5">
+          <div className="flex flex-wrap items-center gap-2 mb-3.5">
             {tagsList.slice(0, 3).map((t) => (
               <button
                 key={t}
                 type="button"
                 data-no-flip="true"
                 onClick={(e) => handleTagClickInternal(e, t)}
-                className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#181818] hover:bg-[#242424] text-slate-300 hover:text-white transition border border-[#2a2a2a] cursor-pointer"
+                className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#181818] hover:bg-[#242424] text-slate-200 hover:text-white transition border border-[#2e2e2e] cursor-pointer"
               >
                 <span>#{t}</span>
               </button>
             ))}
             {tagsList.length > 3 && (
-              <span className="text-[11px] font-medium text-slate-500 px-1">
+              <span className="text-xs font-medium text-slate-400 px-1">
                 +{tagsList.length - 3} more
               </span>
             )}
@@ -245,21 +245,21 @@ const ProblemCard = ({
         )}
 
         {/* Author attribution & Location */}
-        <div className="flex items-center justify-between text-xs text-slate-400 font-medium mb-3 gap-2">
-          <div className="text-slate-300 font-medium truncate">
+        <div className="flex items-center justify-between text-xs sm:text-sm text-slate-300 font-medium mb-3 gap-2">
+          <div className="text-slate-200 font-semibold truncate">
             {authorName}
           </div>
 
           {problem.location && (
-            <div className="text-slate-500 truncate text-[11px]">
+            <div className="text-slate-400 truncate text-xs">
               {problem.location}
             </div>
           )}
         </div>
 
         {/* Engagement stats (Text Only) */}
-        <div className="flex items-center gap-3 py-1.5 px-3 bg-[#121212] rounded-xl text-xs font-medium text-slate-400 mb-3 flex-wrap border border-white/5">
-          <span className="text-slate-300">
+        <div className="flex items-center gap-3 py-2 px-3.5 bg-[#121212] rounded-xl text-xs sm:text-sm font-medium text-slate-300 mb-3 flex-wrap border border-white/5">
+          <span className="text-white font-semibold">
             {answersCount} Answers
           </span>
 
@@ -268,19 +268,19 @@ const ProblemCard = ({
           </span>
 
           {savesCount > 0 && (
-            <span className="text-slate-200 font-semibold">
+            <span className="text-slate-200 font-bold">
               {savesCount} Saved
             </span>
           )}
 
           {totalHelpfulVotes > 0 && (
-            <span className="text-slate-200 font-semibold">
+            <span className="text-slate-200 font-bold">
               +{totalHelpfulVotes} Helpful
             </span>
           )}
 
           {hasBestAnswer && (
-            <span className="text-slate-200 bg-[#222222] px-2 py-0.5 rounded-md border border-white/20 font-bold ml-auto text-[10px]">
+            <span className="text-white bg-[#262626] px-2.5 py-0.5 rounded-md border border-white/20 font-bold ml-auto text-xs">
               Best Answer
             </span>
           )}
@@ -289,13 +289,13 @@ const ProblemCard = ({
 
       {/* Footer Info: Save, Collections, Delete & View (Text Only) */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
-        <div className="flex items-center gap-1.5" data-no-flip="true">
+        <div className="flex items-center gap-2" data-no-flip="true">
           <GlassAiButton
             type="button"
             onClick={handleSaveToggle}
             disabled={saving}
             loading={saving}
-            size="xs"
+            size="sm"
             variant={saved ? "primary" : "glass"}
           >
             {saved ? 'Saved' : 'Save'}
@@ -309,7 +309,7 @@ const ProblemCard = ({
                 e.stopPropagation();
                 onManageCollections(problem);
               }}
-              size="xs"
+              size="sm"
               variant="glass"
             >
               Collection
@@ -321,7 +321,7 @@ const ProblemCard = ({
               type="button"
               onClick={handleDeleteClick}
               disabled={isDeleting}
-              size="xs"
+              size="sm"
               variant="danger"
             >
               Delete
@@ -332,7 +332,7 @@ const ProblemCard = ({
         <div data-no-flip="true">
           <GlassAiButton
             to={`/problems/${problem._id}`}
-            size="xs"
+            size="sm"
             variant="secondary"
           >
             View
@@ -348,47 +348,47 @@ const ProblemCard = ({
       <div className="space-y-4">
         {/* Top Header of Back */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
             {problem.category}
           </span>
 
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+          <span className="text-xs font-bold px-2.5 py-1 rounded bg-white/10 text-slate-200 border border-white/15">
             Flip Back
           </span>
         </div>
 
         {/* Center Title & Author */}
         <div className="text-center py-2">
-          <h4 className="text-sm font-bold text-white line-clamp-2">
+          <h4 className="text-base font-bold text-white line-clamp-2">
             {problem.title}
           </h4>
-          <p className="text-[11px] text-slate-400 mt-1">
-            Asked by <strong className="text-slate-200">{authorName}</strong>
+          <p className="text-xs text-slate-400 mt-1">
+            Asked by <strong className="text-slate-200 font-semibold">{authorName}</strong>
           </p>
         </div>
 
         {/* Detailed 3D Metrics Grid */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-white">{answersCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Solutions</div>
+        <div className="grid grid-cols-2 gap-2.5 text-xs sm:text-sm">
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-white">{answersCount}</div>
+            <div className="text-xs text-slate-400 font-medium">Solutions</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-white">{viewsCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Total Views</div>
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-white">{viewsCount}</div>
+            <div className="text-xs text-slate-400 font-medium">Total Views</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-slate-200">+{totalHelpfulVotes}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Helpful Score</div>
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-slate-200">+{totalHelpfulVotes}</div>
+            <div className="text-xs text-slate-400 font-medium">Helpful Score</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-slate-200">{savesCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Bookmarks</div>
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-slate-200">{savesCount}</div>
+            <div className="text-xs text-slate-400 font-medium">Bookmarks</div>
           </div>
         </div>
 
         {/* Status Indicator */}
-        <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
+        <div className="p-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs sm:text-sm">
           <span className="text-slate-400 font-medium">Resolution Status</span>
           <span className="font-bold text-white">
             {hasBestAnswer ? (
@@ -409,7 +409,7 @@ const ProblemCard = ({
             type="button"
             onClick={handleSaveToggle}
             disabled={saving}
-            size="xs"
+            size="sm"
             variant="glass"
           >
             {saved ? 'Saved' : 'Bookmark'}
@@ -419,7 +419,7 @@ const ProblemCard = ({
         <div data-no-flip="true">
           <GlassAiButton
             to={`/problems/${problem._id}`}
-            size="xs"
+            size="sm"
             variant="primary"
           >
             Open Problem

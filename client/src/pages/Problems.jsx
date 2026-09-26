@@ -184,13 +184,13 @@ const Problems = () => {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-300 text-xs font-mono mb-2">
+            <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-mono mb-2.5">
               <span>Real-world Problem Pool</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
               Explore Problems
             </h1>
-            <p className="text-neutral-400 mt-2 text-sm sm:text-base max-w-2xl">
+            <p className="text-slate-300 mt-2.5 text-base sm:text-lg max-w-2xl leading-relaxed">
               Search across titles, descriptions, categories, tags, and authors to find real-world challenges to solve.
             </p>
           </div>
@@ -216,7 +216,7 @@ const Problems = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search problems by title, description, tags, category, or author username..."
-              className="w-full px-4 py-3.5 rounded-2xl border border-white/10 focus:border-white/30 text-white placeholder:text-neutral-500 text-sm outline-none transition bg-white/5"
+              className="w-full px-4.5 py-3.5 rounded-2xl border border-white/10 focus:border-white/30 text-white placeholder:text-neutral-400 text-base outline-none transition bg-white/5"
             />
             {searchTerm && (
               <button
@@ -233,14 +233,14 @@ const Problems = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
             {/* Status Filter Dropdown */}
             <div className="relative">
-              <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5">
+              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
                 Status Filter
               </label>
               <div className="relative">
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-xs font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
+                  className="w-full appearance-none px-4 py-3 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-sm font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
                 >
                   {STATUS_OPTIONS.map((opt) => (
                     <option
@@ -257,14 +257,14 @@ const Problems = () => {
 
             {/* Sort By Dropdown */}
             <div className="relative">
-              <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5">
+              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5">
                 Sort Order
               </label>
               <div className="relative">
                 <select
                   value={selectedSort}
                   onChange={(e) => setSelectedSort(e.target.value)}
-                  className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-xs font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
+                  className="w-full appearance-none px-4 py-3 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-sm font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
                 >
                   {SORT_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -277,13 +277,13 @@ const Problems = () => {
 
             {/* Category Dropdown (for quick mobile selection) */}
             <div className="relative sm:col-span-2 lg:col-span-2">
-              <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5 flex items-center justify-between">
+              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
                 <span>Selected Category</span>
                 {selectedCategory !== 'All' && (
                   <button
                     type="button"
                     onClick={() => setSelectedCategory('All')}
-                    className="text-neutral-400 hover:text-white text-[10px] font-mono underline"
+                    className="text-slate-300 hover:text-white text-xs font-mono underline"
                   >
                     Reset category
                   </button>
@@ -293,7 +293,7 @@ const Problems = () => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full appearance-none px-4 py-2.5 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-xs font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
+                  className="w-full appearance-none px-4 py-3 rounded-xl border border-white/10 bg-[#181818] text-neutral-200 text-sm font-medium focus:outline-none focus:border-white/30 cursor-pointer pr-9 transition"
                 >
                   <option value="All">All Categories</option>
                   {POPULAR_CATEGORIES.map((cat) => (
@@ -308,7 +308,7 @@ const Problems = () => {
 
           {/* 3. Category Filter Horizontal Scroll Pills */}
           <div className="pt-2 border-t border-white/10">
-            <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2.5">
+            <div className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2.5">
               Browse by Category
             </div>
             <CategoryFilter

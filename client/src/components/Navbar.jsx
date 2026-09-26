@@ -19,7 +19,7 @@ const Navbar = () => {
             to={isPlatform ? '/' : isAuthenticated ? '/dashboard' : '/'}
             className="flex items-center group shrink-0"
           >
-            <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-slate-200 transition-colors">
+            <span className="text-2xl font-black tracking-tight text-white group-hover:text-slate-200 transition-colors">
               Problem<span className="text-slate-400">Pool</span>
             </span>
           </Link>
@@ -40,7 +40,7 @@ const Navbar = () => {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               type="button"
-              className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 focus:outline-none transition cursor-pointer uppercase tracking-wider"
+              className="px-3.5 py-1.5 rounded-xl text-sm font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 focus:outline-none transition cursor-pointer uppercase tracking-wider"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >

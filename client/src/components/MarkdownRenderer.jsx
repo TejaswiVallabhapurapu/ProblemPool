@@ -99,9 +99,9 @@ const CodeBlock = ({ language, codeString }) => {
   return (
     <div className="my-4 rounded-2xl overflow-hidden border border-white/10 bg-[#0c0c0c] shadow-lg text-neutral-100 max-w-full">
       {/* Code Block Top Header */}
-      <div className="px-4 py-2 bg-white/5 border-b border-white/10 flex items-center justify-between gap-3 text-xs">
+      <div className="px-4 py-2.5 bg-white/5 border-b border-white/10 flex items-center justify-between gap-3 text-xs sm:text-sm">
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-white/10 text-neutral-300 border border-white/10">
+          <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase tracking-wider bg-white/10 text-neutral-200 border border-white/10">
             {meta.label}
           </span>
         </div>
@@ -110,10 +110,10 @@ const CodeBlock = ({ language, codeString }) => {
         <button
           type="button"
           onClick={handleCopy}
-          className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all duration-150 cursor-pointer ${
+          className={`px-3 py-1 rounded-lg text-xs sm:text-sm font-mono font-semibold transition-all duration-150 cursor-pointer ${
             copied
-              ? 'bg-white text-black font-semibold'
-              : 'bg-white/5 text-neutral-300 hover:text-white hover:bg-white/10 border border-white/10'
+              ? 'bg-white text-black font-bold'
+              : 'bg-white/10 text-neutral-200 hover:text-white hover:bg-white/20 border border-white/15'
           }`}
           title="Copy code to clipboard"
         >
@@ -122,7 +122,7 @@ const CodeBlock = ({ language, codeString }) => {
       </div>
 
       {/* Code Pre Container */}
-      <div className="p-4 overflow-x-auto font-mono text-[13px] leading-relaxed select-text no-scrollbar">
+      <div className="p-4 overflow-x-auto font-mono text-sm sm:text-[14.5px] leading-relaxed select-text no-scrollbar">
         {highlightedHtml ? (
           <pre className="m-0 p-0 bg-transparent">
             <code
@@ -171,7 +171,7 @@ const MarkdownRenderer = ({ content, className = '' }) => {
             // Inline Code
             return (
               <code
-                className="bg-white/10 text-white font-mono text-[12.5px] px-1.5 py-0.5 rounded border border-white/10 font-medium"
+                className="bg-white/10 text-white font-mono text-sm px-2 py-0.5 rounded border border-white/10 font-medium"
                 {...props}
               >
                 {children}
@@ -200,28 +200,28 @@ const MarkdownRenderer = ({ content, className = '' }) => {
           // Headings
           h1({ children }) {
             return (
-              <h1 className="text-xl sm:text-2xl font-bold text-white mt-6 mb-3 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-black text-white mt-7 mb-3.5 tracking-tight">
                 {children}
               </h1>
             );
           },
           h2({ children }) {
             return (
-              <h2 className="text-lg sm:text-xl font-bold text-white mt-5 mb-2.5 tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-6 mb-3 tracking-tight">
                 {children}
               </h2>
             );
           },
           h3({ children }) {
             return (
-              <h3 className="text-base sm:text-lg font-semibold text-white mt-4 mb-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white mt-5 mb-2.5">
                 {children}
               </h3>
             );
           },
           h4({ children }) {
             return (
-              <h4 className="text-sm sm:text-base font-semibold text-white mt-3 mb-1.5">
+              <h4 className="text-base sm:text-lg font-bold text-white mt-4 mb-2">
                 {children}
               </h4>
             );
@@ -229,13 +229,13 @@ const MarkdownRenderer = ({ content, className = '' }) => {
 
           // Paragraphs
           p({ children }) {
-            return <p className="leading-relaxed mb-3 text-sm sm:text-base text-neutral-300">{children}</p>;
+            return <p className="leading-relaxed mb-4 text-base sm:text-[16px] text-neutral-200">{children}</p>;
           },
 
           // Blockquotes
           blockquote({ children }) {
             return (
-              <blockquote className="border-l-2 border-white/40 bg-white/5 px-4 py-2.5 my-3.5 rounded-r-xl text-neutral-300 italic text-sm">
+              <blockquote className="border-l-2 border-white/40 bg-white/5 px-4 py-3 my-4 rounded-r-xl text-neutral-200 italic text-base">
                 {children}
               </blockquote>
             );
@@ -243,10 +243,10 @@ const MarkdownRenderer = ({ content, className = '' }) => {
 
           // Lists
           ul({ children }) {
-            return <ul className="list-disc list-outside pl-5 my-3 space-y-1 text-sm sm:text-base text-neutral-300">{children}</ul>;
+            return <ul className="list-disc list-outside pl-6 my-3.5 space-y-1.5 text-base sm:text-[16px] text-neutral-200">{children}</ul>;
           },
           ol({ children }) {
-            return <ol className="list-decimal list-outside pl-5 my-3 space-y-1 text-sm sm:text-base text-neutral-300">{children}</ol>;
+            return <ol className="list-decimal list-outside pl-6 my-3.5 space-y-1.5 text-base sm:text-[16px] text-neutral-200">{children}</ol>;
           },
           li({ children }) {
             return <li className="leading-relaxed">{children}</li>;
@@ -255,15 +255,15 @@ const MarkdownRenderer = ({ content, className = '' }) => {
           // Tables
           table({ children }) {
             return (
-              <div className="overflow-x-auto my-4 rounded-xl border border-white/10 shadow-xs">
-                <table className="min-w-full divide-y divide-white/10 text-xs sm:text-sm">
+              <div className="overflow-x-auto my-5 rounded-xl border border-white/10 shadow-xs">
+                <table className="min-w-full divide-y divide-white/10 text-sm sm:text-base">
                   {children}
                 </table>
               </div>
             );
           },
           thead({ children }) {
-            return <thead className="bg-white/5 font-semibold text-white">{children}</thead>;
+            return <thead className="bg-white/5 font-bold text-white">{children}</thead>;
           },
           tbody({ children }) {
             return <tbody className="divide-y divide-white/5 bg-[#121212]/80">{children}</tbody>;
@@ -272,10 +272,10 @@ const MarkdownRenderer = ({ content, className = '' }) => {
             return <tr className="hover:bg-white/5 transition">{children}</tr>;
           },
           th({ children }) {
-            return <th className="px-3.5 py-2.5 text-left font-semibold text-white">{children}</th>;
+            return <th className="px-4 py-3 text-left font-bold text-white">{children}</th>;
           },
           td({ children }) {
-            return <td className="px-3.5 py-2.5 text-neutral-300">{children}</td>;
+            return <td className="px-4 py-3 text-neutral-200">{children}</td>;
           },
 
           // Horizontal Rule

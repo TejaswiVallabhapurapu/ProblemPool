@@ -483,21 +483,21 @@ const ProblemDetails = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-snug mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-5">
               {problem.title}
             </h1>
 
             {/* Author & Location Meta Bar */}
             <div className="flex flex-wrap items-center gap-4 mb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-slate-200 text-xs font-semibold">
-                <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/10 border border-white/15 text-slate-200 text-sm font-semibold">
+                <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
                 <span>Posted by {authorName}</span>
-                {authorEmail && <span className="text-indigo-400 font-normal">({authorEmail})</span>}
+                {authorEmail && <span className="text-indigo-300 font-normal">({authorEmail})</span>}
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#181818] border border-white/10 text-slate-200 text-xs font-medium">
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#181818] border border-white/10 text-slate-200 text-sm font-medium">
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -505,19 +505,17 @@ const ProblemDetails = () => {
                 <span>{problem.location}</span>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181818] border border-white/10 text-slate-300 text-xs font-medium">
-                
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#181818] border border-white/10 text-slate-300 text-sm font-medium">
                 <span>{problem.views || 0} views</span>
               </div>
             </div>
 
             {/* Full Description with Markdown & Syntax Highlighting */}
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
-                
+              <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
                 <span>Problem Description</span>
               </h2>
-              <div className="bg-[#181818] p-5 sm:p-7 rounded-2xl border border-white/10">
+              <div className="bg-[#181818] p-6 sm:p-8 rounded-2xl border border-white/10">
                 <MarkdownRenderer content={problem.description} />
               </div>
             </div>
@@ -525,8 +523,7 @@ const ProblemDetails = () => {
             {/* Tags Section */}
             {Array.isArray(problem.tags) && problem.tags.length > 0 && (
               <div className="mt-6 pt-6 border-t border-white/10">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
-                  
+                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
                   <span>Tags</span>
                 </h3>
                 <div className="flex flex-wrap items-center gap-2">
@@ -534,7 +531,7 @@ const ProblemDetails = () => {
                     <Link
                       key={tag}
                       to={`/problems?tag=${encodeURIComponent(tag)}`}
-                      className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-white/10/80 text-slate-200 hover:bg-indigo-100 hover:text-indigo-800 border border-white/20/80 transition"
+                      className="inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-[#181818] hover:bg-[#242424] text-slate-200 hover:text-white border border-[#2e2e2e] transition"
                     >
                       #{tag}
                     </Link>

@@ -31,47 +31,47 @@ export const ChallengeCard = ({
         {/* Top Metadata: Category, Difficulty & 3D Flip Hint */}
         <div className="flex items-center justify-between gap-2 mb-3.5 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-block px-3 py-0.5 rounded-full text-xs font-bold bg-[#181818] text-slate-300 border border-white/10">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-[#181818] text-slate-200 border border-white/15">
               {challenge.category}
             </span>
-            <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${diffStyle}`}>
+            <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${diffStyle}`}>
               {challenge.difficulty}
             </span>
           </div>
 
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+          <span className="text-xs font-bold px-2 py-0.5 rounded bg-white/10 text-slate-200 border border-white/15">
             3D
           </span>
         </div>
 
         {/* Title & Description */}
         <div className="mb-3.5">
-          <h3 className="text-base sm:text-lg font-extrabold text-white group-hover:text-slate-300 transition-colors leading-snug mb-1.5 line-clamp-2">
+          <h3 className="text-lg sm:text-xl font-extrabold text-white group-hover:text-slate-300 transition-colors leading-snug mb-2 line-clamp-2">
             {challenge.title}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-400 line-clamp-3 leading-relaxed">
+          <p className="text-sm sm:text-[15px] text-slate-300 line-clamp-3 leading-relaxed">
             {challenge.description}
           </p>
         </div>
 
         {/* Challenge Specs */}
-        <div className="py-2 flex items-center justify-between text-xs font-semibold text-slate-400 border-t border-white/10 mb-3">
+        <div className="py-2.5 flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-300 border-t border-white/10 mb-3">
           <span>{challenge.problemsCount} Problems</span>
           <span>{challenge.duration}</span>
         </div>
 
         {/* Real User Progress Bar (When Started) */}
         {stats.status !== 'Not Started' ? (
-          <div className="space-y-1.5 pt-1">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-300">
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between text-xs sm:text-sm">
+              <span className="font-bold text-slate-200">
                 {stats.status}
               </span>
               <span className="font-extrabold text-white">
                 {stats.completedCount} / {stats.total} ({stats.percent}%)
               </span>
             </div>
-            <div className="w-full h-2 rounded-full bg-[#222222] overflow-hidden">
+            <div className="w-full h-2.5 rounded-full bg-[#222222] overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-300 bg-white"
                 style={{ width: `${stats.percent}%` }}
@@ -79,7 +79,7 @@ export const ChallengeCard = ({
             </div>
           </div>
         ) : (
-          <div className="pt-1 text-xs text-slate-500 font-medium">
+          <div className="pt-1 text-xs sm:text-sm text-slate-400 font-medium">
             Status: Ready to Start
           </div>
         )}
@@ -87,7 +87,7 @@ export const ChallengeCard = ({
 
       {/* Card Action Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
-        <span className="text-xs font-bold text-slate-300">
+        <span className="text-sm font-bold text-slate-200">
           +{challenge.rewardPoints} Rep
         </span>
 
@@ -95,7 +95,7 @@ export const ChallengeCard = ({
           <GlassAiButton
             type="button"
             onClick={() => onOpenDetails(challenge)}
-            size="xs"
+            size="sm"
             variant={stats.status === 'Completed' ? "success" : "primary"}
           >
             {stats.status === 'Completed'
@@ -115,47 +115,47 @@ export const ChallengeCard = ({
       <div className="space-y-4">
         {/* Top Header of Back */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
             +{challenge.rewardPoints} Points
           </span>
 
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+          <span className="text-xs font-bold px-2.5 py-1 rounded bg-white/10 text-slate-200 border border-white/15">
             Flip Back
           </span>
         </div>
 
         {/* Center Title */}
         <div className="text-center py-2">
-          <h4 className="text-sm font-bold text-white line-clamp-1">
+          <h4 className="text-base font-bold text-white line-clamp-1">
             {challenge.title}
           </h4>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-400 mt-1">
             {challenge.category} • {challenge.difficulty} Track
           </p>
         </div>
 
         {/* 3D Specs Matrix */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-white">{challenge.problemsCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Problems</div>
+        <div className="grid grid-cols-2 gap-2.5 text-xs sm:text-sm">
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-white">{challenge.problemsCount}</div>
+            <div className="text-xs text-slate-400 font-medium">Problems</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-white">{challenge.duration}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Timeframe</div>
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-white">{challenge.duration}</div>
+            <div className="text-xs text-slate-400 font-medium">Timeframe</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-white">{stats.completedCount}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Solved</div>
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-white">{stats.completedCount}</div>
+            <div className="text-xs text-slate-400 font-medium">Solved</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-base font-black text-slate-200">{stats.percent}%</div>
-            <div className="text-[10px] text-slate-400 font-medium">Progress</div>
+          <div className="p-3 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-lg font-black text-slate-200">{stats.percent}%</div>
+            <div className="text-xs text-slate-400 font-medium">Progress</div>
           </div>
         </div>
 
         {/* Challenge Milestone Overview */}
-        <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
+        <div className="p-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs sm:text-sm">
           <span className="text-slate-400 font-medium">Habit Track</span>
           <span className="font-bold text-white">
             Daily Problem Series
@@ -165,7 +165,7 @@ export const ChallengeCard = ({
 
       {/* Back Actions Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
-        <span className="text-[11px] text-slate-400 font-medium">
+        <span className="text-xs sm:text-sm text-slate-300 font-medium">
           {stats.completedCount} of {stats.total} completed
         </span>
 
@@ -173,7 +173,7 @@ export const ChallengeCard = ({
           <GlassAiButton
             type="button"
             onClick={() => onOpenDetails(challenge)}
-            size="xs"
+            size="sm"
             variant="primary"
           >
             Open Roadmap

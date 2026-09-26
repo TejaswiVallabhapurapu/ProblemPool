@@ -405,32 +405,32 @@ const Profile = () => {
 
               {/* Details */}
               <div>
-                <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                  <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                <div className="flex flex-wrap items-center gap-3 mb-2">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
                     {user.name || user.username || 'Problem Solver'}
                   </h1>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/15">
+                  <span className="text-sm font-semibold px-3 py-1 rounded-full bg-white/10 text-slate-200 border border-white/15">
                     @{user.username || 'solver'}
                   </span>
                 </div>
 
                 {user.title ? (
-                  <div className="text-sm font-medium text-slate-300 mb-2">
+                  <div className="text-base font-semibold text-slate-200 mb-2">
                     {user.title}
                   </div>
                 ) : (
-                  <div className="text-xs text-slate-400 italic mb-2">Community Problem Solver</div>
+                  <div className="text-sm text-slate-400 italic mb-2">Community Problem Solver</div>
                 )}
 
                 {/* Bio */}
                 {user.bio && (
-                  <p className="text-xs sm:text-sm text-slate-300 max-w-xl line-clamp-2 leading-relaxed mb-3 font-medium">
+                  <p className="text-sm sm:text-base text-slate-300 max-w-xl line-clamp-2 leading-relaxed mb-3.5 font-normal">
                     {user.bio}
                   </p>
                 )}
 
                 {/* Meta & Followers Counts */}
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 font-medium">
+                <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-300 font-medium">
                   {user.location && (
                     <span>{user.location}</span>
                   )}
@@ -442,14 +442,14 @@ const Profile = () => {
                     onClick={() => setActiveTab('followers')}
                     className="hover:text-white transition cursor-pointer font-semibold"
                   >
-                    <strong className="text-white">{stats.followersCount || 0}</strong> Followers
+                    <strong className="text-white font-bold">{stats.followersCount || 0}</strong> Followers
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('following')}
                     className="hover:text-white transition cursor-pointer font-semibold"
                   >
-                    <strong className="text-white">{stats.followingCount || 0}</strong> Following
+                    <strong className="text-white font-bold">{stats.followingCount || 0}</strong> Following
                   </button>
                 </div>
               </div>
@@ -559,10 +559,10 @@ const Profile = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex items-center px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                  className={`inline-flex items-center px-4.5 py-2.5 rounded-xl text-sm sm:text-base font-bold whitespace-nowrap transition-all duration-150 cursor-pointer ${
                     isActive
-                      ? 'bg-white/10 text-white border border-white/20 font-bold shadow-xs'
-                      : 'text-[#D1D5DB] hover:text-white hover:bg-white/5'
+                      ? 'bg-white text-black font-extrabold shadow-xs'
+                      : 'text-slate-300 hover:text-white hover:bg-white/8'
                   }`}
                 >
                   <span>{tab.label}</span>

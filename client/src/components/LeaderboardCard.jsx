@@ -43,7 +43,7 @@ export const LeaderboardCard = ({
         {/* Top Rank Badge & 3D Hint */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black shadow-xs ${
+            className={`inline-flex items-center px-3.5 py-1 rounded-full text-xs sm:text-sm font-black shadow-xs ${
               isGold
                 ? 'bg-[#2a2a2a] text-white border border-white/30 shadow-md'
                 : isSilver
@@ -56,7 +56,7 @@ export const LeaderboardCard = ({
             {isGold ? '#1 Champion' : isSilver ? '#2 Runner Up' : isBronze ? '#3 Contributor' : `#${rank}`}
           </div>
 
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+          <span className="text-xs font-bold px-2 py-0.5 rounded bg-white/10 text-slate-200 border border-white/15">
             3D
           </span>
         </div>
@@ -79,27 +79,27 @@ export const LeaderboardCard = ({
         {/* Name & Title */}
         <Link
           to={`/profile/${leader.username || leader._id}`}
-          className="font-extrabold text-white hover:text-slate-300 text-base sm:text-lg line-clamp-1 mb-0.5 block"
+          className="font-extrabold text-white hover:text-slate-300 text-lg sm:text-xl line-clamp-1 mb-1 block"
           data-no-flip="true"
         >
           {leader.name || leader.username || 'Anonymous'}
         </Link>
         {leader.title ? (
-          <p className="text-xs text-slate-400 line-clamp-1 mb-3">
+          <p className="text-sm text-slate-300 line-clamp-1 mb-3 font-medium">
             {leader.title}
           </p>
         ) : leader.username ? (
-          <p className="text-xs text-slate-400 font-semibold line-clamp-1 mb-3">
+          <p className="text-sm text-slate-300 font-semibold line-clamp-1 mb-3">
             @{leader.username}
           </p>
         ) : null}
 
         {/* Primary Metric Display */}
-        <div className="p-3 rounded-2xl border border-white/10 bg-[#121212] text-center">
-          <div className="text-2xl font-black text-white">
+        <div className="p-3.5 rounded-2xl border border-white/10 bg-[#121212] text-center">
+          <div className="text-3xl sm:text-4xl font-black text-white">
             {leader.primaryMetric}
           </div>
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mt-0.5">
             {metricLabel}
           </div>
         </div>
@@ -107,14 +107,14 @@ export const LeaderboardCard = ({
 
       {/* Front Action Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
-        <span className="text-[11px] text-slate-500 font-medium truncate">
+        <span className="text-xs text-slate-400 font-medium truncate">
           {leader.location || 'ProblemPool Member'}
         </span>
 
         <div data-no-flip="true">
           <GlassAiButton
             to={`/profile/${leader.username || leader._id}`}
-            size="xs"
+            size="sm"
             variant={isGold ? "primary" : "secondary"}
           >
             Profile
@@ -130,47 +130,47 @@ export const LeaderboardCard = ({
       <div className="space-y-4">
         {/* Top Header */}
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#1e1e1e] text-slate-200 border border-white/15">
             Rank #{rank}
           </span>
 
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+          <span className="text-xs font-bold px-2.5 py-1 rounded bg-white/10 text-slate-200 border border-white/15">
             Flip Back
           </span>
         </div>
 
         {/* Center Name */}
         <div className="text-center py-1">
-          <h4 className="text-base font-bold text-white line-clamp-1">
+          <h4 className="text-base sm:text-lg font-bold text-white line-clamp-1">
             {leader.name || leader.username || 'Anonymous'}
           </h4>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
             {leader.username ? `@${leader.username}` : 'Community Contributor'}
           </p>
         </div>
 
         {/* 3D Metrics Grid */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-sm font-black text-white">{leader.reputation || leader.primaryMetric || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Reputation</div>
+        <div className="grid grid-cols-2 gap-2.5 text-xs sm:text-sm">
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-base font-black text-white">{leader.reputation || leader.primaryMetric || 0}</div>
+            <div className="text-xs text-slate-400 font-medium">Reputation</div>
           </div>
-          <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-sm font-black text-slate-200">{leader.helpfulVotes || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Helpful Votes</div>
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-base font-black text-slate-200">{leader.helpfulVotes || 0}</div>
+            <div className="text-xs text-slate-400 font-medium">Helpful Votes</div>
           </div>
-          <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-sm font-black text-slate-200">{leader.problemsSolved || leader.solvedCount || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Solved</div>
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-base font-black text-slate-200">{leader.problemsSolved || leader.solvedCount || 0}</div>
+            <div className="text-xs text-slate-400 font-medium">Solved</div>
           </div>
-          <div className="p-2 rounded-xl bg-[#121212] border border-white/10 text-center">
-            <div className="text-sm font-black text-slate-200">{leader.bestAnswersCount || 0}</div>
-            <div className="text-[10px] text-slate-400 font-medium">Best Answers</div>
+          <div className="p-2.5 rounded-xl bg-[#121212] border border-white/10 text-center">
+            <div className="text-base font-black text-slate-200">{leader.bestAnswersCount || 0}</div>
+            <div className="text-xs text-slate-400 font-medium">Best Answers</div>
           </div>
         </div>
 
         {/* Community Standing Indicator */}
-        <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
+        <div className="p-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs sm:text-sm">
           <span className="text-slate-400 font-medium">Community Status</span>
           <span className="font-bold text-white">
             Top Tier Solver
@@ -180,14 +180,14 @@ export const LeaderboardCard = ({
 
       {/* Back Actions Footer */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 mt-auto">
-        <span className="text-[11px] text-slate-500 font-medium truncate">
+        <span className="text-xs text-slate-400 font-medium truncate">
           {leader.location || 'Active Member'}
         </span>
 
         <div data-no-flip="true">
           <GlassAiButton
             to={`/profile/${leader.username || leader._id}`}
-            size="xs"
+            size="sm"
             variant="primary"
           >
             View Full Profile

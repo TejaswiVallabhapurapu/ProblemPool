@@ -15,10 +15,10 @@ const Sidebar = () => {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `flex items-center px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 ${
+    `flex items-center px-4 py-2.5 rounded-xl font-medium text-[15px] transition-all duration-150 ${
       isActive
-        ? 'text-white bg-white/10 border border-white/15 font-bold shadow-xs'
-        : 'text-[#D1D5DB] hover:text-white hover:bg-white/5'
+        ? 'text-white bg-white/12 border border-white/20 font-bold shadow-xs'
+        : 'text-[#E5E7EB] hover:text-white hover:bg-white/8'
     }`;
 
   const navItems = [
@@ -42,13 +42,13 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileOpen(true)}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 focus:outline-none transition cursor-pointer tracking-wider uppercase"
+            className="px-3.5 py-1.5 rounded-lg text-sm font-bold text-white bg-white/10 hover:bg-white/20 border border-white/15 focus:outline-none transition cursor-pointer tracking-wider uppercase"
             aria-label="Open Sidebar Menu"
           >
             Menu
           </button>
 
-          <Link to="/dashboard" className="text-lg font-black tracking-tight text-white">
+          <Link to="/dashboard" className="text-xl font-black tracking-tight text-white">
             Problem<span className="text-slate-300">Pool</span>
           </Link>
         </div>
@@ -56,13 +56,13 @@ const Sidebar = () => {
         <div className="flex items-center gap-2.5">
           <Link
             to="/notifications"
-            className="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white bg-white/5 border border-white/10"
+            className="px-3 py-1.5 rounded-lg text-sm font-bold text-slate-200 hover:text-white bg-white/10 border border-white/15"
           >
             Alerts
           </Link>
           <Link
             to="/profile"
-            className="w-8 h-8 rounded-full bg-[#1c1c1c] border border-white/20 text-white flex items-center justify-center font-bold text-xs shadow-xs"
+            className="w-9 h-9 rounded-full bg-[#1c1c1c] border border-white/20 text-white flex items-center justify-center font-bold text-sm shadow-xs"
           >
             {user?.name?.charAt?.(0)?.toUpperCase() || user?.username?.charAt?.(0)?.toUpperCase() || 'U'}
           </Link>
@@ -92,14 +92,14 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
               className="group inline-block"
             >
-              <span className="text-xl font-black tracking-tight text-white group-hover:text-slate-200 transition-colors">
+              <span className="text-2xl font-black tracking-tight text-white group-hover:text-slate-200 transition-colors">
                 Problem<span className="text-slate-400">Pool</span>
               </span>
             </Link>
 
             <button
               onClick={() => setMobileOpen(false)}
-              className="md:hidden px-2 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-[#181818] border border-white/10"
+              className="md:hidden px-2.5 py-1.5 rounded-lg text-sm font-bold text-slate-300 hover:text-white hover:bg-[#181818] border border-white/10"
               aria-label="Close Sidebar"
             >
               Close
@@ -111,7 +111,7 @@ const Sidebar = () => {
             <GlassAiButton
               to="/create-problem"
               onClick={() => setMobileOpen(false)}
-              size="sm"
+              size="md"
               variant="primary"
               fullWidth
             >
@@ -120,8 +120,8 @@ const Sidebar = () => {
           </div>
 
           {/* Primary Navigation Menu */}
-          <div className="space-y-1">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-4 mb-2">
+          <div className="space-y-1.5">
+            <div className="text-xs font-extrabold uppercase tracking-wider text-slate-400 px-3 mb-2.5">
               Explore & Solve
             </div>
             {navItems.map((item) => (
@@ -141,8 +141,8 @@ const Sidebar = () => {
           <div className="my-4 border-t border-white/10" />
 
           {/* Secondary Account Navigation */}
-          <div className="space-y-1">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-4 mb-2">
+          <div className="space-y-1.5">
+            <div className="text-xs font-extrabold uppercase tracking-wider text-slate-400 px-3 mb-2.5">
               Account & Workspace
             </div>
             {secondaryNavItems.map((item) => (
@@ -161,7 +161,7 @@ const Sidebar = () => {
               <NavLink
                 to="/admin"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center px-4 py-2.5 rounded-xl font-bold text-xs bg-[#221212] text-rose-300 hover:bg-[#2e1616] border border-rose-500/30 transition shadow-xs mt-1"
+                className="flex items-center px-4 py-2.5 rounded-xl font-bold text-sm bg-[#221212] text-rose-300 hover:bg-[#2e1616] border border-rose-500/30 transition shadow-xs mt-1"
               >
                 <span>Admin Dashboard</span>
               </NavLink>
@@ -175,16 +175,16 @@ const Sidebar = () => {
           <Link
             to="/profile"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 p-2.5 rounded-xl bg-[#141414] border border-white/10 hover:border-white/20 transition group"
+            className="flex items-center gap-3 p-3 rounded-xl bg-[#141414] border border-white/10 hover:border-white/20 transition group"
           >
-            <div className="w-8 h-8 rounded-full bg-[#202020] border border-white/15 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-[#202020] border border-white/15 text-white flex items-center justify-center font-bold text-sm shadow-xs">
               {user?.name?.charAt?.(0)?.toUpperCase() || user?.username?.charAt?.(0)?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-white truncate group-hover:text-slate-200">
+              <div className="text-sm font-bold text-white truncate group-hover:text-slate-200">
                 {user?.name || user?.username || 'Problem Solver'}
               </div>
-              <div className="text-[11px] text-slate-400 truncate">
+              <div className="text-xs text-slate-400 truncate">
                 @{user?.username || (typeof user?.email === 'string' ? user.email.split('@')[0] : 'solver')}
               </div>
             </div>
@@ -194,7 +194,7 @@ const Sidebar = () => {
           <button
             onClick={handleLogout}
             type="button"
-            className="w-full flex items-center justify-center px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-rose-400 hover:bg-rose-950/20 border border-white/5 hover:border-rose-900/30 transition cursor-pointer"
+            className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:text-rose-400 hover:bg-rose-950/20 border border-white/10 hover:border-rose-900/30 transition cursor-pointer"
           >
             <span>Sign Out</span>
           </button>
